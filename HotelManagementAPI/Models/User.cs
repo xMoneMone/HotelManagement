@@ -22,4 +22,6 @@ public partial class User
     public virtual AccountType? AccountType { get; set; }
 
     public virtual Color Color { get; set; } = null!;
+
+    public virtual ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
 }
