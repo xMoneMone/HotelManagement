@@ -2,6 +2,8 @@
 using HotelManagementAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using HotelManagementAPI.Util;
+using Microsoft.AspNetCore.JsonPatch;
+using HotelManagementAPI.Models;
 
 namespace HotelManagementAPI.Controllers
 {
@@ -77,6 +79,33 @@ namespace HotelManagementAPI.Controllers
 
             UserStore.context.SaveChanges();
 
+            return Ok();
+        }
+
+        [HttpPatch("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult PatchUser(int id, JsonPatchDocument<User> patch)
+        {
+            if (id == 0 || patch == null)
+            {
+                return BadRequest();
+            }
+
+            var user = UserStore.context.Users.FirstOrDefault(x => x.Id == id);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            patch.ApplyTo(user, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            UserStore.context.SaveChanges();
             return Ok();
         }
     }
