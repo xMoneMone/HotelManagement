@@ -102,3 +102,26 @@ CREATE TABLE BookingsExtras
 ExtraId INT FOREIGN KEY REFERENCES Extras(Id) ON DELETE CASCADE NOT NULL,
 BookingId INT FOREIGN KEY REFERENCES Bookings(Id) NOT NULL
 );
+
+INSERT INTO Currencies([Name], FormattingString) VALUES
+('Leva', '*.lv'),
+('Euro', '€*')
+
+INSERT INTO AccountTypes([Type]) VALUES
+('Owner'),
+('Employee')
+
+INSERT INTO Colors([Color]) VALUES
+('ffb3ba'),
+('ffdfba'),
+('ffffba'),
+('baffc9'),
+('bae1ff'),
+('b4a7d6')
+
+INSERT INTO Beds(BedType, Capacity) VALUES
+('Single', 1),
+('Twin', 2),
+('Triple', 3),
+('Single couch', 1),
+('Double couch', 2)
