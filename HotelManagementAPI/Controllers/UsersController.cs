@@ -1,6 +1,7 @@
 ﻿using HotelManagementAPI.Data;
 using HotelManagementAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using HotelManagementAPI.Util;
 
 namespace HotelManagementAPI.Controllers
 {
@@ -11,18 +12,14 @@ namespace HotelManagementAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<CreateUserDTO> CreateUser([FromBody]CreateUserDTO userDTO)
+        public ActionResult<CreateUserDTO> CreateUser([FromBody] CreateUserDTO userDTO)
         {
             if (userDTO == null)
             {
                 return BadRequest(userDTO);
             }
 
-            int[] colors = UserStore.context.Colors.Select(x => x.Id).ToArray();
-            if (!colors.Contains(userDTO.ColorId))
-            {
-                userDTO.ColorId = colors[0];
-            }
+            userDTO.ColorId = Validators.ColorValidator(userDTO.ColorId);
 
             UserStore.context.Users.Add(new Models.User
             {
@@ -58,6 +55,28 @@ namespace HotelManagementAPI.Controllers
 
             UserStore.context.Users.Remove(user);
             UserStore.context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult EditUser(int id, [FromBody] EditUserDTO userDTO)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            userDTO.ColorId = Validators.ColorValidator(userDTO.ColorId);
+
+            var user = UserStore.context.Users.FirstOrDefault(x => x.Id == id);
+            user.FirstName = userDTO.FirstName;
+            user.LastName = userDTO.LastName;
+            user.ColorId = userDTO.ColorId;
+
+            UserStore.context.SaveChanges();
+
             return Ok();
         }
     }
