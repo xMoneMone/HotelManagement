@@ -27,7 +27,7 @@ namespace HotelManagementAPI.Controllers
             {
                 ColorId = userDTO.ColorId,
                 Email = userDTO.Email,
-                Password = userDTO.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password),
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName
             });
