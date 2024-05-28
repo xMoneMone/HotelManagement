@@ -49,6 +49,29 @@ namespace HotelManagementAPI.Controllers
             return Ok(userDTO);
         }
 
+        [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<LoginUserDTO> Login(LoginUserDTO userDTO)
+        {
+            var user = UserStore.context.Users.FirstOrDefault(x => x.Email == userDTO.Email);
+
+            if (user == null)
+            {
+                return BadRequest("Wrong email or password.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(userDTO.Password, user.Password))
+            {
+                return BadRequest("Wrong email or password.");
+            }
+
+            string token = CreateToken(user);
+
+            return Ok(token);
+        }
+
+
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
