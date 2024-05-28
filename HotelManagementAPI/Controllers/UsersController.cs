@@ -29,7 +29,8 @@ namespace HotelManagementAPI.Controllers
                 Email = userDTO.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password),
                 FirstName = userDTO.FirstName,
-                LastName = userDTO.LastName
+                LastName = userDTO.LastName,
+                AccountTypeId = userDTO.AccountTypeId
             });
 
             UserStore.context.SaveChanges();
