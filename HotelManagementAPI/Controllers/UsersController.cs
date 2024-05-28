@@ -4,6 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.JsonPatch;
 using HotelManagementAPI.Models;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Validators = HotelManagementAPI.Util.Validators;
 
 namespace HotelManagementAPI.Controllers
 {
@@ -11,6 +16,13 @@ namespace HotelManagementAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+
+        public UsersController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -109,5 +121,26 @@ namespace HotelManagementAPI.Controllers
             UserStore.context.SaveChanges();
             return Ok();
         }
+
+        private string CreateToken(User user)
+        {
+            List<Claim> claims =
+            [
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, UserStore.context.AccountTypes.FirstOrDefault(x => x.Id == user.AccountTypeId).Type)
+            ];
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(30),
+                    signingCredentials: credentials
+                );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwt;
+        } 
     }
 }
