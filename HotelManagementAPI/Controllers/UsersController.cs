@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Validators = HotelManagementAPI.Util.Validators;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelManagementAPI.Controllers
 {
@@ -72,7 +73,7 @@ namespace HotelManagementAPI.Controllers
         }
 
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -96,7 +97,7 @@ namespace HotelManagementAPI.Controllers
             return Ok();
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult EditUser(int id, [FromBody] EditUserDTO userDTO)
@@ -118,7 +119,7 @@ namespace HotelManagementAPI.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id:int}")]
+        [HttpPatch("{id:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult PatchUser(int id, JsonPatchDocument<User> patch)
