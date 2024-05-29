@@ -149,7 +149,7 @@ namespace HotelManagementAPI.Controllers
         {
             List<Claim> claims =
             [
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, UserStore.context.AccountTypes.FirstOrDefault(x => x.Id == user.AccountTypeId).Type)
             ];
 
