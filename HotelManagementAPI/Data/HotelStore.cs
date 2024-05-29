@@ -18,8 +18,9 @@ namespace HotelManagementAPI.Data
 
         public static IEnumerable<HotelDTO> GetUserHotels(User user)
         {
+            int[] employeeHotelsIds = UserStore.context.UsersHotels.Where(x => x.UserId == user.Id).Select(x => x.HotelId).ToArray();
             return from hotel in context.Hotels
-                   where hotel.Owner == user
+                   where hotel.Owner == user || employeeHotelsIds.Contains(hotel.Id)
                    select new HotelDTO()
                    {
                        Id = hotel.Id,
