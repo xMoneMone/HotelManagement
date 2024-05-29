@@ -16,5 +16,17 @@ namespace HotelManagementAPI.Data
                                                             DownPaymentPercentage = hotel.DownPaymentPercentage
                                                         };
 
+        public static IEnumerable<HotelDTO> GetUserHotels(User user)
+        {
+            return from hotel in context.Hotels
+                   where hotel.Owner == user
+                   select new HotelDTO()
+                   {
+                       Id = hotel.Id,
+                       Name = hotel.Name,
+                       CurrencyFormat = hotel.Currency.FormattingString,
+                       DownPaymentPercentage = hotel.DownPaymentPercentage
+                   };
+        }
     }
 }
