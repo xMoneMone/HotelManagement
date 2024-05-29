@@ -73,18 +73,13 @@ namespace HotelManagementAPI.Controllers
         }
 
 
-        [HttpDelete("{id:int}"), Authorize]
+        [HttpDelete, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteUser(int id)
+        public IActionResult DeleteUser()
         {
-            if (id == 0)
-            {
-                return BadRequest();
-            }
-
-            var user = UserStore.context.Users.FirstOrDefault(x => x.Id == id);
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
             Console.WriteLine(user);
 
             if (user == null)
@@ -97,19 +92,20 @@ namespace HotelManagementAPI.Controllers
             return Ok();
         }
 
-        [HttpPut("{id:int}"), Authorize]
+        [HttpPut, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult EditUser(int id, [FromBody] EditUserDTO userDTO)
+        public IActionResult EditUser([FromBody] EditUserDTO userDTO)
         {
-            if (id == 0)
+            userDTO.ColorId = Validators.ColorValidator(userDTO.ColorId);
+
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+
+            if (user == null)
             {
                 return BadRequest();
             }
 
-            userDTO.ColorId = Validators.ColorValidator(userDTO.ColorId);
-
-            var user = UserStore.context.Users.FirstOrDefault(x => x.Id == id);
             user.FirstName = userDTO.FirstName;
             user.LastName = userDTO.LastName;
             user.ColorId = userDTO.ColorId;
@@ -119,17 +115,12 @@ namespace HotelManagementAPI.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id:int}"), Authorize]
+        [HttpPatch, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult PatchUser(int id, JsonPatchDocument<User> patch)
+        public IActionResult PatchUser(JsonPatchDocument<User> patch)
         {
-            if (id == 0 || patch == null)
-            {
-                return BadRequest();
-            }
-
-            var user = UserStore.context.Users.FirstOrDefault(x => x.Id == id);
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
             if (user == null)
             {
