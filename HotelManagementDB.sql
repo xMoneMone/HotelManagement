@@ -43,7 +43,8 @@ DownPaymentPercentage INT,
 CREATE TABLE HotelCodes
 (
 Code VARCHAR(200) NOT NULL,
-HotelId INT FOREIGN KEY REFERENCES Hotels(Id)
+HotelId INT FOREIGN KEY REFERENCES Hotels(Id),
+UserId INT FOREIGN KEY REFERENCES Users(Id)
 );
 
 CREATE TABLE UsersHotels

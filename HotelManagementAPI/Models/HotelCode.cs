@@ -9,5 +9,9 @@ public partial class HotelCode
 
     public int? HotelId { get; set; }
 
+    public int? UserId { get; set; }
+
     public virtual Hotel? Hotel { get; set; }
+
+    public virtual User? User { get; set; }
 }
