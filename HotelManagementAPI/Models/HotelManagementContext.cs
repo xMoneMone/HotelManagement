@@ -157,19 +157,19 @@ public partial class HotelManagementContext : DbContext
 
         modelBuilder.Entity<HotelCode>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA66707A2D1");
 
             entity.Property(e => e.Code)
                 .HasMaxLength(200)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.Hotel).WithMany()
+            entity.HasOne(d => d.Hotel).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.HotelId)
-                .HasConstraintName("FK__HotelCode__Hotel__440B1D61");
+                .HasConstraintName("FK__HotelCode__Hotel__5AEE82B9");
 
-            entity.HasOne(d => d.User).WithMany()
+            entity.HasOne(d => d.User).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__HotelCode__UserI__44FF419A");
+                .HasConstraintName("FK__HotelCode__UserI__5BE2A6F2");
         });
 
         modelBuilder.Entity<Room>(entity =>

@@ -19,6 +19,8 @@ public partial class Hotel
 
     public virtual ICollection<Extra> Extras { get; set; } = new List<Extra>();
 
+    public virtual ICollection<HotelCode> HotelCodes { get; set; } = new List<HotelCode>();
+
     public virtual User Owner { get; set; } = null!;
 
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
