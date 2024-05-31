@@ -40,11 +40,18 @@ DownPaymentPercentage INT,
 [OwnerId] INT FOREIGN KEY REFERENCES Users(Id) ON DELETE CASCADE NOT NULL
 );
 
+CREATE TABLE HotelCodeStatuses
+(
+Id INT PRIMARY KEY IDENTITY NOT NULL,
+[Status] VARCHAR(200) NOT NULL
+);
+
 CREATE TABLE HotelCodes
 (
 Code VARCHAR(200) PRIMARY KEY NOT NULL,
 HotelId INT FOREIGN KEY REFERENCES Hotels(Id),
-UserId INT FOREIGN KEY REFERENCES Users(Id)
+UserId INT FOREIGN KEY REFERENCES Users(Id),
+StatusId INT FOREIGN KEY REFERENCES HotelCodeStatuses(Id)
 );
 
 CREATE TABLE UsersHotels
@@ -126,3 +133,8 @@ INSERT INTO Beds(BedType, Capacity) VALUES
 ('Triple', 3),
 ('Single couch', 1),
 ('Double couch', 2)
+
+INSERT INTO HotelCodeStatuses([Status]) VALUES
+('Pending'),
+('Accepted'),
+('Rejected')

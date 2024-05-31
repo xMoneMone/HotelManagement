@@ -33,6 +33,8 @@ public partial class HotelManagementContext : DbContext
 
     public virtual DbSet<HotelCode> HotelCodes { get; set; }
 
+    public virtual DbSet<HotelCodeStatus> HotelCodeStatuses { get; set; }
+
     public virtual DbSet<Room> Rooms { get; set; }
 
     public virtual DbSet<RoomsBed> RoomsBeds { get; set; }
@@ -157,7 +159,7 @@ public partial class HotelManagementContext : DbContext
 
         modelBuilder.Entity<HotelCode>(entity =>
         {
-            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA66707A2D1");
+            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA66138ADE7");
 
             entity.Property(e => e.Code)
                 .HasMaxLength(200)
@@ -165,11 +167,24 @@ public partial class HotelManagementContext : DbContext
 
             entity.HasOne(d => d.Hotel).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.HotelId)
-                .HasConstraintName("FK__HotelCode__Hotel__5AEE82B9");
+                .HasConstraintName("FK__HotelCode__Hotel__6754599E");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.HotelCodes)
+                .HasForeignKey(d => d.StatusId)
+                .HasConstraintName("FK__HotelCode__Statu__693CA210");
 
             entity.HasOne(d => d.User).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__HotelCode__UserI__5BE2A6F2");
+                .HasConstraintName("FK__HotelCode__UserI__68487DD7");
+        });
+
+        modelBuilder.Entity<HotelCodeStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__HotelCod__3214EC071C918463");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(200)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Room>(entity =>
