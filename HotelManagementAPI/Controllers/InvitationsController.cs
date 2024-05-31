@@ -101,5 +101,34 @@ namespace HotelManagementAPI.Controllers
                 return Ok("Invite rejected.");
             }
         }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [HttpDelete("{codeId}"), Authorize]
+        public IActionResult DeleteInvite(string codeId)
+        {
+            var code = HotelStore.context.HotelCodes.FirstOrDefault(x => x.Code == codeId);
+
+            if (code == null)
+            {
+                return BadRequest("Code does not exist.");
+            }
+
+            Hotel hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == code.HotelId);
+            var hotelOwner = UserStore.context.Users.FirstOrDefault(x => x.Id == hotel.OwnerId);
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+
+            if (user.Id != hotelOwner.Id)
+            {
+                return Unauthorized("You're not the creator of this invite.");
+            }
+
+            HotelStore.context.HotelCodes.Remove(code);
+            HotelStore.context.SaveChanges();
+
+            return Ok("Invite deleted.");
+        }
+
     }
 }
