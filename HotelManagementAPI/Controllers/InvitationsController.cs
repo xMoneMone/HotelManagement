@@ -27,6 +27,13 @@ namespace HotelManagementAPI.Controllers
                 return BadRequest("User or hotel does not exist.");
             }
 
+            var userHotelConnection = HotelStore.context.UsersHotels.FirstOrDefault(x => x.UserId == employee.Id && x.HotelId == hotel.Id);
+
+            if (userHotelConnection != null)
+            {
+                return BadRequest("User is already an employee of this hotel.");
+            }
+
             if (user.Id != hotel.OwnerId)
             {
                 return Unauthorized("You are not the owner of this hotel.");
