@@ -4,6 +4,7 @@ using HotelManagementAPI.Models;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace HotelManagementAPI.Controllers
 {
@@ -49,7 +50,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("{codeId}"), Authorize]
-        public IActionResult AcceptInvitation(string codeId)
+        public IActionResult RespondToInvitation(string codeId, [FromBody] RespondToInviteDTO inviteResponse)
         {
             var code = HotelStore.context.HotelCodes.FirstOrDefault(x => x.Code == codeId);
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
@@ -69,17 +70,24 @@ namespace HotelManagementAPI.Controllers
                 return BadRequest("Code already used.");
             }
 
-            code.StatusId = 2;
-            var hotelEmployeeConnection = new UsersHotel
+            if (inviteResponse.Accept)
             {
-                HotelId = code.HotelId,
-                UserId = code.UserId
-            };
-
-            HotelStore.context.UsersHotels.Add(hotelEmployeeConnection);
-            HotelStore.context.SaveChanges();
-
-            return Ok("Employee added to hotel.");
+                code.StatusId = 2;
+                var hotelEmployeeConnection = new UsersHotel
+                {
+                    HotelId = code.HotelId,
+                    UserId = code.UserId
+                };
+                HotelStore.context.UsersHotels.Add(hotelEmployeeConnection);
+                HotelStore.context.SaveChanges();
+                return Ok("Invite accepted.");
+            }
+            else
+            {
+                code.StatusId = 3;
+                HotelStore.context.SaveChanges();
+                return Ok("Invite rejected.");
+            }
         }
     }
 }
