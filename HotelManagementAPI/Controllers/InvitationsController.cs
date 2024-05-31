@@ -39,6 +39,11 @@ namespace HotelManagementAPI.Controllers
                 return Unauthorized("You are not the owner of this hotel.");
             }
 
+            if (user == employee)
+            {
+                return BadRequest("Can't invite yourself to your hotel.");
+            }
+
             string code = CodeGenerator.GenerateCode();
             var hotelCode = new HotelCode
             {
