@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Controllers
 {
-    [Route("api/hotels"), Authorize]
+    [Route("hotels"), Authorize]
     [ApiController]
     public class HotelsController : ControllerBase
     {
-        [HttpGet]
+        [HttpGet, Authorize]
         public IEnumerable<HotelDTO> GetHotels()
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);

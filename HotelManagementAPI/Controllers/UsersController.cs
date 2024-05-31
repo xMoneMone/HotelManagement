@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HotelManagementAPI.Controllers
 {
-    [Route("api/users")]
+    [Route("users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
