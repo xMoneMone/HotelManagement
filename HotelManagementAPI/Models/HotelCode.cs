@@ -7,11 +7,11 @@ public partial class HotelCode
 {
     public string Code { get; set; } = null!;
 
-    public int? HotelId { get; set; }
+    public int HotelId { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
-    public int? StatusId { get; set; }
+    public int StatusId { get; set; }
 
     public virtual Hotel? Hotel { get; set; }
 

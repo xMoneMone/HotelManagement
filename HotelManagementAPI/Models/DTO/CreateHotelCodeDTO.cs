@@ -3,7 +3,7 @@
     public class CreateHotelCodeDTO
     {
 
-        public int? HotelId { get; set; }
+        public int HotelId { get; set; }
 
         public string UserEmail { get; set; }
     }
