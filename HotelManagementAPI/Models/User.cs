@@ -26,4 +26,6 @@ public partial class User
     public virtual ICollection<HotelCode> HotelCodes { get; set; } = new List<HotelCode>();
 
     public virtual ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
+
+    public virtual ICollection<Hotel> HotelsNavigation { get; set; } = new List<Hotel>();
 }

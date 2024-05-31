@@ -41,8 +41,6 @@ public partial class HotelManagementContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<UsersHotel> UsersHotels { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=.;Database=HotelManagement;Trusted_Connection=true;TrustServerCertificate=True");
@@ -159,7 +157,7 @@ public partial class HotelManagementContext : DbContext
 
         modelBuilder.Entity<HotelCode>(entity =>
         {
-            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA66138ADE7");
+            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA6D3695668");
 
             entity.Property(e => e.Code)
                 .HasMaxLength(200)
@@ -167,20 +165,23 @@ public partial class HotelManagementContext : DbContext
 
             entity.HasOne(d => d.Hotel).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.HotelId)
-                .HasConstraintName("FK__HotelCode__Hotel__6754599E");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__HotelCode__Hotel__71D1E811");
 
             entity.HasOne(d => d.Status).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("FK__HotelCode__Statu__693CA210");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__HotelCode__Statu__73BA3083");
 
             entity.HasOne(d => d.User).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__HotelCode__UserI__68487DD7");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__HotelCode__UserI__72C60C4A");
         });
 
         modelBuilder.Entity<HotelCodeStatus>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__HotelCod__3214EC071C918463");
+            entity.HasKey(e => e.Id).HasName("PK__HotelCod__3214EC07542A122E");
 
             entity.Property(e => e.Status)
                 .HasMaxLength(200)
@@ -243,20 +244,22 @@ public partial class HotelManagementContext : DbContext
                 .HasForeignKey(d => d.ColorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Users__ColorId__3B75D760");
-        });
 
-        modelBuilder.Entity<UsersHotel>(entity =>
-        {
-            entity.HasNoKey();
-
-            entity.HasOne(d => d.Hotel).WithMany()
-                .HasForeignKey(d => d.HotelId)
-                .HasConstraintName("FK__UsersHote__Hotel__47DBAE45");
-
-            entity.HasOne(d => d.User).WithMany()
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UsersHote__UserI__46E78A0C");
+            entity.HasMany(d => d.HotelsNavigation).WithMany(p => p.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "UsersHotel",
+                    r => r.HasOne<Hotel>().WithMany()
+                        .HasForeignKey("HotelId")
+                        .HasConstraintName("FK__UsersHote__Hotel__6D0D32F4"),
+                    l => l.HasOne<User>().WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK__UsersHote__UserI__6C190EBB"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "HotelId").HasName("PK__UsersHot__F3E8EFF118CF3B51");
+                        j.ToTable("UsersHotels");
+                    });
         });
 
         OnModelCreatingPartial(modelBuilder);

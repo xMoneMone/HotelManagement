@@ -13,9 +13,9 @@ public partial class HotelCode
 
     public int StatusId { get; set; }
 
-    public virtual Hotel? Hotel { get; set; }
+    public virtual Hotel Hotel { get; set; } = null!;
 
-    public virtual HotelCodeStatus? Status { get; set; }
+    public virtual HotelCodeStatus Status { get; set; } = null!;
 
-    public virtual User? User { get; set; }
+    public virtual User User { get; set; } = null!;
 }

@@ -24,4 +24,6 @@ public partial class Hotel
     public virtual User Owner { get; set; } = null!;
 
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }
