@@ -27,5 +27,5 @@ public partial class User
 
     public virtual ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
 
-    public virtual ICollection<Hotel> HotelsNavigation { get; set; } = new List<Hotel>();
+    public virtual ICollection<UsersHotel> UsersHotels { get; set; } = new List<UsersHotel>();
 }
