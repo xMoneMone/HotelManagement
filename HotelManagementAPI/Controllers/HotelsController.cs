@@ -54,7 +54,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<HotelCreateDTO> CreateUser([FromBody] HotelCreateDTO hotelDTO)
+        public ActionResult<HotelCreateDTO> CreateHotel([FromBody] HotelCreateDTO hotelDTO)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
@@ -84,7 +84,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<HotelCreateDTO> EditUser([FromBody] HotelCreateDTO hotelDTO, int id)
+        public ActionResult<HotelCreateDTO> EditHotel([FromBody] HotelCreateDTO hotelDTO, int id)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
             var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == id);
