@@ -116,5 +116,30 @@ namespace HotelManagementAPI.Controllers
             HotelStore.context.SaveChanges();
             return Ok(hotelDTO);
         }
+
+
+        [HttpDelete("{id:int}"), Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult DeleteHotel(int id)
+        {
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == id);
+
+            if (hotel == null)
+            {
+                return BadRequest("Hotel does not exist.");
+            }
+
+            if (hotel.OwnerId != user.Id)
+            {
+                return Unauthorized("You are not the owner of this hotel.");
+            }
+
+            HotelStore.context.Hotels.Remove(hotel);
+            HotelStore.context.SaveChanges();
+            return Ok("Hotel has been deleted.");
+        }
     }
 }   
