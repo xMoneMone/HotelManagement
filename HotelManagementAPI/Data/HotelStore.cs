@@ -29,5 +29,18 @@ namespace HotelManagementAPI.Data
                        DownPaymentPercentage = hotel.DownPaymentPercentage
                    };
         }
+
+        public static IEnumerable<HotelCodeSentDTO> GetSentInvites(User user)
+        {
+            return from code in context.HotelCodes
+                   where context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Id == user.Id
+                   select new HotelCodeSentDTO
+                   {
+                       HotelName = context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Name,
+                       UserEmail = context.Users.FirstOrDefault(x => x.Id == code.UserId).Email,
+                       Status = context.HotelCodeStatuses.FirstOrDefault(x => x.Id == code.StatusId).Status
+                   };
+        }
+
     }
 }
