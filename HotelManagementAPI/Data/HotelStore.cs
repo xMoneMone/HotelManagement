@@ -33,7 +33,7 @@ namespace HotelManagementAPI.Data
         public static IEnumerable<HotelCodeSentDTO> GetSentInvites(User user)
         {
             return from code in context.HotelCodes
-                   where context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Id == user.Id
+                   where code.SenderId == user.Id
                    select new HotelCodeSentDTO
                    {
                        HotelName = context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Name,
@@ -49,8 +49,7 @@ namespace HotelManagementAPI.Data
                    select new HotelCodeReceivedDTO
                    {
                        HotelName = context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Name,
-                       OwnerEmail = context.Users.FirstOrDefault(x => x.Id ==
-                                   context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Id).Email,
+                       OwnerEmail = context.Users.FirstOrDefault(x => x.Id == code.SenderId).Email,
                    };
         }
     }
