@@ -27,7 +27,7 @@ namespace HotelManagementAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<CreateUserDTO> CreateUser([FromBody] CreateUserDTO userDTO)
+        public ActionResult<UserCreateDTO> CreateUser([FromBody] UserCreateDTO userDTO)
         {
             if (userDTO == null)
             {
