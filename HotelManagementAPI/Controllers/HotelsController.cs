@@ -63,6 +63,11 @@ namespace HotelManagementAPI.Controllers
                 return BadRequest(hotelDTO);
             }
 
+            if (hotelDTO.Name.Length == 0 || hotelDTO.Name.Length > 100)
+            {
+                return BadRequest("Hotel name must be under 100 characters.");
+            }
+
             UserStore.context.Hotels.Add(new Hotel
             {
                 Name = hotelDTO.Name,
