@@ -1,6 +1,6 @@
 ﻿namespace HotelManagementAPI.Models.DTO
 {
-    public class LoginUserDTO
+    public class UserLoginDTO
     {
         public string Email { get; set; } = null!;
 

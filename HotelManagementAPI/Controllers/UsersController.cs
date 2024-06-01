@@ -53,7 +53,7 @@ namespace HotelManagementAPI.Controllers
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<LoginUserDTO> Login(LoginUserDTO userDTO)
+        public ActionResult<UserLoginDTO> Login(UserLoginDTO userDTO)
         {
             var user = UserStore.context.Users.FirstOrDefault(x => x.Email == userDTO.Email);
 
@@ -95,7 +95,7 @@ namespace HotelManagementAPI.Controllers
         [HttpPut, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult EditUser([FromBody] EditUserDTO userDTO)
+        public IActionResult EditUser([FromBody] UserEditDTO userDTO)
         {
             userDTO.ColorId = Validators.ColorValidator(userDTO.ColorId);
 
