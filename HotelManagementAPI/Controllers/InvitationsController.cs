@@ -16,7 +16,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost, Authorize]
-        public IActionResult InviteEmployee([FromBody] CreateHotelCodeDTO HotelCodeDTO)
+        public IActionResult InviteEmployee([FromBody] HotelCodeCreateDTO HotelCodeDTO)
         {
             User employee = UserStore.context.Users.FirstOrDefault(x => x.Email == HotelCodeDTO.UserEmail);
             Hotel hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == HotelCodeDTO.HotelId);

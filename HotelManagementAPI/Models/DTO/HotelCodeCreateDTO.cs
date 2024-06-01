@@ -1,6 +1,6 @@
 ﻿namespace HotelManagementAPI.Models.DTO
 {
-    public class CreateHotelCodeDTO
+    public class HotelCodeCreateDTO
     {
 
         public int HotelId { get; set; }
