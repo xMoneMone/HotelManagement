@@ -79,5 +79,42 @@ namespace HotelManagementAPI.Controllers
             UserStore.context.SaveChanges();
             return Ok(hotelDTO);
         }
+
+        [HttpPut("{id:int}"), Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public ActionResult<HotelCreateDTO> EditUser([FromBody] HotelCreateDTO hotelDTO, int id)
+        {
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == id);
+
+            if (hotelDTO == null)
+            {
+                return BadRequest(hotelDTO);
+            }
+
+            if (hotel == null)
+            {
+                return BadRequest("Hotel does not exist.");
+            }
+
+            if (hotel.OwnerId != user.Id)
+            {
+                return Unauthorized("You are not the owner of this hotel.");
+            }
+
+            if (hotelDTO.Name.Length == 0 || hotelDTO.Name.Length > 100)
+            {
+                return BadRequest("Hotel name must be under 100 characters.");
+            }
+
+            hotel.Name = hotelDTO.Name;
+            hotel.CurrencyId = hotelDTO.CurrencyId;
+            hotel.DownPaymentPercentage = hotelDTO.DownPaymentPercentage;
+
+            HotelStore.context.SaveChanges();
+            return Ok(hotelDTO);
+        }
     }
 }   
