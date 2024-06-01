@@ -83,7 +83,7 @@ namespace HotelManagementAPI.Controllers
         [HttpPut("{id:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<HotelCreateDTO> EditHotel([FromBody] HotelCreateDTO hotelDTO, int id)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
