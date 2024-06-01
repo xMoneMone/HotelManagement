@@ -80,7 +80,6 @@ namespace HotelManagementAPI.Controllers
         public IActionResult DeleteUser()
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-            Console.WriteLine(user);
 
             if (user == null)
             {
