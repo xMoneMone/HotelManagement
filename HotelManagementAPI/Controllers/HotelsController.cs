@@ -49,5 +49,30 @@ namespace HotelManagementAPI.Controllers
             HotelStore.context.SaveChanges();
             return Ok("Employee removed from hotel.");
         }
+
+        [HttpPost, Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public ActionResult<CreateHotelDTO> CreateUser([FromBody] CreateHotelDTO hotelDTO)
+        {
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+
+            if (hotelDTO == null)
+            {
+                return BadRequest(hotelDTO);
+            }
+
+            UserStore.context.Hotels.Add(new Hotel
+            {
+                Name = hotelDTO.Name,
+                CurrencyId = hotelDTO.CurrencyId,
+                DownPaymentPercentage = hotelDTO.DownPaymentPercentage,
+                OwnerId = user.Id
+            });
+
+            UserStore.context.SaveChanges();
+            return Ok(hotelDTO);
+        }
     }
 }   
