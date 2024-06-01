@@ -12,6 +12,26 @@ namespace HotelManagementAPI.Controllers
     [ApiController]
     public class InvitationsController : ControllerBase
     {
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet, Authorize]
+        public IActionResult GetInvites()
+        {
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+
+            if (user.AccountTypeId == 1)
+            {
+                return Ok(HotelStore.GetSentInvites(user));
+            }
+            else if (user.AccountTypeId == 2)
+            {
+                return Ok(HotelStore.GetReceivedInvites(user));
+            }
+
+            return StatusCode(500);
+        }
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
