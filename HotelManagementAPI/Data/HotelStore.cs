@@ -42,5 +42,16 @@ namespace HotelManagementAPI.Data
                    };
         }
 
+        public static IEnumerable<HotelCodeReceivedDTO> GetReceivedInvites(User user)
+        {
+            return from code in context.HotelCodes
+                   where code.UserId == user.Id
+                   select new HotelCodeReceivedDTO
+                   {
+                       HotelName = context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Name,
+                       OwnerEmail = context.Users.FirstOrDefault(x => x.Id ==
+                                   context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Id).Email,
+                   };
+        }
     }
 }
