@@ -13,7 +13,11 @@ public partial class HotelCode
 
     public int StatusId { get; set; }
 
+    public int SenderId { get; set; }
+
     public virtual Hotel Hotel { get; set; } = null!;
+
+    public virtual User Sender { get; set; } = null!;
 
     public virtual HotelCodeStatus Status { get; set; } = null!;
 

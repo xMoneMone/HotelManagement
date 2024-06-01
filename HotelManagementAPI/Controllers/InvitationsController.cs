@@ -70,7 +70,8 @@ namespace HotelManagementAPI.Controllers
                 UserId = employee.Id,
                 Code = code,
                 HotelId = HotelCodeDTO.HotelId,
-                StatusId = 1
+                StatusId = 1,
+                SenderId = user.Id
             };
 
             HotelStore.context.HotelCodes.Add(hotelCode);

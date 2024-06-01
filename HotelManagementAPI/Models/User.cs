@@ -23,7 +23,9 @@ public partial class User
 
     public virtual Color Color { get; set; } = null!;
 
-    public virtual ICollection<HotelCode> HotelCodes { get; set; } = new List<HotelCode>();
+    public virtual ICollection<HotelCode> HotelCodeSenders { get; set; } = new List<HotelCode>();
+
+    public virtual ICollection<HotelCode> HotelCodeUsers { get; set; } = new List<HotelCode>();
 
     public virtual ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
 

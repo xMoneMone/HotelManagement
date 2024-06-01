@@ -159,7 +159,7 @@ public partial class HotelManagementContext : DbContext
 
         modelBuilder.Entity<HotelCode>(entity =>
         {
-            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA6D3695668");
+            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA61DBFEE3C");
 
             entity.Property(e => e.Code)
                 .HasMaxLength(200)
@@ -168,17 +168,22 @@ public partial class HotelManagementContext : DbContext
             entity.HasOne(d => d.Hotel).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.HotelId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HotelCode__Hotel__71D1E811");
+                .HasConstraintName("FK__HotelCode__Hotel__7E37BEF6");
+
+            entity.HasOne(d => d.Sender).WithMany(p => p.HotelCodeSenders)
+                .HasForeignKey(d => d.SenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__HotelCode__Sende__01142BA1");
 
             entity.HasOne(d => d.Status).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HotelCode__Statu__73BA3083");
+                .HasConstraintName("FK__HotelCode__Statu__00200768");
 
-            entity.HasOne(d => d.User).WithMany(p => p.HotelCodes)
+            entity.HasOne(d => d.User).WithMany(p => p.HotelCodeUsers)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HotelCode__UserI__72C60C4A");
+                .HasConstraintName("FK__HotelCode__UserI__7F2BE32F");
         });
 
         modelBuilder.Entity<HotelCodeStatus>(entity =>
