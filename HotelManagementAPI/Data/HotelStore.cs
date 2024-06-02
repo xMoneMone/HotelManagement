@@ -52,5 +52,10 @@ namespace HotelManagementAPI.Data
                        OwnerEmail = context.Users.FirstOrDefault(x => x.Id == code.SenderId).Email,
                    };
         }
+
+        public static int[] GetHotelEmployeesIds(int hotelId)
+        {
+            return UserStore.context.UsersHotels.Where(x => x.HotelId == hotelId).Select(x => x.UserId).ToArray();
+        }
     }
 }
