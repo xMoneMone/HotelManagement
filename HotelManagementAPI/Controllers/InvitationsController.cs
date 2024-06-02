@@ -42,27 +42,14 @@ namespace HotelManagementAPI.Controllers
             Hotel hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == HotelCodeDTO.HotelId);
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
-            if (employee == null || hotel == null)
+            var error = InvitationValidators.InviteEmployeeValidator(user, employee, hotel);
+
+            if (error != null)
             {
-                return BadRequest("User or hotel does not exist.");
+                return error;
             }
 
             var userHotelConnection = HotelStore.context.UsersHotels.FirstOrDefault(x => x.UserId == employee.Id && x.HotelId == hotel.Id);
-
-            if (userHotelConnection != null)
-            {
-                return BadRequest("User is already an employee of this hotel.");
-            }
-
-            if (user.Id != hotel.OwnerId)
-            {
-                return Unauthorized("You are not the owner of this hotel.");
-            }
-
-            if (user == employee)
-            {
-                return BadRequest("Can't invite yourself to your hotel.");
-            }
 
             string code = CodeGenerator.GenerateCode();
             var hotelCode = new HotelCode
@@ -88,19 +75,11 @@ namespace HotelManagementAPI.Controllers
             var code = HotelStore.context.HotelCodes.FirstOrDefault(x => x.Code == codeId);
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
-            if (code == null)
-            {
-                return BadRequest("Code does not exist.");
-            }
+            var error = InvitationValidators.RespondToInvitationValidator(user, code);
 
-            if (user.Id != code.UserId)
+            if (error != null)
             {
-                return Unauthorized("You are not the recepient of this invite.");
-            }
-
-            if (code.StatusId != 1)
-            {
-                return BadRequest("Code already used.");
+                return error;
             }
 
             if (inviteResponse.Accept)
