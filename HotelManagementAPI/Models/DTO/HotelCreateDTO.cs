@@ -4,9 +4,9 @@
     {
         public string Name { get; set; } = null!;
 
-        public int? CurrencyId { get; set; }
+        public int CurrencyId { get; set; }
 
-        public int? DownPaymentPercentage { get; set; }
+        public int DownPaymentPercentage { get; set; }
 
     }
 }
