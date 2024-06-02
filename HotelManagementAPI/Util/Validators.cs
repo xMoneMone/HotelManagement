@@ -1,15 +1,18 @@
 ﻿using HotelManagementAPI.Data;
+using HotelManagementAPI.Models;
+using HotelManagementAPI.Models.DTO;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagementAPI.Util
 {
     public class Validators
     {
-        public static int ColorValidator(int colorId)
+        public static int ValidateMultipleChoice<TEntity>(DbSet<TEntity> table, int colorId) where TEntity : class
         {
-            int[] colors = UserStore.context.Colors.Select(x => x.Id).ToArray();
-            if (!colors.Contains(colorId))
+            if (colorId <= 0 || colorId > table.Count())
             {
-                return colors[0];
+                return 1;
             }
 
             return colorId;
