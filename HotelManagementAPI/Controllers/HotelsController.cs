@@ -28,22 +28,14 @@ namespace HotelManagementAPI.Controllers
             var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == hotelId);
             var employee = HotelStore.context.Users.FirstOrDefault(x => x.Id == employeeId);
 
-            if (hotel == null || employee == null)
-            {
-                return BadRequest("Hotel or employee does not exist.");
-            }
+            var error = HotelValidators.RemoveHotelEmployeeValidator(user, employee, hotel);
 
-            if (user.Id != hotel.OwnerId)
+            if (error != null)
             {
-                return Unauthorized("You are not authorized to perform this action.");
+                return error;
             }
 
             var userHotelConnection = HotelStore.context.UsersHotels.FirstOrDefault(x => x.UserId == employee.Id && x.HotelId == hotel.Id);
-
-            if (userHotelConnection == null)
-            {
-                return BadRequest("User does not work in this hotel.");
-            }
 
             HotelStore.context.UsersHotels.Remove(userHotelConnection);
             HotelStore.context.SaveChanges();
@@ -54,24 +46,21 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<HotelCreateDTO> CreateHotel([FromBody] HotelCreateDTO hotelDTO)
+        public IActionResult CreateHotel([FromBody] HotelCreateDTO hotelDTO)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
-            if (hotelDTO == null)
-            {
-                return BadRequest(hotelDTO);
-            }
+            var error = HotelValidators.CreateHotelValidator(hotelDTO);
 
-            if (hotelDTO.Name.Length == 0 || hotelDTO.Name.Length > 100)
+            if (error != null)
             {
-                return BadRequest("Hotel name must be under 100 characters.");
+                return error;
             }
 
             UserStore.context.Hotels.Add(new Hotel
             {
                 Name = hotelDTO.Name,
-                CurrencyId = hotelDTO.CurrencyId,
+                CurrencyId = Validators.ValidateMultipleChoice(HotelStore.context.Currencies, hotelDTO.CurrencyId),
                 DownPaymentPercentage = hotelDTO.DownPaymentPercentage,
                 OwnerId = user.Id
             });
@@ -84,33 +73,20 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult<HotelCreateDTO> EditHotel([FromBody] HotelCreateDTO hotelDTO, int id)
+        public IActionResult EditHotel([FromBody] HotelCreateDTO hotelDTO, int id)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
             var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == id);
 
-            if (hotelDTO == null)
-            {
-                return BadRequest(hotelDTO);
-            }
+            var error = HotelValidators.EditHotelValidator(hotelDTO, hotel, user);
 
-            if (hotel == null)
+            if (error != null)
             {
-                return BadRequest("Hotel does not exist.");
-            }
-
-            if (hotel.OwnerId != user.Id)
-            {
-                return Unauthorized("You are not the owner of this hotel.");
-            }
-
-            if (hotelDTO.Name.Length == 0 || hotelDTO.Name.Length > 100)
-            {
-                return BadRequest("Hotel name must be under 100 characters.");
+                return error;
             }
 
             hotel.Name = hotelDTO.Name;
-            hotel.CurrencyId = hotelDTO.CurrencyId;
+            hotel.CurrencyId = Validators.ValidateMultipleChoice(HotelStore.context.Currencies, hotelDTO.CurrencyId);
             hotel.DownPaymentPercentage = hotelDTO.DownPaymentPercentage;
 
             HotelStore.context.SaveChanges();
@@ -127,14 +103,11 @@ namespace HotelManagementAPI.Controllers
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
             var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == id);
 
-            if (hotel == null)
-            {
-                return BadRequest("Hotel does not exist.");
-            }
+            var error = HotelValidators.DeleteHotelValidator(hotel, user);
 
-            if (hotel.OwnerId != user.Id)
+            if (error != null)
             {
-                return Unauthorized("You are not the owner of this hotel.");
+                return error;
             }
 
             HotelStore.context.Hotels.Remove(hotel);
