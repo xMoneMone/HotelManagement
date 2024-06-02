@@ -15,56 +15,48 @@ namespace HotelManagementAPI.Controllers
 {
     [Route("users")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController(IConfiguration configuration) : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-
-        public UsersController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        private readonly IConfiguration _configuration = configuration;
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<UserCreateDTO> CreateUser([FromBody] UserCreateDTO userDTO)
+        public IActionResult CreateUser([FromBody] UserCreateDTO userDTO)
         {
-            if (userDTO == null)
-            {
-                return BadRequest(userDTO);
-            }
+            var error = UserValidators.CreateUserValidator(userDTO);
 
-            userDTO.ColorId = Validators.ColorValidator(userDTO.ColorId);
+            if (error != null)
+            {
+                return error;
+            }
 
             UserStore.context.Users.Add(new Models.User
             {
-                ColorId = userDTO.ColorId,
+                ColorId = Validators.ValidateMultipleChoice(UserStore.context.Colors, userDTO.ColorId),
                 Email = userDTO.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password),
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
-                AccountTypeId = userDTO.AccountTypeId
+                AccountTypeId = Validators.ValidateMultipleChoice(UserStore.context.AccountTypes, userDTO.ColorId)
             });
 
             UserStore.context.SaveChanges();
-            return Ok(userDTO);
+            return Ok("User has been created.");
         }
 
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<UserLoginDTO> Login(UserLoginDTO userDTO)
+        public IActionResult Login(UserLoginDTO userDTO)
         {
             var user = UserStore.context.Users.FirstOrDefault(x => x.Email == userDTO.Email);
 
-            if (user == null)
-            {
-                return BadRequest("Wrong email or password.");
-            }
+            var error = UserValidators.LoginValidator(userDTO, user);
 
-            if (!BCrypt.Net.BCrypt.Verify(userDTO.Password, user.Password))
+            if (error != null)
             {
-                return BadRequest("Wrong email or password.");
+                return error;
             }
 
             string token = CreateToken(user);
@@ -81,11 +73,6 @@ namespace HotelManagementAPI.Controllers
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             UserStore.context.Users.Remove(user);
             UserStore.context.SaveChanges();
             return Ok();
@@ -96,18 +83,18 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult EditUser([FromBody] UserEditDTO userDTO)
         {
-            userDTO.ColorId = Validators.ColorValidator(userDTO.ColorId);
-
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
-            if (user == null)
+            var error = UserValidators.EditUserValidator(userDTO);
+
+            if (error != null)
             {
-                return BadRequest();
+                return error;
             }
 
             user.FirstName = userDTO.FirstName;
             user.LastName = userDTO.LastName;
-            user.ColorId = userDTO.ColorId;
+            user.ColorId = Validators.ValidateMultipleChoice(UserStore.context.Colors, userDTO.ColorId);
 
             UserStore.context.SaveChanges();
 
