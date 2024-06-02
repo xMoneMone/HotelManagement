@@ -8,14 +8,14 @@ namespace HotelManagementAPI.Util
 {
     public class Validators
     {
-        public static int ValidateMultipleChoice<TEntity>(DbSet<TEntity> table, int colorId) where TEntity : class
+        public static int ValidateMultipleChoice<TEntity>(DbSet<TEntity> table, int id) where TEntity : class
         {
-            if (colorId <= 0 || colorId > table.Count())
+            if (id <= 0 || id > table.Count())
             {
                 return 1;
             }
 
-            return colorId;
+            return id;
         }
     }
 }
