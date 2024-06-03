@@ -55,25 +55,19 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? GetRoomByIdValidator(User user, int hotelId, int roomId)
+        public static IActionResult? GetRoomByIdValidator(User user, int roomId)
         {
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == hotelId);
-
-            if (hotel == null)
-            {
-                return new BadRequestObjectResult("Hotel does not exist.");
-            }
-
-            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotelId, user.Id))
-            {
-                return new UnauthorizedObjectResult("You do not have permission to see this resource.");
-            }
-
             var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
 
             if (room == null)
             {
                 return new BadRequestObjectResult("Room does not exist.");
+            }
+
+            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
+            {
+                return new UnauthorizedObjectResult("You do not have permission to see this resource.");
             }
 
             return null;

@@ -11,7 +11,7 @@ namespace HotelManagementAPI.Controllers
     [ApiController]
     public class RoomsController : ControllerBase
     {
-        [HttpGet("{hotelId:int}"), Authorize]
+        [HttpGet("all-rooms/{hotelId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -59,23 +59,23 @@ namespace HotelManagementAPI.Controllers
             return Ok("Room created successfully.");
         }
 
-        [HttpGet("{hotelId:int}/{roomId:int}"), Authorize]
+        [HttpGet("{roomId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetRoomById(int hotelId, int roomId)
+        public IActionResult GetRoomById(int roomId)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
-            var error = RoomValidators.GetRoomByIdValidator(user, hotelId, roomId);
+            var error = RoomValidators.GetRoomByIdValidator(user, roomId);
 
             if (error != null)
             {
                 return error;
             }
 
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == hotelId);
             var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
             return Ok(new RoomDTO
             {
                 Id = room.Id,
