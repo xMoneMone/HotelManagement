@@ -85,7 +85,7 @@ namespace HotelManagementAPI.Util
 
             if (hotel.OwnerId != user.Id)
             {
-                return new UnauthorizedObjectResult("You do not have permission to see this resource.");
+                return new UnauthorizedObjectResult("You do not have permission to delete this resource.");
             }
 
             return null;
