@@ -36,6 +36,7 @@ namespace HotelManagementAPI.Data
                    where code.SenderId == user.Id
                    select new HotelCodeSentDTO
                    {
+                       Code = code.Code,
                        HotelName = context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Name,
                        UserEmail = context.Users.FirstOrDefault(x => x.Id == code.UserId).Email,
                        Status = context.HotelCodeStatuses.FirstOrDefault(x => x.Id == code.StatusId).Status
@@ -48,6 +49,7 @@ namespace HotelManagementAPI.Data
                    where code.UserId == user.Id
                    select new HotelCodeReceivedDTO
                    {
+                       Code = code.Code,
                        HotelName = context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Name,
                        OwnerEmail = context.Users.FirstOrDefault(x => x.Id == code.SenderId).Email,
                    };
