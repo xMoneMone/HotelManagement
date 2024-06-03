@@ -31,10 +31,12 @@ namespace HotelManagementAPI.Controllers
         }
 
         [HttpPost, Authorize(Roles = "Owner")]
+        [HttpPost("{hotelId:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult CreateRoom([FromBody] RoomCreateDTO roomDTO)
+        public IActionResult CreateRoom([FromBody] RoomCreateDTO roomDTO, int hotelId)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
 
@@ -51,6 +53,7 @@ namespace HotelManagementAPI.Controllers
                 PricePerNight = roomDTO.PricePerNight,
                 Notes = roomDTO.Notes,
                 HotelId = roomDTO.HotelId
+                HotelId = hotelId
             };
 
             RoomStore.context.Rooms.Add(room);
