@@ -98,5 +98,25 @@ namespace HotelManagementAPI.Util
 
             return null;
         }
+
+        public static IActionResult? DeleteBookingValidator(User user, int bookingId)
+        {
+            var booking = BookingStore.context.Bookings.FirstOrDefault(x => x.Id == bookingId);
+
+            if (booking == null)
+            {
+                return new BadRequestObjectResult("Booking does not exist.");
+            }
+
+            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == booking.RoomId);
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
+
+            if (hotel.OwnerId != user.Id)
+            {
+                return new UnauthorizedObjectResult("You do not have permission to delete this resource.");
+            }
+
+            return null;
+        }
     }
 }
