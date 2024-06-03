@@ -68,5 +68,35 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
+        public static IActionResult? EditBookingValidator(User user, CreateBookingDTO bookingDTO, Booking booking)
+        {
+            if (booking == null)
+            {
+                return new BadRequestObjectResult("Booking does not exist.");
+            }
+
+            return CreateBookingValidator(user, bookingDTO, booking.RoomId);
+        }
+
+
+        public static IActionResult? GetBookingByIdValidator(User user, int bookingId)
+        {
+            var booking = BookingStore.context.Bookings.FirstOrDefault(x => x.Id == bookingId);
+
+            if (booking == null)
+            {
+                return new BadRequestObjectResult("Booking does not exist.");
+            }
+
+            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == booking.RoomId);
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
+
+            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
+            {
+                return new UnauthorizedObjectResult("You do not have permission to see this resource.");
+            }
+
+            return null;
+        }
     }
 }
