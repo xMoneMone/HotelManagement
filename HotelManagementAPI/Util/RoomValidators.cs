@@ -55,6 +55,16 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
+        public static IActionResult? EditRoomValidator(User user, RoomCreateDTO roomDTO, Room? room)
+        {
+            if (room == null)
+            {
+                return new BadRequestObjectResult("Room does not exist.");
+            }
+
+            return CreateRoomValidator(user, roomDTO);
+        }
+
         public static IActionResult? GetRoomByIdValidator(User user, int roomId)
         {
             var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
