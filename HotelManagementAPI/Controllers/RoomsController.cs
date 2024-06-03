@@ -18,15 +18,16 @@ namespace HotelManagementAPI.Controllers
         public IActionResult GetRooms(int hotelId)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == hotelId);
 
-            var error = RoomValidators.GetRoomsValidator(user, hotelId);
+            var error = RoomValidators.GetRoomsValidator(user, hotel);
 
             if (error != null)
             {
                 return error;
             }
 
-            return Ok(RoomStore.GetRooms(hotelId));
+            return Ok(RoomStore.GetRooms(hotel));
         }
 
         [HttpPost, Authorize]
@@ -56,6 +57,34 @@ namespace HotelManagementAPI.Controllers
             RoomStore.context.SaveChanges();
 
             return Ok("Room created successfully.");
+        }
+
+        [HttpGet("{hotelId:int}/{roomId:int}"), Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetRoomById(int hotelId, int roomId)
+        {
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+
+            var error = RoomValidators.GetRoomByIdValidator(user, hotelId, roomId);
+
+            if (error != null)
+            {
+                return error;
+            }
+
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == hotelId);
+            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
+            return Ok(new RoomDTO
+            {
+                Id = room.Id,
+                RoomNumber = room.RoomNumber,
+                PricePerNight = room.PricePerNight,
+                Notes = room.Notes,
+                CurrencyFormat = RoomStore.context.Currencies.FirstOrDefault(x => x.Id == hotel.CurrencyId).FormattingString
+            });
+
         }
     }
 }
