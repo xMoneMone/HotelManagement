@@ -1,6 +1,5 @@
 ﻿using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
-using HotelManagementAPI.Util;
 using System.Runtime.CompilerServices;
 
 namespace HotelManagementAPI.Data
@@ -19,8 +18,9 @@ namespace HotelManagementAPI.Data
 
         public static IEnumerable<HotelDTO> GetUserHotels(User user)
         {
+            int[] employeeHotelsIds = UserStore.context.UsersHotels.Where(x => x.UserId == user.Id).Select(x => x.HotelId).ToArray();
             return from hotel in context.Hotels
-                   where hotel.Owner == user || Validators.EmployeeWorksAtHotel(hotel.Id, user.Id)
+                   where hotel.Owner == user || employeeHotelsIds.Contains(hotel.Id)
                    select new HotelDTO()
                    {
                        Id = hotel.Id,
