@@ -86,5 +86,27 @@ namespace HotelManagementAPI.Controllers
             });
 
         }
+
+        [HttpDelete("{roomId:int}"), Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult DeleteRoom(int roomId)
+        {
+            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+
+            var error = RoomValidators.DeleteRoomValidator(user, roomId);
+
+            if (error != null)
+            {
+                return error;
+            }
+
+            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
+            RoomStore.context.Rooms.Remove(room);
+            RoomStore.context.SaveChanges();
+
+            return Ok("Room has been deleted.");
+        }
     }
 }
