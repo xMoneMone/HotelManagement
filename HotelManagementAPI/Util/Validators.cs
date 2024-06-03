@@ -17,5 +17,11 @@ namespace HotelManagementAPI.Util
 
             return id;
         }
+
+        public static bool EmployeeWorksAtHotel(int hotelId,  int userId)
+        {
+            var employeesAtHotel = HotelStore.GetHotelEmployeesIds(hotelId);
+            return employeesAtHotel.Contains(userId);
+        }
     }
 }
