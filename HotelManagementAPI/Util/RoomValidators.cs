@@ -8,16 +8,14 @@ namespace HotelManagementAPI.Util
 {
     public class RoomValidators
     {
-        public static IActionResult? GetRoomsValidator(User user, int hotelId)
+        public static IActionResult? GetRoomsValidator(User user, Hotel hotel)
         {
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == hotelId);
-
             if (hotel == null)
             {
                 return new BadRequestObjectResult("Hotel does not exist.");
             }
 
-            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotelId, user.Id))
+            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
             {
                 return new UnauthorizedObjectResult("You do not have permission to see this resource.");
             }
@@ -36,7 +34,7 @@ namespace HotelManagementAPI.Util
 
             if (hotel.OwnerId != user.Id)
             {
-                return new UnauthorizedObjectResult("You are not the owner of this hotel    .");
+                return new UnauthorizedObjectResult("You are not the owner of this hotel.");
             }
 
             if (roomDTO.RoomNumber.Length <= 0 || roomDTO.RoomNumber.Length > 50)
@@ -52,6 +50,30 @@ namespace HotelManagementAPI.Util
             if (roomDTO.Notes != null && roomDTO.Notes.Length > 300)
             {
                 return new BadRequestObjectResult("Room notes must not exceed 300 characters.");
+            }
+
+            return null;
+        }
+
+        public static IActionResult? GetRoomByIdValidator(User user, int hotelId, int roomId)
+        {
+            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == hotelId);
+
+            if (hotel == null)
+            {
+                return new BadRequestObjectResult("Hotel does not exist.");
+            }
+
+            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotelId, user.Id))
+            {
+                return new UnauthorizedObjectResult("You do not have permission to see this resource.");
+            }
+
+            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
+
+            if (room == null)
+            {
+                return new BadRequestObjectResult("Room does not exist.");
             }
 
             return null;
