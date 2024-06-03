@@ -66,7 +66,7 @@ namespace HotelManagementAPI.Controllers
             });
 
             UserStore.context.SaveChanges();
-            return Ok(hotelDTO);
+            return Ok("Hotel created successfully.");
         }
 
         [HttpPut("{id:int}"), Authorize]
@@ -90,7 +90,7 @@ namespace HotelManagementAPI.Controllers
             hotel.DownPaymentPercentage = hotelDTO.DownPaymentPercentage;
 
             HotelStore.context.SaveChanges();
-            return Ok(hotelDTO);
+            return Ok("Hotel edited successfully.");
         }
 
 
