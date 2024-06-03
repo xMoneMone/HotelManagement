@@ -30,7 +30,7 @@ namespace HotelManagementAPI.Controllers
             return Ok(RoomStore.GetRooms(hotel));
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -87,7 +87,7 @@ namespace HotelManagementAPI.Controllers
 
         }
 
-        [HttpDelete("{roomId:int}"), Authorize]
+        [HttpDelete("{roomId:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

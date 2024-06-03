@@ -21,7 +21,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete("{hotelId}/employees/{employeeId}"), Authorize]
+        [HttpDelete("{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
         public IActionResult RemoveHotelEmployee(int hotelId, int employeeId)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
@@ -42,7 +42,7 @@ namespace HotelManagementAPI.Controllers
             return Ok("Employee removed from hotel.");
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -69,7 +69,7 @@ namespace HotelManagementAPI.Controllers
             return Ok("Hotel created successfully.");
         }
 
-        [HttpPut("{id:int}"), Authorize]
+        [HttpPut("{id:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -94,7 +94,7 @@ namespace HotelManagementAPI.Controllers
         }
 
 
-        [HttpDelete("{id:int}"), Authorize]
+        [HttpDelete("{id:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

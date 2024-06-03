@@ -35,7 +35,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost, Authorize]
+        [HttpPost, Authorize(Roles = "Owner")]
         public IActionResult InviteEmployee([FromBody] HotelCodeCreateDTO HotelCodeDTO)
         {
             User employee = UserStore.context.Users.FirstOrDefault(x => x.Email == HotelCodeDTO.UserEmail);
@@ -105,7 +105,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete("{codeId}"), Authorize]
+        [HttpDelete("{codeId}"), Authorize(Roles = "Owner")]
         public IActionResult DeleteInvite(string codeId)
         {
             var code = HotelStore.context.HotelCodes.FirstOrDefault(x => x.Code == codeId);
