@@ -9,5 +9,7 @@
         public decimal PricePerNight { get; set; }
 
         public string? Notes { get; set; }
+
+        public string CurrencyFormat { get; set; } = null!;
     }
 }
