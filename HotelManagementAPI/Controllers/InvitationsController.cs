@@ -4,7 +4,6 @@ using HotelManagementAPI.Models;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.JsonPatch;
 
 namespace HotelManagementAPI.Controllers
 {
