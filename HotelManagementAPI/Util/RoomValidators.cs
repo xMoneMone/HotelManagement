@@ -8,8 +8,10 @@ namespace HotelManagementAPI.Util
 {
     public class RoomValidators
     {
-        public static IActionResult? GetRoomsValidator(User user, Hotel hotel)
+        public static IActionResult? GetRoomsValidator(User user, int hotelId)
         {
+            var hotel = HotelStore.GetById(hotelId);
+
             if (hotel == null)
             {
                 return new BadRequestObjectResult("Hotel does not exist.");
@@ -25,7 +27,7 @@ namespace HotelManagementAPI.Util
 
         public static IActionResult? CreateRoomValidator(User user, RoomCreateDTO roomDTO)
         {
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == roomDTO.HotelId);
+            var hotel = HotelStore.GetById(roomDTO.HotelId);
 
             if (hotel == null)
             {
@@ -55,8 +57,10 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? EditRoomValidator(User user, RoomCreateDTO roomDTO, Room? room)
+        public static IActionResult? EditRoomValidator(User user, RoomCreateDTO roomDTO, int roomId)
         {
+            var room = RoomStore.GetById(roomId);
+
             if (room == null)
             {
                 return new BadRequestObjectResult("Room does not exist.");
@@ -67,8 +71,8 @@ namespace HotelManagementAPI.Util
 
         public static IActionResult? GetRoomByIdValidator(User user, int roomId)
         {
-            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
+            var room = RoomStore.GetById(roomId);
+            var hotel = HotelStore.GetById(room.HotelId);
 
             if (room == null)
             {
@@ -85,8 +89,8 @@ namespace HotelManagementAPI.Util
 
         public static IActionResult? DeleteRoomValidator(User user, int roomId)
         {
-            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
+            var room = RoomStore.GetById(roomId);
+            var hotel = HotelStore.GetById(room.HotelId);
 
             if (room == null)
             {
