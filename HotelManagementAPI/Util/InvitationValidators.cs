@@ -7,14 +7,17 @@ namespace HotelManagementAPI.Util
 {
     public class InvitationValidators
     {
-        public static IActionResult? InviteEmployeeValidator(User user, User? employee, Hotel? hotel)
+        public static IActionResult? InviteEmployeeValidator(User user, string employeeEmail, int hotelId)
         {
+            var employee = UserStore.GetByEmail(employeeEmail);
+            var hotel = HotelStore.GetById(hotelId);
+
             if (employee == null || hotel == null)
             {
                 return new BadRequestObjectResult("User or hotel does not exist.");
             }
 
-            var userHotelConnection = HotelStore.context.UsersHotels.FirstOrDefault(x => x.UserId == employee.Id && x.HotelId == hotel.Id);
+            var userHotelConnection = HotelCodeStore.GetByEmployeeHotel(employeeEmail, hotelId);
 
             if (userHotelConnection != null)
             {
@@ -34,8 +37,10 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? RespondToInvitationValidator(User user, HotelCode code)
+        public static IActionResult? RespondToInvitationValidator(User user, string codeId)
         {
+            var code = HotelCodeStore.GetById(codeId);
+
             if (code == null)
             {
                 return new BadRequestObjectResult("Code does not exist.");
@@ -49,6 +54,26 @@ namespace HotelManagementAPI.Util
             if (code.StatusId != 1)
             {
                 return new BadRequestObjectResult("Code already used.");
+            }
+
+            return null;
+        }
+
+        public static IActionResult? DeleteInviteValidator(User user, string codeId)
+        {
+            var code = HotelCodeStore.GetById(codeId);
+
+            if (code == null)
+            {
+                return new BadRequestObjectResult("Code does not exist.");
+            }
+
+            Hotel hotel = HotelStore.GetById(code.HotelId);
+            var hotelOwner = UserStore.GetById(hotel.OwnerId);
+
+            if (user.Id != hotelOwner.Id)
+            {
+                return new UnauthorizedObjectResult("You're not the creator of this invite.");
             }
 
             return null;

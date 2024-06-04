@@ -17,7 +17,7 @@ namespace HotelManagementAPI.Controllers
         [HttpGet, Authorize]
         public IActionResult GetInvites()
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
             if (user.AccountTypeId == 1)
             {
@@ -35,33 +35,20 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost, Authorize(Roles = "Owner")]
-        public IActionResult InviteEmployee([FromBody] HotelCodeCreateDTO HotelCodeDTO)
+        public IActionResult InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO)
         {
-            User employee = UserStore.context.Users.FirstOrDefault(x => x.Email == HotelCodeDTO.UserEmail);
-            Hotel hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == HotelCodeDTO.HotelId);
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
-            var error = InvitationValidators.InviteEmployeeValidator(user, employee, hotel);
+            var error = InvitationValidators.InviteEmployeeValidator(user, hotelCodeDTO.UserEmail, hotelCodeDTO.HotelId);
 
             if (error != null)
             {
                 return error;
             }
 
-            var userHotelConnection = HotelStore.context.UsersHotels.FirstOrDefault(x => x.UserId == employee.Id && x.HotelId == hotel.Id);
-
             string code = CodeGenerator.GenerateCode();
-            var hotelCode = new HotelCode
-            {
-                UserId = employee.Id,
-                Code = code,
-                HotelId = HotelCodeDTO.HotelId,
-                StatusId = 1,
-                SenderId = user.Id
-            };
+            HotelCodeStore.Add(hotelCodeDTO, code, user);
 
-            HotelStore.context.HotelCodes.Add(hotelCode);
-            HotelStore.context.SaveChanges();
             return Ok(code);
         }
 
@@ -71,10 +58,9 @@ namespace HotelManagementAPI.Controllers
         [HttpPost("{codeId}"), Authorize]
         public IActionResult RespondToInvitation(string codeId, [FromBody] RespondToInviteDTO inviteResponse)
         {
-            var code = HotelStore.context.HotelCodes.FirstOrDefault(x => x.Code == codeId);
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
-            var error = InvitationValidators.RespondToInvitationValidator(user, code);
+            var error = InvitationValidators.RespondToInvitationValidator(user, codeId);
 
             if (error != null)
             {
@@ -83,20 +69,12 @@ namespace HotelManagementAPI.Controllers
 
             if (inviteResponse.Accept)
             {
-                code.StatusId = 2;
-                var hotelEmployeeConnection = new UsersHotel
-                {
-                    HotelId = code.HotelId,
-                    UserId = code.UserId
-                };
-                HotelStore.context.UsersHotels.Add(hotelEmployeeConnection);
-                HotelStore.context.SaveChanges();
+                HotelCodeStore.AcceptInvite(codeId);
                 return Ok("Invite accepted.");
             }
             else
             {
-                code.StatusId = 3;
-                HotelStore.context.SaveChanges();
+                HotelCodeStore.RejectInvite(codeId);
                 return Ok("Invite rejected.");
             }
         }
@@ -107,25 +85,16 @@ namespace HotelManagementAPI.Controllers
         [HttpDelete("{codeId}"), Authorize(Roles = "Owner")]
         public IActionResult DeleteInvite(string codeId)
         {
-            var code = HotelStore.context.HotelCodes.FirstOrDefault(x => x.Code == codeId);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
-            if (code == null)
+            var error = InvitationValidators.DeleteInviteValidator(user, codeId);
+
+            if (error != null)
             {
-                return BadRequest("Code does not exist.");
+                return error;
             }
 
-            Hotel hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == code.HotelId);
-            var hotelOwner = UserStore.context.Users.FirstOrDefault(x => x.Id == hotel.OwnerId);
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-
-            if (user.Id != hotelOwner.Id)
-            {
-                return Unauthorized("You're not the creator of this invite.");
-            }
-
-            HotelStore.context.HotelCodes.Remove(code);
-            HotelStore.context.SaveChanges();
-
+            HotelCodeStore.Delete(codeId);
             return Ok("Invite deleted.");
         }
 
