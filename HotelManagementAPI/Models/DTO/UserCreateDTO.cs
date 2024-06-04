@@ -1,6 +1,6 @@
 ﻿namespace HotelManagementAPI.Models.DTO
 {
-    public class UserCreateDTO
+    public class UserCreateDTO : DTO
     {
         public int ColorId { get; set; }
 
