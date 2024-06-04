@@ -25,7 +25,7 @@ namespace HotelManagementAPI.Controllers
         public IActionResult RemoveHotelEmployee(int hotelId, int employeeId)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == hotelId);
+            var hotel = HotelStore.GetById(hotelId);
             var employee = HotelStore.context.Users.FirstOrDefault(x => x.Id == employeeId);
 
             var error = HotelValidators.RemoveHotelEmployeeValidator(user, employee, hotel);
@@ -57,15 +57,8 @@ namespace HotelManagementAPI.Controllers
                 return error;
             }
 
-            UserStore.context.Hotels.Add(new Hotel
-            {
-                Name = hotelDTO.Name,
-                CurrencyId = Validators.ValidateMultipleChoice(HotelStore.context.Currencies, hotelDTO.CurrencyId),
-                DownPaymentPercentage = hotelDTO.DownPaymentPercentage,
-                OwnerId = user.Id
-            });
-
-            UserStore.context.SaveChanges();
+            HotelStore.Add(hotelDTO, user);
+            
             return Ok("Hotel created successfully.");
         }
 
@@ -76,20 +69,16 @@ namespace HotelManagementAPI.Controllers
         public IActionResult EditHotel([FromBody] HotelCreateDTO hotelDTO, int id)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == id);
 
-            var error = HotelValidators.EditHotelValidator(hotelDTO, hotel, user);
+            var error = HotelValidators.EditHotelValidator(hotelDTO, id, user);
 
             if (error != null)
             {
                 return error;
             }
 
-            hotel.Name = hotelDTO.Name;
-            hotel.CurrencyId = Validators.ValidateMultipleChoice(HotelStore.context.Currencies, hotelDTO.CurrencyId);
-            hotel.DownPaymentPercentage = hotelDTO.DownPaymentPercentage;
-
-            HotelStore.context.SaveChanges();
+            HotelStore.Edit(id, hotelDTO);
+            
             return Ok("Hotel edited successfully.");
         }
 
@@ -101,17 +90,15 @@ namespace HotelManagementAPI.Controllers
         public IActionResult DeleteHotel(int id)
         {
             var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == id);
 
-            var error = HotelValidators.DeleteHotelValidator(hotel, user);
+            var error = HotelValidators.DeleteHotelValidator(id, user);
 
             if (error != null)
             {
                 return error;
             }
 
-            HotelStore.context.Hotels.Remove(hotel);
-            HotelStore.context.SaveChanges();
+            HotelStore.Delete(id);
             return Ok("Hotel has been deleted.");
         }
     }

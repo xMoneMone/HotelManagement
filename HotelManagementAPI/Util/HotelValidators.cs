@@ -50,8 +50,10 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? EditHotelValidator(HotelCreateDTO hotelDTO, Hotel? hotel, User user)
+        public static IActionResult? EditHotelValidator(HotelCreateDTO hotelDTO, int hotelId, User user)
         {
+            var hotel = HotelStore.GetById(hotelId);
+
             if (hotel == null)
             {
                 return new BadRequestObjectResult("Hotel does not exist.");
@@ -65,8 +67,10 @@ namespace HotelManagementAPI.Util
             return CreateHotelValidator(hotelDTO);
         }
 
-        public static IActionResult? DeleteHotelValidator(Hotel? hotel, User user)
+        public static IActionResult? DeleteHotelValidator(int hotelId, User user)
         {
+            var hotel = HotelStore.GetById(hotelId);
+
             if (hotel == null)
             {
                 return new BadRequestObjectResult("Hotel does not exist.");

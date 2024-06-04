@@ -22,11 +22,11 @@ namespace HotelManagementAPI.Controllers
 
             if (user.AccountTypeId == 1)
             {
-                return Ok(HotelStore.GetSentInvites(user));
+                return Ok(HotelCodeStore.GetSentInvites(user));
             }
             else if (user.AccountTypeId == 2)
             {
-                return Ok(HotelStore.GetReceivedInvites(user));
+                return Ok(HotelCodeStore.GetReceivedInvites(user));
             }
 
             return StatusCode(500);

@@ -1,20 +1,55 @@
 ﻿using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
+using HotelManagementAPI.Util;
+using Microsoft.IdentityModel.Tokens;
+using Validators = HotelManagementAPI.Util.Validators;
 using System.Runtime.CompilerServices;
 
 namespace HotelManagementAPI.Data
 {
-    public class HotelStore
+    public class HotelStore : DataStore
     {
-        public static HotelManagementContext context = new HotelManagementContext();
-        public static IEnumerable<HotelDTO> allHotels = from hotel in context.Hotels
-                                                        select new HotelDTO()
-                                                        {
-                                                            Id = hotel.Id,
-                                                            Name = hotel.Name,
-                                                            CurrencyFormat = hotel.Currency.FormattingString,
-                                                            DownPaymentPercentage = hotel.DownPaymentPercentage
-                                                        };
+        public static void Add(HotelCreateDTO hotelDTO, User user)
+        {
+            context.Hotels.Add(new Hotel
+            {
+                Name = hotelDTO.Name,
+                CurrencyId = Validators.ValidateMultipleChoice(context.Currencies, hotelDTO.CurrencyId),
+                DownPaymentPercentage = hotelDTO.DownPaymentPercentage,
+                OwnerId = user.Id
+            });
+            context.SaveChanges();
+        }
+
+        public static void Edit(int id, HotelCreateDTO hotelDTO)
+        {
+            var hotel = GetById(id);
+            hotel.Name = hotelDTO.Name;
+            hotel.CurrencyId = Validators.ValidateMultipleChoice(context.Currencies, hotelDTO.CurrencyId);
+            hotel.DownPaymentPercentage = hotelDTO.DownPaymentPercentage;
+            context.SaveChanges();
+        }
+
+        public static void Delete(int id)
+        {
+            var hotel = GetById(id);
+            context.Hotels.Remove(hotel);
+            context.SaveChanges();
+        }
+
+        public static Hotel? GetById(int id)
+        {
+            return (from hotel in context.Hotels
+                    where id == hotel.Id
+                    select hotel)
+                   .FirstOrDefault();
+        }
+
+        public static IEnumerable<Hotel> All()
+        {
+            return from hotel in context.Hotels
+                   select hotel;
+        }
 
         public static IEnumerable<HotelDTO> GetUserHotels(User user)
         {
@@ -27,31 +62,6 @@ namespace HotelManagementAPI.Data
                        Name = hotel.Name,
                        CurrencyFormat = hotel.Currency.FormattingString,
                        DownPaymentPercentage = hotel.DownPaymentPercentage
-                   };
-        }
-
-        public static IEnumerable<HotelCodeSentDTO> GetSentInvites(User user)
-        {
-            return from code in context.HotelCodes
-                   where code.SenderId == user.Id
-                   select new HotelCodeSentDTO
-                   {
-                       Code = code.Code,
-                       HotelName = context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Name,
-                       UserEmail = context.Users.FirstOrDefault(x => x.Id == code.UserId).Email,
-                       Status = context.HotelCodeStatuses.FirstOrDefault(x => x.Id == code.StatusId).Status
-                   };
-        }
-
-        public static IEnumerable<HotelCodeReceivedDTO> GetReceivedInvites(User user)
-        {
-            return from code in context.HotelCodes
-                   where code.UserId == user.Id
-                   select new HotelCodeReceivedDTO
-                   {
-                       Code = code.Code,
-                       HotelName = context.Hotels.FirstOrDefault(x => x.Id == code.HotelId).Name,
-                       OwnerEmail = context.Users.FirstOrDefault(x => x.Id == code.SenderId).Email,
                    };
         }
 
