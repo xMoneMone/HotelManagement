@@ -17,7 +17,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetBookings(int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
             var room = RoomStore.GetById(roomId);
 
             var error = BookingValidators.GetBookingsValidator(user, room);
@@ -36,7 +36,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult CreateBooking([FromBody] BookingCreateDTO bookingDTO, int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = BookingValidators.CreateBookingValidator(user, bookingDTO, roomId);
 
@@ -56,7 +56,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult EditBooking([FromBody] BookingCreateDTO bookingDTO, int bookingId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = BookingValidators.EditBookingValidator(user, bookingDTO, bookingId);
 
@@ -75,7 +75,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetBookingById(int bookingId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
             var booking = BookingStore.GetById(bookingId);
 
             var error = BookingValidators.GetBookingByIdValidator(user, bookingId);
@@ -108,7 +108,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult DeleteBooking(int bookingId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = BookingValidators.DeleteBookingValidator(user, bookingId);
 

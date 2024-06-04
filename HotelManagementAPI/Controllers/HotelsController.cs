@@ -14,7 +14,7 @@ namespace HotelManagementAPI.Controllers
         [HttpGet, Authorize]
         public IEnumerable<HotelDTO> GetHotels()
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
             return HotelStore.GetUserHotels(user);
         }
 
@@ -24,7 +24,7 @@ namespace HotelManagementAPI.Controllers
         [HttpDelete("{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
         public IActionResult RemoveHotelEmployee(int hotelId, int employeeId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
             var hotel = HotelStore.GetById(hotelId);
             var employee = HotelStore.context.Users.FirstOrDefault(x => x.Id == employeeId);
 
@@ -48,7 +48,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public IActionResult CreateHotel([FromBody] HotelCreateDTO hotelDTO)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = HotelValidators.CreateHotelValidator(hotelDTO);
 
@@ -68,7 +68,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult EditHotel([FromBody] HotelCreateDTO hotelDTO, int id)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = HotelValidators.EditHotelValidator(hotelDTO, id, user);
 
@@ -89,7 +89,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteHotel(int id)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = HotelValidators.DeleteHotelValidator(id, user);
 

@@ -17,7 +17,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetRooms(int hotelId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = RoomValidators.GetRoomsValidator(user, hotelId);
 
@@ -35,7 +35,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult CreateRoom([FromBody] RoomCreateDTO roomDTO, int hotelId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = RoomValidators.CreateRoomValidator(user, roomDTO);
 
@@ -54,7 +54,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = RoomValidators.EditRoomValidator(user, roomDTO, roomId);
 
@@ -73,7 +73,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetRoomById(int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = RoomValidators.GetRoomByIdValidator(user, roomId);
 
@@ -92,7 +92,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult DeleteRoom(int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = RoomValidators.DeleteRoomValidator(user, roomId);
 

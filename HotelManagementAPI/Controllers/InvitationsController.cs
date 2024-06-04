@@ -17,7 +17,7 @@ namespace HotelManagementAPI.Controllers
         [HttpGet, Authorize]
         public IActionResult GetInvites()
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             if (user.AccountTypeId == 1)
             {
@@ -37,7 +37,7 @@ namespace HotelManagementAPI.Controllers
         [HttpPost, Authorize(Roles = "Owner")]
         public IActionResult InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = InvitationValidators.InviteEmployeeValidator(user, hotelCodeDTO.UserEmail, hotelCodeDTO.HotelId);
 
@@ -58,7 +58,7 @@ namespace HotelManagementAPI.Controllers
         [HttpPost("{codeId}"), Authorize]
         public IActionResult RespondToInvitation(string codeId, [FromBody] RespondToInviteDTO inviteResponse)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = InvitationValidators.RespondToInvitationValidator(user, codeId);
 
@@ -85,7 +85,7 @@ namespace HotelManagementAPI.Controllers
         [HttpDelete("{codeId}"), Authorize(Roles = "Owner")]
         public IActionResult DeleteInvite(string codeId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = InvitationValidators.DeleteInviteValidator(user, codeId);
 

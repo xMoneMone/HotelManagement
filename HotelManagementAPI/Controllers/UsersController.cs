@@ -60,7 +60,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteUser()
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             UserStore.Delete(user);
             return Ok();
@@ -71,7 +71,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult EditUser([FromBody] UserEditDTO userDTO)
         {
-            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var user = JwtDecoder.GetUser(User.Claims);
 
             var error = UserValidators.EditUserValidator(userDTO);
 
