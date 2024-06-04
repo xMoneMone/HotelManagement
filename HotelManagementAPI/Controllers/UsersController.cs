@@ -2,13 +2,11 @@
 using HotelManagementAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using HotelManagementAPI.Util;
-using Microsoft.AspNetCore.JsonPatch;
 using HotelManagementAPI.Models;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
-using Validators = HotelManagementAPI.Util.Validators;
 using Microsoft.AspNetCore.Authorization;
 
 namespace HotelManagementAPI.Controllers
@@ -31,17 +29,8 @@ namespace HotelManagementAPI.Controllers
                 return error;
             }
 
-            UserStore.context.Users.Add(new Models.User
-            {
-                ColorId = Validators.ValidateMultipleChoice(UserStore.context.Colors, userDTO.ColorId),
-                Email = userDTO.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password),
-                FirstName = userDTO.FirstName,
-                LastName = userDTO.LastName,
-                AccountTypeId = Validators.ValidateMultipleChoice(UserStore.context.AccountTypes, userDTO.ColorId)
-            });
+            UserStore.Add(userDTO);
 
-            UserStore.context.SaveChanges();
             return Ok("User has been created.");
         }
 
@@ -50,7 +39,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Login(UserLoginDTO userDTO)
         {
-            var user = UserStore.context.Users.FirstOrDefault(x => x.Email == userDTO.Email);
+            var user = UserStore.GetByEmail(userDTO.Email);
 
             var error = UserValidators.LoginValidator(userDTO, user);
 
@@ -71,10 +60,9 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteUser()
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
-            UserStore.context.Users.Remove(user);
-            UserStore.context.SaveChanges();
+            UserStore.Delete(user);
             return Ok();
         }
 
@@ -83,7 +71,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult EditUser([FromBody] UserEditDTO userDTO)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
             var error = UserValidators.EditUserValidator(userDTO);
 
@@ -92,34 +80,7 @@ namespace HotelManagementAPI.Controllers
                 return error;
             }
 
-            user.FirstName = userDTO.FirstName;
-            user.LastName = userDTO.LastName;
-            user.ColorId = Validators.ValidateMultipleChoice(UserStore.context.Colors, userDTO.ColorId);
-
-            UserStore.context.SaveChanges();
-
-            return Ok();
-        }
-
-        [HttpPatch, Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult PatchUser(JsonPatchDocument<User> patch)
-        {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            patch.ApplyTo(user, ModelState);
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            UserStore.context.SaveChanges();
+            UserStore.Edit(user, userDTO);
             return Ok();
         }
 
@@ -128,7 +89,7 @@ namespace HotelManagementAPI.Controllers
             List<Claim> claims =
             [
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, UserStore.context.AccountTypes.FirstOrDefault(x => x.Id == user.AccountTypeId).Type)
+                new Claim(ClaimTypes.Role, AccountTypeStore.GetById(user.AccountTypeId).Type)
             ];
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
