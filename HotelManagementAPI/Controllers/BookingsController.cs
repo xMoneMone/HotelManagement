@@ -17,8 +17,8 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetBookings(int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var room = RoomStore.GetById(roomId);
 
             var error = BookingValidators.GetBookingsValidator(user, room);
 
@@ -34,9 +34,9 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult CreateBooking([FromBody] CreateBookingDTO bookingDTO, int roomId)
+        public IActionResult CreateBooking([FromBody] BookingCreateDTO bookingDTO, int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
             var error = BookingValidators.CreateBookingValidator(user, bookingDTO, roomId);
 
@@ -45,22 +45,7 @@ namespace HotelManagementAPI.Controllers
                 return error;
             }
 
-            var booking = new Booking
-            {
-                FirstName = bookingDTO.FirstName,
-                LastName = bookingDTO.LastName,
-                StartDate = bookingDTO.StartDate,
-                EndDate = bookingDTO.EndDate,
-                DownPaymentPaid = bookingDTO.DownPaymentPaid,
-                FullPaymentPaid = bookingDTO.FullPaymentPaid,
-                DownPaymentPrice = bookingDTO.DownPaymentPrice,
-                FullPaymentPrice = bookingDTO.FullPaymentPrice,
-                Notes = bookingDTO.Notes,
-                RoomId = roomId
-            };
-
-            BookingStore.context.Bookings.Add(booking);
-            BookingStore.context.SaveChanges();
+            BookingStore.Add(bookingDTO, roomId);
 
             return Ok("Booking created successfully.");
         }
@@ -69,30 +54,18 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult EditBooking([FromBody] CreateBookingDTO bookingDTO, int bookingId)
+        public IActionResult EditBooking([FromBody] BookingCreateDTO bookingDTO, int bookingId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-            var booking = BookingStore.context.Bookings.FirstOrDefault(x => x.Id == bookingId);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
-            var error = BookingValidators.EditBookingValidator(user, bookingDTO, booking);
+            var error = BookingValidators.EditBookingValidator(user, bookingDTO, bookingId);
 
             if (error != null)
             {
                 return error;
             }
 
-            booking.FirstName = bookingDTO.FirstName;
-            booking.LastName = bookingDTO.LastName;
-            booking.StartDate = bookingDTO.StartDate;
-            booking.EndDate = bookingDTO.EndDate;
-            booking.DownPaymentPaid = bookingDTO.DownPaymentPaid;
-            booking.FullPaymentPaid = bookingDTO.FullPaymentPaid;
-            booking.DownPaymentPrice = bookingDTO.DownPaymentPrice;
-            booking.FullPaymentPrice = bookingDTO.FullPaymentPrice;
-            booking.Notes = bookingDTO.Notes;
-
-            BookingStore.context.SaveChanges();
-
+            BookingStore.Edit(bookingId, bookingDTO);
             return Ok("Booking edited successfully.");
         }
 
@@ -102,8 +75,8 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetBookingById(int bookingId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
-            var booking = BookingStore.context.Bookings.FirstOrDefault(x => x.Id == bookingId);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
+            var booking = BookingStore.GetById(bookingId);
 
             var error = BookingValidators.GetBookingByIdValidator(user, bookingId);
 
@@ -135,7 +108,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult DeleteBooking(int bookingId)
         {
-            var user = JwtDecoder.GetUser(User.Claims, UserStore.context);
+            var user = JwtDecoder.GetUser(User.Claims, DataStore.context);
 
             var error = BookingValidators.DeleteBookingValidator(user, bookingId);
 
@@ -144,10 +117,7 @@ namespace HotelManagementAPI.Controllers
                 return error;
             }
 
-            var booking = BookingStore.context.Bookings.FirstOrDefault(x => x.Id == bookingId);
-            BookingStore.context.Bookings.Remove(booking);
-            BookingStore.context.SaveChanges();
-
+            BookingStore.Delete(bookingId);
             return Ok("Booking has been deleted.");
         }
 

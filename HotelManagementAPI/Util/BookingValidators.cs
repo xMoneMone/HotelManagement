@@ -7,14 +7,14 @@ namespace HotelManagementAPI.Util
 {
     public class BookingValidators
     {
-        public static IActionResult? GetBookingsValidator(User user, Room room)
+        public static IActionResult? GetBookingsValidator(User user, Room? room)
         {
             if (room == null)
             {
                 return new BadRequestObjectResult("Room does not exist.");
             }
 
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
+            var hotel = HotelStore.GetById(room.HotelId);
 
             if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
             {
@@ -24,16 +24,16 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? CreateBookingValidator(User user, CreateBookingDTO bookingDTO, int roomId)
+        public static IActionResult? CreateBookingValidator(User user, BookingCreateDTO bookingDTO, int roomId)
         {
-            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == roomId);
+            var room = RoomStore.GetById(roomId);
 
             if (room == null)
             {
                 return new BadRequestObjectResult("Room does not exist.");
             }
 
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
+            var hotel = HotelStore.GetById(room.HotelId);
 
             if (hotel.OwnerId != user.Id || Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
             {
@@ -68,8 +68,9 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? EditBookingValidator(User user, CreateBookingDTO bookingDTO, Booking booking)
+        public static IActionResult? EditBookingValidator(User user, BookingCreateDTO bookingDTO, int bookingId)
         {
+            var booking = BookingStore.GetById(bookingId);
             if (booking == null)
             {
                 return new BadRequestObjectResult("Booking does not exist.");
@@ -81,15 +82,15 @@ namespace HotelManagementAPI.Util
 
         public static IActionResult? GetBookingByIdValidator(User user, int bookingId)
         {
-            var booking = BookingStore.context.Bookings.FirstOrDefault(x => x.Id == bookingId);
+            var booking = BookingStore.GetById(bookingId);
 
             if (booking == null)
             {
                 return new BadRequestObjectResult("Booking does not exist.");
             }
 
-            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == booking.RoomId);
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
+            var room = RoomStore.GetById(booking.RoomId);
+            var hotel = HotelStore.GetById(room.HotelId);
 
             if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
             {
@@ -101,15 +102,15 @@ namespace HotelManagementAPI.Util
 
         public static IActionResult? DeleteBookingValidator(User user, int bookingId)
         {
-            var booking = BookingStore.context.Bookings.FirstOrDefault(x => x.Id == bookingId);
+            var booking = BookingStore.GetById(bookingId);
 
             if (booking == null)
             {
                 return new BadRequestObjectResult("Booking does not exist.");
             }
 
-            var room = RoomStore.context.Rooms.FirstOrDefault(x => x.Id == booking.RoomId);
-            var hotel = HotelStore.context.Hotels.FirstOrDefault(x => x.Id == room.HotelId);
+            var room = RoomStore.GetById(booking.RoomId);
+            var hotel = HotelStore.GetById(room.HotelId);
 
             if (hotel.OwnerId != user.Id)
             {
