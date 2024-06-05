@@ -12,5 +12,10 @@ namespace HotelManagementAPI.Data
                 UserId = code.UserId
             });
         }
+
+        public static UsersHotel? GetByHotelEmployee(int hotelId, int employeeId)
+        {
+            return context.UsersHotels.FirstOrDefault(x => x.UserId == employeeId && x.HotelId == hotelId);
+        }
     }
 }
