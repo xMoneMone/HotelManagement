@@ -13,7 +13,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-Log.Logger = new LoggerConfiguration().MinimumLevel.Error().WriteTo.File("log/log.txt", rollingInterval:RollingInterval.Month).CreateLogger();
+Log.Logger = new LoggerConfiguration().MinimumLevel.Error().WriteTo.File("Log/log.txt", rollingInterval:RollingInterval.Month).CreateLogger();
 
 builder.Host.UseSerilog();
 builder.Services.AddDbContext<HotelManagementContext>(options => options.UseSqlServer("Server=.;Database=HotelManagement;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"));
