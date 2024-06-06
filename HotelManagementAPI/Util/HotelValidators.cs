@@ -8,7 +8,7 @@ namespace HotelManagementAPI.Util
 {
     public class HotelValidators
     {
-        public static IActionResult? RemoveHotelEmployeeValidator(User user, User? employee, Hotel? hotel)
+        public static IActionResult? RemoveHotelEmployeeValidator(User user, User? employee, Hotel? hotel, UsersHotel? userHotelConnection)
         {
             if (hotel == null || employee == null)
             {
@@ -19,8 +19,6 @@ namespace HotelManagementAPI.Util
             {
                 return new UnauthorizedObjectResult("You are not authorized to perform this action.");
             }
-
-            var userHotelConnection = UserHotelStore.GetByHotelEmployee(employee.Id, hotel.Id);
 
             if (userHotelConnection == null)
             {

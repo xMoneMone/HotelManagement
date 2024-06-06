@@ -1,5 +1,4 @@
-﻿using HotelManagementAPI.Data;
-using HotelManagementAPI.DataInterfaces;
+﻿using HotelManagementAPI.DataInterfaces;
 using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Authorization;
@@ -9,10 +8,10 @@ namespace HotelManagementAPI.Controllers
 {
     [Route("hotels"), Authorize]
     [ApiController]
-    public class HotelsController(IUserStore userStore, IHotelStore hotelStore) : ControllerBase
+    public class HotelsController(IHotelStore hotelStore, IUserHotelStore userHotelStore) : ControllerBase
     {
-        private readonly IUserStore userStore = userStore;
         private readonly IHotelStore hotelStore = hotelStore;
+        private readonly IUserHotelStore userHotelStore = userHotelStore;
 
         [HttpGet, Authorize]
         public IEnumerable<HotelDTO> GetHotels()
@@ -26,22 +25,7 @@ namespace HotelManagementAPI.Controllers
         [HttpDelete("{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
         public IActionResult RemoveHotelEmployee(int hotelId, int employeeId)
         {
-            var user = userStore.GetCurrentUser();
-            var hotel = HotelStore.GetById(hotelId);
-            var employee = HotelStore.context.Users.FirstOrDefault(x => x.Id == employeeId);
-
-            var error = HotelValidators.RemoveHotelEmployeeValidator(user, employee, hotel);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            var userHotelConnection = HotelStore.context.UsersHotels.FirstOrDefault(x => x.UserId == employee.Id && x.HotelId == hotel.Id);
-
-            HotelStore.context.UsersHotels.Remove(userHotelConnection);
-            HotelStore.context.SaveChanges();
-            return Ok("Employee removed from hotel.");
+            return userHotelStore.Delete(hotelId, employeeId);
         }
 
         [HttpPost, Authorize(Roles = "Owner")]
