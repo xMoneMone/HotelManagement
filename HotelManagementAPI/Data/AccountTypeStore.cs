@@ -1,10 +1,13 @@
-﻿using HotelManagementAPI.Models;
+﻿using HotelManagementAPI.DataInterfaces;
+using HotelManagementAPI.Models;
 
 namespace HotelManagementAPI.Data
 {
-    public class AccountTypeStore : DataStore
+    public class AccountTypeStore(HotelManagementContext context) : IAccountTypeStore
     {
-        public static AccountType? GetById(int id)
+        private readonly HotelManagementContext context = context;
+
+        public AccountType? GetById(int id)
         {
             return (from accountType in context.AccountTypes
                     where id == accountType.Id

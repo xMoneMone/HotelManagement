@@ -19,6 +19,7 @@ builder.Services.AddDbContext<HotelManagementContext>(options => options.UseSqlS
 builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Registering stores
+builder.Services.AddScoped<IAccountTypeStore, AccountTypeStore>();
 builder.Services.AddScoped<IBookingStore, BookingStore>();
 builder.Services.AddScoped<ICurrencyStore, CurrencyStore>();
 builder.Services.AddScoped<IHotelCodeStatusStore, HotelCodeStatusStore>();

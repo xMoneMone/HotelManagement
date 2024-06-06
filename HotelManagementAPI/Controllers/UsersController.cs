@@ -14,10 +14,11 @@ namespace HotelManagementAPI.Controllers
 {
     [Route("users")]
     [ApiController]
-    public class UsersController(IConfiguration configuration, IUserStore userStore) : ControllerBase
+    public class UsersController(IConfiguration configuration, IUserStore userStore, IAccountTypeStore accountTypeStore) : ControllerBase
     {
         private readonly IConfiguration _configuration = configuration;
         private readonly IUserStore userStore = userStore;
+        private readonly IAccountTypeStore accountTypeStore = accountTypeStore;
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -69,7 +70,7 @@ namespace HotelManagementAPI.Controllers
             List<Claim> claims =
             [
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, AccountTypeStore.GetById(user.AccountTypeId).Type)
+                new Claim(ClaimTypes.Role, accountTypeStore.GetById(user.AccountTypeId).Type)
             ];
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
