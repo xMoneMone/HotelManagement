@@ -20,10 +20,13 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Registering stores
 builder.Services.AddScoped<IBookingStore, BookingStore>();
-builder.Services.AddScoped<IUserStore, UserStore>();
-builder.Services.AddScoped<IHotelStore, HotelStore>();
-builder.Services.AddScoped<IUserHotelStore, UserHotelStore>();
+builder.Services.AddScoped<ICurrencyStore, CurrencyStore>();
+builder.Services.AddScoped<IHotelCodeStatusStore, HotelCodeStatusStore>();
 builder.Services.AddScoped<IHotelCodeStore, HotelCodeStore>();
+builder.Services.AddScoped<IHotelStore, HotelStore>();
+builder.Services.AddScoped<IRoomStore, RoomStore>();
+builder.Services.AddScoped<IUserHotelStore, UserHotelStore>();
+builder.Services.AddScoped<IUserStore, UserStore>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
