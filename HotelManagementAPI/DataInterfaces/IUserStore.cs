@@ -10,6 +10,7 @@ namespace HotelManagementAPI.DataInterfaces
         IEnumerable<User> All();
         IActionResult Delete();
         IActionResult Edit(UserEditDTO userDTO);
+        IActionResult Login(UserLoginDTO userDTO);
         User? GetByEmail(string email);
         User? GetById(int id);
         User? GetCurrentUser();

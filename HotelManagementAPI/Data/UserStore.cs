@@ -3,17 +3,24 @@ using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Validators = HotelManagementAPI.Util.Validators;
 
 namespace HotelManagementAPI.Data
 {
-    public class UserStore(HotelManagementContext _context, IHttpContextAccessor http) : IUserStore
+    public class UserStore(HotelManagementContext _context, IHttpContextAccessor http, IConfiguration configuration, IAccountTypeStore accountTypeStore) : IUserStore
     {
         private readonly HotelManagementContext context = _context;
         private readonly IHttpContextAccessor http = http;
+        private readonly IConfiguration configuration = configuration;
+        private readonly IAccountTypeStore accountTypeStore = accountTypeStore;
 
         public User? GetCurrentUser()
         {
-            var userId = JwtDecoder.GetUser(http.HttpContext.User.Claims);
+            var userId = Jwt.DecodeUser(http.HttpContext.User.Claims);
             return GetById(userId);
         }
 
@@ -83,10 +90,45 @@ namespace HotelManagementAPI.Data
                    .FirstOrDefault();
         }
 
+        public IActionResult Login(UserLoginDTO userDTO)
+        {
+            var user = GetByEmail(userDTO.Email);
+
+            var error = UserValidators.LoginValidator(userDTO, user);
+
+            if (error != null)
+            {
+                return error;
+            }
+
+            return new OkObjectResult(CreateToken(user));
+        }
+
         public IEnumerable<User> All()
         {
             return from user in context.Users
                    select user;
+        }
+
+        private string CreateToken(User user)
+        {
+            List<Claim> claims =
+            [
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, accountTypeStore.GetById(user.AccountTypeId).Type)
+            ];
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(30),
+                    signingCredentials: credentials
+                );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwt;
         }
     }
 }
