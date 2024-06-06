@@ -7,14 +7,14 @@ namespace HotelManagementAPI.Util
 {
     public class BookingValidators
     {
-        public static IActionResult? GetBookingsValidator(User user, Room? room, Hotel? hotel)
+        public static IActionResult? GetBookingsValidator(User user, Room? room, Hotel? hotel, int[] employeesAtHotel)
         {
             if (room == null)
             {
                 return new NotFoundObjectResult("Room does not exist.");
             }
 
-            if (hotel.OwnerId != user.Id && !Validators.EmployeeWorksAtHotel(room.HotelId, user.Id))
+            if (hotel.OwnerId != user.Id && !Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
                 return new UnauthorizedObjectResult("You do not have permission to see this resource.");
             }
@@ -22,14 +22,14 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? CreateBookingValidator(User user, BookingCreateDTO bookingDTO, Room? room, Hotel? hotel)
+        public static IActionResult? CreateBookingValidator(User user, BookingCreateDTO bookingDTO, Room? room, Hotel? hotel, int[] employeesAtHotel)
         {
             if (room == null)
             {
                 return new NotFoundObjectResult("Room does not exist.");
             }
 
-            if (hotel.OwnerId != user.Id || Validators.EmployeeWorksAtHotel(hotel.OwnerId, user.Id))
+            if (hotel.OwnerId != user.Id || Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
                 return new UnauthorizedObjectResult("You cannot make bookings at this hotel.");
             }
@@ -62,25 +62,25 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? EditBookingValidator(User user, BookingCreateDTO bookingDTO, Booking? booking, Room? room, Hotel? hotel)
+        public static IActionResult? EditBookingValidator(User user, BookingCreateDTO bookingDTO, Booking? booking, Room? room, Hotel? hotel, int[] employeesAtHotel)
         {
             if (booking == null)
             {
                 return new NotFoundObjectResult("Booking does not exist.");
             }
 
-            return CreateBookingValidator(user, bookingDTO, room, hotel);
+            return CreateBookingValidator(user, bookingDTO, room, hotel, employeesAtHotel);
         }
 
 
-        public static IActionResult? GetBookingByIdValidator(User user, Booking? booking, Room? room, Hotel? hotel)
+        public static IActionResult? GetBookingByIdValidator(User user, Booking? booking, Room? room, Hotel? hotel, int[] employeesAtHotel)
         {
             if (booking == null)
             {
                 return new NotFoundObjectResult("Booking does not exist.");
             }
 
-            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
+            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
                 return new UnauthorizedObjectResult("You do not have permission to see this resource.");
             }

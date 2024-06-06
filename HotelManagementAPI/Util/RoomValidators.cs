@@ -8,14 +8,14 @@ namespace HotelManagementAPI.Util
 {
     public class RoomValidators
     {
-        public static IActionResult? GetRoomsValidator(User user, Hotel? hotel)
+        public static IActionResult? GetRoomsValidator(User user, Hotel? hotel, int[] employeesAtHotel)
         {
             if (hotel == null)
             {
                 return new NotFoundObjectResult("Hotel does not exist.");
             }
 
-            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
+            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
                 return new UnauthorizedObjectResult("You do not have permission to see this resource.");
             }
@@ -63,14 +63,14 @@ namespace HotelManagementAPI.Util
             return CreateRoomValidator(user, roomDTO, hotel);
         }
 
-        public static IActionResult? GetRoomByIdValidator(User user, Room? room, Hotel? hotel)
+        public static IActionResult? GetRoomByIdValidator(User user, Room? room, Hotel? hotel, int[] employeesAtHotel)
         {
             if (room == null)
             {
                 return new NotFoundObjectResult("Room does not exist.");
             }
 
-            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
+            if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
                 return new UnauthorizedObjectResult("You do not have permission to see this resource.");
             }

@@ -18,8 +18,9 @@ namespace HotelManagementAPI.Data
             var user = userStore.GetCurrentUser();
             var room = roomStore.GetById(roomId);
             var hotel = hotelStore.GetById(room?.HotelId);
+            var employeesAtHotel = hotelStore.GetHotelEmployeesIds(hotel?.Id);
 
-            var error = BookingValidators.CreateBookingValidator(user, bookingDTO, room, hotel);
+            var error = BookingValidators.CreateBookingValidator(user, bookingDTO, room, hotel, employeesAtHotel);
 
             if (error != null)
             {
@@ -49,10 +50,11 @@ namespace HotelManagementAPI.Data
             var booking = GetById(id);
             var room = roomStore.GetById(booking?.RoomId);
             var hotel = hotelStore.GetById(room?.HotelId);
+            var employeesAtHotel = hotelStore.GetHotelEmployeesIds(hotel?.Id);
 
             var user = userStore.GetCurrentUser();
 
-            var error = BookingValidators.EditBookingValidator(user, bookingDTO, booking, room, hotel);
+            var error = BookingValidators.EditBookingValidator(user, bookingDTO, booking, room, hotel, employeesAtHotel);
 
             if (error != null)
             {
@@ -112,8 +114,9 @@ namespace HotelManagementAPI.Data
             var booking = GetById(id);
             var room = roomStore.GetById(booking?.RoomId);
             var hotel = hotelStore.GetById(room?.HotelId);
+            var employeesAtHotel = hotelStore.GetHotelEmployeesIds(hotel?.Id);
 
-            var error = BookingValidators.GetBookingByIdValidator(user, booking, room, hotel);
+            var error = BookingValidators.GetBookingByIdValidator(user, booking, room, hotel, employeesAtHotel);
 
             if (error != null)
             {
@@ -150,8 +153,9 @@ namespace HotelManagementAPI.Data
             var user = userStore.GetCurrentUser();
             var room = roomStore.GetById(roomId);
             var hotel = hotelStore.GetById(room?.HotelId);
+            var employeesAtHotel = hotelStore.GetHotelEmployeesIds(hotel?.Id);
 
-            var error = BookingValidators.GetBookingsValidator(user, room, hotel);
+            var error = BookingValidators.GetBookingsValidator(user, room, hotel, employeesAtHotel);
 
             if (error != null)
             {

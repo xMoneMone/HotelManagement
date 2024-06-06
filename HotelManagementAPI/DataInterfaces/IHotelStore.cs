@@ -11,7 +11,7 @@ namespace HotelManagementAPI.DataInterfaces
         IActionResult Delete(int id);
         IActionResult Edit(int id, HotelCreateDTO hotelDTO);
         Hotel? GetById(int? id);
-        int[] GetHotelEmployeesIds(int hotelId);
+        int[] GetHotelEmployeesIds(int? hotelId);
         IEnumerable<HotelDTO> GetUserHotels();
     }
 }

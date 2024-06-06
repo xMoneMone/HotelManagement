@@ -3,6 +3,7 @@ using HotelManagementAPI.DataInterfaces;
 using HotelManagementAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -17,6 +18,7 @@ Log.Logger = new LoggerConfiguration().MinimumLevel.Error().WriteTo.File("log/lo
 builder.Host.UseSerilog();
 builder.Services.AddDbContext<HotelManagementContext>(options => options.UseSqlServer("Server=.;Database=HotelManagement;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"));
 builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Registering stores
 builder.Services.AddScoped<IAccountTypeStore, AccountTypeStore>();

@@ -110,9 +110,13 @@ namespace HotelManagementAPI.Data
                    };
         }
 
-        public int[] GetHotelEmployeesIds(int hotelId)
+        public int[] GetHotelEmployeesIds(int? hotelId)
         {
-            return context.UsersHotels.Where(x => x.HotelId == hotelId).Select(x => x.UserId).ToArray();
+            if (hotelId == null)
+            {
+                return new int[0];
+            }
+            return [.. context.UsersHotels.Where(x => x.HotelId == hotelId).Select(x => x.UserId)];
         }
     }
 }

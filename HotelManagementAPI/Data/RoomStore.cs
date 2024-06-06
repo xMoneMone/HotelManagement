@@ -93,8 +93,9 @@ namespace HotelManagementAPI.Data
             var user = userStore.GetCurrentUser();
             var room = GetById(id);
             var hotel = hotelStore.GetById(room.HotelId);
+            var employeesAtHotel = hotelStore.GetHotelEmployeesIds(hotel?.Id);
 
-            var error = RoomValidators.GetRoomByIdValidator(user, room, hotel);
+            var error = RoomValidators.GetRoomByIdValidator(user, room, hotel, employeesAtHotel);
 
             if (error != null)
             {
@@ -121,8 +122,9 @@ namespace HotelManagementAPI.Data
         {
             var user = userStore.GetCurrentUser();
             var hotel = hotelStore.GetById(hotelId);
+            var employeesAtHotel = hotelStore.GetHotelEmployeesIds(hotel?.Id);
 
-            var error = RoomValidators.GetRoomsValidator(user, hotel);
+            var error = RoomValidators.GetRoomsValidator(user, hotel, employeesAtHotel);
 
             if (error != null)
             {
