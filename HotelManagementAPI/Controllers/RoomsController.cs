@@ -1,7 +1,5 @@
 ﻿using HotelManagementAPI.DataInterfaces;
-using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
-using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +7,8 @@ namespace HotelManagementAPI.Controllers
 {
     [Route("rooms"), Authorize]
     [ApiController]
-    public class RoomsController(IUserStore userStore, IRoomStore roomStore) : ControllerBase
+    public class RoomsController(IRoomStore roomStore) : ControllerBase
     {
-        private readonly IUserStore userStore = userStore;
         private readonly IRoomStore roomStore = roomStore;
 
         [HttpGet("all-rooms/{hotelId:int}"), Authorize]

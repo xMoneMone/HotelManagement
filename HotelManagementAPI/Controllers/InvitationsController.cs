@@ -1,6 +1,4 @@
 ﻿using HotelManagementAPI.Models.DTO;
-using HotelManagementAPI.Models;
-using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HotelManagementAPI.DataInterfaces;
