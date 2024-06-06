@@ -151,7 +151,7 @@ namespace HotelManagementAPI.Data
             var room = roomStore.GetById(roomId);
             var hotel = hotelStore.GetById(room?.HotelId);
 
-            var error = BookingValidators.GetBookingsValidator(user, room);
+            var error = BookingValidators.GetBookingsValidator(user, room, hotel);
 
             if (error != null)
             {

@@ -12,7 +12,7 @@ namespace HotelManagementAPI.Util
         {
             if (hotel == null)
             {
-                return new BadRequestObjectResult("Hotel does not exist.");
+                return new NotFoundObjectResult("Hotel does not exist.");
             }
 
             if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
@@ -27,7 +27,7 @@ namespace HotelManagementAPI.Util
         {
             if (hotel == null)
             {
-                return new BadRequestObjectResult("Hotel does not exist.");
+                return new NotFoundObjectResult("Hotel does not exist.");
             }
 
             if (hotel.OwnerId != user.Id)
@@ -57,7 +57,7 @@ namespace HotelManagementAPI.Util
         {
             if (room == null)
             {
-                return new BadRequestObjectResult("Room does not exist.");
+                return new NotFoundObjectResult("Room does not exist.");
             }
 
             return CreateRoomValidator(user, roomDTO, hotel);
@@ -67,7 +67,7 @@ namespace HotelManagementAPI.Util
         {
             if (room == null)
             {
-                return new BadRequestObjectResult("Room does not exist.");
+                return new NotFoundObjectResult("Room does not exist.");
             }
 
             if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
@@ -82,7 +82,7 @@ namespace HotelManagementAPI.Util
         {
             if (room == null)
             {
-                return new BadRequestObjectResult("Room does not exist.");
+                return new NotFoundObjectResult("Room does not exist.");
             }
 
             if (hotel.OwnerId != user.Id)

@@ -7,16 +7,14 @@ namespace HotelManagementAPI.Util
 {
     public class BookingValidators
     {
-        public static IActionResult? GetBookingsValidator(User user, Room? room)
+        public static IActionResult? GetBookingsValidator(User user, Room? room, Hotel? hotel)
         {
             if (room == null)
             {
                 return new NotFoundObjectResult("Room does not exist.");
             }
 
-            var hotelOwnerId = HotelStore.GetById(room.HotelId).OwnerId;
-
-            if (hotelOwnerId != user.Id && !Validators.EmployeeWorksAtHotel(room.HotelId, user.Id))
+            if (hotel.OwnerId != user.Id && !Validators.EmployeeWorksAtHotel(room.HotelId, user.Id))
             {
                 return new UnauthorizedObjectResult("You do not have permission to see this resource.");
             }
@@ -79,7 +77,7 @@ namespace HotelManagementAPI.Util
         {
             if (booking == null)
             {
-                return new BadRequestObjectResult("Booking does not exist.");
+                return new NotFoundObjectResult("Booking does not exist.");
             }
 
             if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(hotel.Id, user.Id))
@@ -94,7 +92,7 @@ namespace HotelManagementAPI.Util
         {
             if (booking == null)
             {
-                return new BadRequestObjectResult("Booking does not exist.");
+                return new NotFoundObjectResult("Booking does not exist.");
             }
 
             if (hotelOwnerId != user.Id)

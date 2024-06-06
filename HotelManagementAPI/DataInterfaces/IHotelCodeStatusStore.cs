@@ -2,7 +2,7 @@
 
 namespace HotelManagementAPI.Data
 {
-    public interface IHotelCodeStatusesStore
+    public interface IHotelCodeStatusStore
     {
         HotelCodeStatus? GetById(int id);
     }
