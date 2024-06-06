@@ -1,4 +1,4 @@
-﻿using HotelManagementAPI.Data;
+﻿using HotelManagementAPI.DataInterfaces;
 using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
@@ -9,24 +9,18 @@ namespace HotelManagementAPI.Controllers
 {
     [Route("rooms"), Authorize]
     [ApiController]
-    public class RoomsController : ControllerBase
+    public class RoomsController(IUserStore userStore, IRoomStore roomStore) : ControllerBase
     {
+        private readonly IUserStore userStore = userStore;
+        private readonly IRoomStore roomStore = roomStore;
+
         [HttpGet("all-rooms/{hotelId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetRooms(int hotelId)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            var error = RoomValidators.GetRoomsValidator(user, hotelId);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            return Ok(RoomStore.GetRooms(hotelId));
+            return roomStore.GetRooms(hotelId);
         }
 
         [HttpPost("{hotelId:int}"), Authorize(Roles = "Owner")]
@@ -35,17 +29,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult CreateRoom([FromBody] RoomCreateDTO roomDTO, int hotelId)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            var error = RoomValidators.CreateRoomValidator(user, roomDTO);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            RoomStore.Add(roomDTO, hotelId, user);
-            return Ok("Room created successfully.");
+            return roomStore.Add(roomDTO, hotelId);
         }
 
         [HttpPut("{roomId:int}"), Authorize(Roles = "Owner")]
@@ -54,17 +38,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            var error = RoomValidators.EditRoomValidator(user, roomDTO, roomId);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            RoomStore.Edit(roomId, roomDTO);
-            return Ok("Room created successfully.");
+            return roomStore.Edit(roomId, roomDTO);
         }
 
         [HttpGet("{roomId:int}"), Authorize]
@@ -73,17 +47,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetRoomById(int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            var error = RoomValidators.GetRoomByIdValidator(user, roomId);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            return Ok(RoomStore.GetDTOById(roomId));
-
+            return roomStore.GetDTOById(roomId);
         }
 
         [HttpDelete("{roomId:int}"), Authorize(Roles = "Owner")]
@@ -92,18 +56,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult DeleteRoom(int roomId)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            var error = RoomValidators.DeleteRoomValidator(user, roomId);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            RoomStore.Delete(roomId);
-
-            return Ok("Room has been deleted.");
+            return roomStore.Delete(roomId);
         }
     }
 }

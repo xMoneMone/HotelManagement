@@ -8,10 +8,8 @@ namespace HotelManagementAPI.Util
 {
     public class RoomValidators
     {
-        public static IActionResult? GetRoomsValidator(User user, int hotelId)
+        public static IActionResult? GetRoomsValidator(User user, Hotel? hotel)
         {
-            var hotel = HotelStore.GetById(hotelId);
-
             if (hotel == null)
             {
                 return new BadRequestObjectResult("Hotel does not exist.");
@@ -25,10 +23,8 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? CreateRoomValidator(User user, RoomCreateDTO roomDTO)
+        public static IActionResult? CreateRoomValidator(User user, RoomCreateDTO roomDTO, Hotel? hotel)
         {
-            var hotel = HotelStore.GetById(roomDTO.HotelId);
-
             if (hotel == null)
             {
                 return new BadRequestObjectResult("Hotel does not exist.");
@@ -57,23 +53,18 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? EditRoomValidator(User user, RoomCreateDTO roomDTO, int roomId)
+        public static IActionResult? EditRoomValidator(User user, RoomCreateDTO roomDTO, Room? room, Hotel? hotel)
         {
-            var room = RoomStore.GetById(roomId);
-
             if (room == null)
             {
                 return new BadRequestObjectResult("Room does not exist.");
             }
 
-            return CreateRoomValidator(user, roomDTO);
+            return CreateRoomValidator(user, roomDTO, hotel);
         }
 
-        public static IActionResult? GetRoomByIdValidator(User user, int roomId)
+        public static IActionResult? GetRoomByIdValidator(User user, Room? room, Hotel? hotel)
         {
-            var room = RoomStore.GetById(roomId);
-            var hotel = HotelStore.GetById(room.HotelId);
-
             if (room == null)
             {
                 return new BadRequestObjectResult("Room does not exist.");
@@ -87,11 +78,8 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? DeleteRoomValidator(User user, int roomId)
+        public static IActionResult? DeleteRoomValidator(User user, Room? room, Hotel? hotel)
         {
-            var room = RoomStore.GetById(roomId);
-            var hotel = HotelStore.GetById(room.HotelId);
-
             if (room == null)
             {
                 return new BadRequestObjectResult("Room does not exist.");
