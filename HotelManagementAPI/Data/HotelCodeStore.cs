@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Data
 {
-    public class HotelCodeStore(HotelManagementContext _context, IUserStore userStore, IHotelStore hotelStore, IUserHotelStore userHotelStore) : IHotelCodeStore
+    public class HotelCodeStore(HotelManagementContext _context, IUserStore userStore, IHotelStore hotelStore, IUserHotelStore userHotelStore,
+        IHotelCodeStatusStore hotelCodeStatusStore) : IHotelCodeStore
     {
         private readonly HotelManagementContext context = _context;
         private readonly IUserStore userStore = userStore;
         private readonly IHotelStore hotelStore = hotelStore;
         private readonly IUserHotelStore userHotelStore = userHotelStore;
+        private readonly IHotelCodeStatusStore hotelCodeStatusesStore = hotelCodeStatusStore;
 
         public IActionResult Add(HotelCodeCreateDTO hotelCodeDTO)
         {
@@ -142,8 +144,7 @@ namespace HotelManagementAPI.Data
                        Code = code.Code,
                        HotelName = hotelStore.GetById(code.HotelId).Name,
                        UserEmail = userStore.GetById(code.UserId).Email,
-                       fixlater,
-                       Status = context.HotelCodeStatuses.FirstOrDefault(x => x.Id == code.StatusId).Status
+                       Status = hotelCodeStatusStore.GetById(code.StatusId).Status
                    };
         }
 

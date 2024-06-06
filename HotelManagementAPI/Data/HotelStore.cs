@@ -112,7 +112,6 @@ namespace HotelManagementAPI.Data
 
         public int[] GetHotelEmployeesIds(int hotelId)
         {
-            fixlater;
             return context.UsersHotels.Where(x => x.HotelId == hotelId).Select(x => x.UserId).ToArray();
         }
     }
