@@ -4,13 +4,28 @@ using HotelManagementAPI.Util;
 using Microsoft.IdentityModel.Tokens;
 using Validators = HotelManagementAPI.Util.Validators;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using HotelManagementAPI.DataInterfaces;
 
 namespace HotelManagementAPI.Data
 {
-    public class HotelStore : DataStore
+    public class HotelStore(HotelManagementContext context, IUserStore userStore) : DataStore, IHotelStore
     {
-        public static void Add(HotelCreateDTO hotelDTO, User user)
+        private readonly HotelManagementContext context = context;
+        private readonly IUserStore userStore = userStore;
+
+        public IActionResult Add(HotelCreateDTO hotelDTO)
         {
+            var user = userStore.GetCurrentUser();
+
+            var error = HotelValidators.CreateHotelValidator(hotelDTO);
+
+            if (error != null)
+            {
+                return error;
+            }
+
             context.Hotels.Add(new Hotel
             {
                 Name = hotelDTO.Name,
@@ -19,41 +34,71 @@ namespace HotelManagementAPI.Data
                 OwnerId = user.Id
             });
             context.SaveChanges();
+
+            return new OkObjectResult("Hotel created successfully.");
         }
 
-        public static void Edit(int id, HotelCreateDTO hotelDTO)
+        public IActionResult Edit(int id, HotelCreateDTO hotelDTO)
         {
+            var user = userStore.GetCurrentUser();
             var hotel = GetById(id);
+
+            var error = HotelValidators.EditHotelValidator(hotelDTO, hotel, user);
+
+            if (error != null)
+            {
+                return error;
+            }
+
             hotel.Name = hotelDTO.Name;
             hotel.CurrencyId = Validators.ValidateMultipleChoice(context.Currencies, hotelDTO.CurrencyId);
             hotel.DownPaymentPercentage = hotelDTO.DownPaymentPercentage;
             context.SaveChanges();
+
+            return new OkObjectResult("Hotel edited successfully.");
         }
 
-        public static void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            var user = userStore.GetCurrentUser();
             var hotel = GetById(id);
+
+            var error = HotelValidators.DeleteHotelValidator(hotel, user);
+
+            if (error != null)
+            {
+                return error;
+            }
+
             context.Hotels.Remove(hotel);
             context.SaveChanges();
+
+            return new OkObjectResult("Hotel has been deleted.");
         }
 
-        public static Hotel? GetById(int id)
+        public Hotel? GetById(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
+
             return (from hotel in context.Hotels
                     where id == hotel.Id
                     select hotel)
                    .FirstOrDefault();
         }
 
-        public static IEnumerable<Hotel> All()
+        public IEnumerable<Hotel> All()
         {
             return from hotel in context.Hotels
                    select hotel;
         }
 
-        public static IEnumerable<HotelDTO> GetUserHotels(User user)
+        public IEnumerable<HotelDTO> GetUserHotels()
         {
-            int[] employeeHotelsIds = UserStore.context.UsersHotels.Where(x => x.UserId == user.Id).Select(x => x.HotelId).ToArray();
+            var user = userStore.GetCurrentUser();
+            int[] employeeHotelsIds = context.UsersHotels.Where(x => x.UserId == user.Id).Select(x => x.HotelId).ToArray();
             return from hotel in context.Hotels
                    where hotel.Owner == user || employeeHotelsIds.Contains(hotel.Id)
                    select new HotelDTO()
@@ -65,9 +110,10 @@ namespace HotelManagementAPI.Data
                    };
         }
 
-        public static int[] GetHotelEmployeesIds(int hotelId)
+        public int[] GetHotelEmployeesIds(int hotelId)
         {
-            return UserStore.context.UsersHotels.Where(x => x.HotelId == hotelId).Select(x => x.UserId).ToArray();
+            Fix later
+            return context.UsersHotels.Where(x => x.HotelId == hotelId).Select(x => x.UserId).ToArray();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace HotelManagementAPI.Util
         {
             if (hotel == null || employee == null)
             {
-                return new BadRequestObjectResult("Hotel or employee does not exist.");
+                return new NotFoundObjectResult("Hotel or employee does not exist.");
             }
 
             if (user.Id != hotel.OwnerId)
@@ -20,7 +20,7 @@ namespace HotelManagementAPI.Util
                 return new UnauthorizedObjectResult("You are not authorized to perform this action.");
             }
 
-            var userHotelConnection = HotelStore.context.UsersHotels.FirstOrDefault(x => x.UserId == employee.Id && x.HotelId == hotel.Id);
+            var userHotelConnection = UserHotelStore.GetByHotelEmployee(employee.Id, hotel.Id);
 
             if (userHotelConnection == null)
             {
@@ -50,13 +50,15 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? EditHotelValidator(HotelCreateDTO hotelDTO, int hotelId, User user)
+        public static IActionResult? EditHotelValidator(HotelCreateDTO hotelDTO, Hotel? hotel, User user)
         {
-            var hotel = HotelStore.GetById(hotelId);
-
+            if (hotelDTO == null)
+            {
+                return new BadRequestObjectResult("Empty hotel.");
+            }
             if (hotel == null)
             {
-                return new BadRequestObjectResult("Hotel does not exist.");
+                return new NotFoundObjectResult("Hotel does not exist.");
             }
 
             if (hotel.OwnerId != user.Id)
@@ -67,13 +69,11 @@ namespace HotelManagementAPI.Util
             return CreateHotelValidator(hotelDTO);
         }
 
-        public static IActionResult? DeleteHotelValidator(int hotelId, User user)
+        public static IActionResult? DeleteHotelValidator(Hotel? hotel, User user)
         {
-            var hotel = HotelStore.GetById(hotelId);
-
             if (hotel == null)
             {
-                return new BadRequestObjectResult("Hotel does not exist.");
+                return new NotFoundObjectResult("Hotel does not exist.");
             }
 
             if (hotel.OwnerId != user.Id)

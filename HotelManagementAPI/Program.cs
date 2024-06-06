@@ -1,14 +1,28 @@
+using HotelManagementAPI.Data;
+using HotelManagementAPI.DataInterfaces;
+using HotelManagementAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+Log.Logger = new LoggerConfiguration().MinimumLevel.Error().WriteTo.File("log/log.txt", rollingInterval:RollingInterval.Month).CreateLogger();
 
+builder.Host.UseSerilog();
+builder.Services.AddDbContext<HotelManagementContext>(options => options.UseSqlServer("Server=.;Database=HotelManagement;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"));
 builder.Services.AddControllers().AddNewtonsoftJson();
+
+// Registering stores
+builder.Services.AddScoped<IBookingStore, BookingStore>();
+builder.Services.AddScoped<IUserStore, UserStore>();
+builder.Services.AddScoped<IHotelStore, HotelStore>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

@@ -1,5 +1,5 @@
 ﻿using HotelManagementAPI.Data;
-using HotelManagementAPI.Models;
+using HotelManagementAPI.DataInterfaces;
 using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Authorization;
@@ -9,13 +9,15 @@ namespace HotelManagementAPI.Controllers
 {
     [Route("hotels"), Authorize]
     [ApiController]
-    public class HotelsController : ControllerBase
+    public class HotelsController(IUserStore userStore, IHotelStore hotelStore) : ControllerBase
     {
+        private readonly IUserStore userStore = userStore;
+        private readonly IHotelStore hotelStore = hotelStore;
+
         [HttpGet, Authorize]
         public IEnumerable<HotelDTO> GetHotels()
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-            return HotelStore.GetUserHotels(user);
+            return hotelStore.GetUserHotels();
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -24,7 +26,7 @@ namespace HotelManagementAPI.Controllers
         [HttpDelete("{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
         public IActionResult RemoveHotelEmployee(int hotelId, int employeeId)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
+            var user = userStore.GetCurrentUser();
             var hotel = HotelStore.GetById(hotelId);
             var employee = HotelStore.context.Users.FirstOrDefault(x => x.Id == employeeId);
 
@@ -48,18 +50,9 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public IActionResult CreateHotel([FromBody] HotelCreateDTO hotelDTO)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
 
-            var error = HotelValidators.CreateHotelValidator(hotelDTO);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            HotelStore.Add(hotelDTO, user);
+            return hotelStore.Add(hotelDTO);
             
-            return Ok("Hotel created successfully.");
         }
 
         [HttpPut("{id:int}"), Authorize(Roles = "Owner")]
@@ -68,18 +61,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult EditHotel([FromBody] HotelCreateDTO hotelDTO, int id)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            var error = HotelValidators.EditHotelValidator(hotelDTO, id, user);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            HotelStore.Edit(id, hotelDTO);
-            
-            return Ok("Hotel edited successfully.");
+            return hotelStore.Edit(id, hotelDTO);
         }
 
 
@@ -89,17 +71,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteHotel(int id)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            var error = HotelValidators.DeleteHotelValidator(id, user);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            HotelStore.Delete(id);
-            return Ok("Hotel has been deleted.");
+            return hotelStore.Delete(id);
         }
     }
 }   
