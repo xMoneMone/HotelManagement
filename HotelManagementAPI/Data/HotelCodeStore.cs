@@ -13,9 +13,21 @@ namespace HotelManagementAPI.Data
         private readonly IHotelStore hotelStore = hotelStore;
         private readonly IUserHotelStore userHotelStore = userHotelStore;
 
-        public string Add(HotelCodeCreateDTO hotelCodeDTO, string code, User user)
+        public IActionResult Add(HotelCodeCreateDTO hotelCodeDTO)
         {
+            var user = userStore.GetCurrentUser();
             var employee = userStore.GetByEmail(hotelCodeDTO.UserEmail);
+            var hotel = hotelStore.GetById(hotelCodeDTO.HotelId);
+            var connection = userHotelStore.GetByHotelEmployee(hotel?.Id, employee?.Id);
+
+            var error = InvitationValidators.InviteEmployeeValidator(user, employee, hotel, connection);
+
+            if (error != null)
+            {
+                return error;
+            }
+
+            string code = CodeGenerator.GenerateCode();
 
             context.Add(new HotelCode
             {
@@ -28,7 +40,7 @@ namespace HotelManagementAPI.Data
 
             context.SaveChanges();
 
-            return code;
+            return new OkObjectResult(code);
         }
 
         public IActionResult RespondToInvite(RespondToInviteDTO inviteResponse, string codeId)
@@ -130,7 +142,7 @@ namespace HotelManagementAPI.Data
                        Code = code.Code,
                        HotelName = hotelStore.GetById(code.HotelId).Name,
                        UserEmail = userStore.GetById(code.UserId).Email,
-                       fix later
+                       fixlater,
                        Status = context.HotelCodeStatuses.FirstOrDefault(x => x.Id == code.StatusId).Status
                    };
         }

@@ -7,7 +7,7 @@ namespace HotelManagementAPI.DataInterfaces
     public interface IHotelCodeStore
     {
         void AcceptInvite(string codeId);
-        string Add(HotelCodeCreateDTO hotelCodeDTO, string code, User user);
+        IActionResult Add(HotelCodeCreateDTO hotelCodeDTO);
         IActionResult Delete(string id);
         HotelCode? GetByEmployeeHotel(string employeeEmail, int hotelId);
         HotelCode? GetById(string id);

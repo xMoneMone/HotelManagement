@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Data
 {
-    public class UserHotelStore(HotelManagementContext context, IUserStore userStore, IHotelStore hotelStore) : DataStore, IUserHotelStore
+    public class UserHotelStore(HotelManagementContext context, IUserStore userStore, IHotelStore hotelStore) : IUserHotelStore
     {
         private readonly HotelManagementContext context = context;
         private readonly IUserStore userStore = userStore;
@@ -39,8 +39,12 @@ namespace HotelManagementAPI.Data
             return new OkObjectResult("Employee removed from hotel.");
         }
 
-        public UsersHotel? GetByHotelEmployee(int hotelId, int employeeId)
+        public UsersHotel? GetByHotelEmployee(int? hotelId, int? employeeId)
         {
+            if (employeeId == null || hotelId == null)
+            {
+                return null;
+            }
             return context.UsersHotels.FirstOrDefault(x => x.UserId == employeeId && x.HotelId == hotelId);
         }
     }

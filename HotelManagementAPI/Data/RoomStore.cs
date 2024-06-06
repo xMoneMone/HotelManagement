@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Data
 {
-    public class RoomStore(HotelManagementContext context, IUserStore userStore, IHotelStore hotelStore) : IRoomStore
+    public class RoomStore(HotelManagementContext context, IUserStore userStore, IHotelStore hotelStore, ICurrencyStore currencyStore) : IRoomStore
     {
         private readonly HotelManagementContext context = context;
         private readonly IUserStore userStore = userStore;
         private readonly IHotelStore hotelStore = hotelStore;
+        private readonly ICurrencyStore currencyStore = currencyStore;
 
         public IActionResult Add(RoomCreateDTO roomDTO, int hotelId)
         {
@@ -75,8 +76,12 @@ namespace HotelManagementAPI.Data
             return new OkObjectResult("Room has been deleted.");
         }
 
-        public Room? GetById(int id)
+        public Room? GetById(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             return (from room in context.Rooms
                     where id == room.Id
                     select room)
@@ -102,7 +107,7 @@ namespace HotelManagementAPI.Data
                 RoomNumber = room.RoomNumber,
                 PricePerNight = room.PricePerNight,
                 Notes = room.Notes,
-                CurrencyFormat = CurrencyStore.GetById(hotel.CurrencyId).FormattingString
+                CurrencyFormat = currencyStore.GetById(hotel.CurrencyId).FormattingString
             });
         }
 
@@ -132,8 +137,7 @@ namespace HotelManagementAPI.Data
                                           RoomNumber = room.RoomNumber,
                                           PricePerNight = room.PricePerNight,
                                           Notes = room.Notes,
-                                          fix later
-                                          CurrencyFormat = context.Currencies.FirstOrDefault(x => x.Id == hotel.CurrencyId).FormattingString
+                                          CurrencyFormat = currencyStore.GetById(hotel.CurrencyId).FormattingString
                                       });
         }
     }

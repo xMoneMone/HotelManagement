@@ -10,7 +10,7 @@ using HotelManagementAPI.DataInterfaces;
 
 namespace HotelManagementAPI.Data
 {
-    public class HotelStore(HotelManagementContext context, IUserStore userStore) : DataStore, IHotelStore
+    public class HotelStore(HotelManagementContext context, IUserStore userStore) : IHotelStore
     {
         private readonly HotelManagementContext context = context;
         private readonly IUserStore userStore = userStore;
@@ -112,7 +112,7 @@ namespace HotelManagementAPI.Data
 
         public int[] GetHotelEmployeesIds(int hotelId)
         {
-            Fix later
+            fixlater;
             return context.UsersHotels.Where(x => x.HotelId == hotelId).Select(x => x.UserId).ToArray();
         }
     }

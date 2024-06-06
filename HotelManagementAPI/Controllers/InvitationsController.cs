@@ -9,9 +9,8 @@ namespace HotelManagementAPI.Controllers
 {
     [Route("hotels/invitations"), Authorize]
     [ApiController]
-    public class InvitationsController(IUserStore userStore, IHotelCodeStore hotelCodeStore) : ControllerBase
+    public class InvitationsController(IHotelCodeStore hotelCodeStore) : ControllerBase
     {
-        private readonly IUserStore userStore = userStore;
         private readonly IHotelCodeStore hotelCodeStore = hotelCodeStore;
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -28,20 +27,7 @@ namespace HotelManagementAPI.Controllers
         [HttpPost, Authorize(Roles = "Owner")]
         public IActionResult InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO)
         {
-            var user = userStore.GetCurrentUser();
-            var employee = userStore.GetByEmail(hotelCodeDTO.UserEmail);
-
-            var error = InvitationValidators.InviteEmployeeValidator(user, hotelCodeDTO.UserEmail, hotelCodeDTO.HotelId);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            string code = CodeGenerator.GenerateCode();
-            hotelCodeStore.Add(hotelCodeDTO, code, user);
-
-            return Ok(code);
+            return hotelCodeStore.Add(hotelCodeDTO);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]

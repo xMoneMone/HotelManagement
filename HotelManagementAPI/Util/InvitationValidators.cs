@@ -7,7 +7,7 @@ namespace HotelManagementAPI.Util
 {
     public class InvitationValidators
     {
-        public static IActionResult? InviteEmployeeValidator(User user, User employee, Hotel hotel, HotelCode userHotelConnection)
+        public static IActionResult? InviteEmployeeValidator(User user, User employee, Hotel hotel, UsersHotel userHotelConnection)
         {
             if (employee == null || hotel == null)
             {

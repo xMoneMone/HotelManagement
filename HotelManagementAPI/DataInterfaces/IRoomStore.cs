@@ -10,7 +10,7 @@ namespace HotelManagementAPI.DataInterfaces
         IEnumerable<Room> All();
         IActionResult Delete(int id);
         IActionResult Edit(int id, RoomCreateDTO roomDTO);
-        Room? GetById(int id);
+        Room? GetById(int? id);
         IActionResult GetDTOById(int id);
         IActionResult GetRooms(int hotelId);
     }
