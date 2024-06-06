@@ -8,30 +8,23 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using HotelManagementAPI.DataInterfaces;
 
 namespace HotelManagementAPI.Controllers
 {
     [Route("users")]
     [ApiController]
-    public class UsersController(IConfiguration configuration) : ControllerBase
+    public class UsersController(IConfiguration configuration, IUserStore userStore) : ControllerBase
     {
         private readonly IConfiguration _configuration = configuration;
+        private readonly IUserStore userStore = userStore;
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CreateUser([FromBody] UserCreateDTO userDTO)
         {
-            var error = UserValidators.CreateUserValidator(userDTO);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            UserStore.Add(userDTO);
-
-            return Ok("User has been created.");
+            return userStore.Add(userDTO);
         }
 
         [HttpPost("login")]
@@ -39,7 +32,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Login(UserLoginDTO userDTO)
         {
-            var user = UserStore.GetByEmail(userDTO.Email);
+            var user = userStore.GetByEmail(userDTO.Email);
 
             var error = UserValidators.LoginValidator(userDTO, user);
 
@@ -60,10 +53,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteUser()
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            UserStore.Delete(user);
-            return Ok();
+            return userStore.Delete();
         }
 
         [HttpPut, Authorize]
@@ -71,17 +61,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult EditUser([FromBody] UserEditDTO userDTO)
         {
-            var user = JwtDecoder.GetUser(User.Claims);
-
-            var error = UserValidators.EditUserValidator(userDTO);
-
-            if (error != null)
-            {
-                return error;
-            }
-
-            UserStore.Edit(user, userDTO);
-            return Ok();
+            return userStore.Edit(userDTO);
         }
 
         private string CreateToken(User user)

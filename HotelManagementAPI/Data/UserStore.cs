@@ -1,13 +1,33 @@
-﻿using HotelManagementAPI.Models;
+﻿using HotelManagementAPI.DataInterfaces;
+using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace HotelManagementAPI.Data
 {
-    public class UserStore : DataStore
+    public class UserStore(HotelManagementContext _context, IHttpContextAccessor http) : IUserStore
     {
-        public static void Add(UserCreateDTO userDTO)
+        private readonly HotelManagementContext context = _context;
+        private readonly IHttpContextAccessor http = http;
+
+        public User? GetCurrentUser()
         {
+            var userId = JwtDecoder.GetUser(http.HttpContext.User.Claims);
+            return GetById(userId);
+        }
+
+        public IActionResult Add(UserCreateDTO userDTO)
+        {
+            var error = UserValidators.CreateUserValidator(userDTO);
+
+            if (error != null)
+            {
+                return error;
+            }
+
             context.Users.Add(new Models.User
             {
                 ColorId = Validators.ValidateMultipleChoice(context.Colors, userDTO.ColorId),
@@ -18,23 +38,38 @@ namespace HotelManagementAPI.Data
                 AccountTypeId = Validators.ValidateMultipleChoice(context.AccountTypes, userDTO.ColorId)
             });
             context.SaveChanges();
+
+            return new OkObjectResult("User has been created.");
         }
 
-        public static void Edit(User user, UserEditDTO userDTO)
+        public IActionResult Edit(UserEditDTO userDTO)
         {
+            var user = GetCurrentUser();
+
+            var error = UserValidators.EditUserValidator(userDTO);
+
+            if (error != null)
+            {
+                return error;
+            }
+
             user.FirstName = userDTO.FirstName;
             user.LastName = userDTO.LastName;
-            user.ColorId = Validators.ValidateMultipleChoice(UserStore.context.Colors, userDTO.ColorId);
+            user.ColorId = Validators.ValidateMultipleChoice(context.Colors, userDTO.ColorId);
             context.SaveChanges();
+
+            return new OkObjectResult("User has been edited.");
         }
 
-        public static void Delete(User user)
+        public IActionResult Delete()
         {
+            var user = GetCurrentUser();
             context.Users.Remove(user);
             context.SaveChanges();
+            return new OkObjectResult("User has been deleted.");
         }
 
-        public static User? GetById(int id)
+        public User? GetById(int id)
         {
             return (from user in context.Users
                     where id == user.Id
@@ -42,7 +77,7 @@ namespace HotelManagementAPI.Data
                    .FirstOrDefault();
         }
 
-        public static User? GetByEmail(string email)
+        public User? GetByEmail(string email)
         {
             return (from user in context.Users
                     where email == user.Email
@@ -50,7 +85,7 @@ namespace HotelManagementAPI.Data
                    .FirstOrDefault();
         }
 
-        public static IEnumerable<User> All()
+        public IEnumerable<User> All()
         {
             return from user in context.Users
                    select user;

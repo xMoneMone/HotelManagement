@@ -6,10 +6,10 @@ namespace HotelManagementAPI.Util
 {
     public class JwtDecoder
     {
-        public static User GetUser(IEnumerable<Claim> claims)
+        public static int GetUser(IEnumerable<Claim> claims)
         {
             int userId = int.Parse(claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value);
-            return UserStore.GetById(userId);
+            return userId;
         }
     }
 }
