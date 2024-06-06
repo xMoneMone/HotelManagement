@@ -7,17 +7,12 @@ namespace HotelManagementAPI.Util
 {
     public class InvitationValidators
     {
-        public static IActionResult? InviteEmployeeValidator(User user, string employeeEmail, int hotelId)
+        public static IActionResult? InviteEmployeeValidator(User user, User employee, Hotel hotel, HotelCode userHotelConnection)
         {
-            var employee = UserStore.GetByEmail(employeeEmail);
-            var hotel = HotelStore.GetById(hotelId);
-
             if (employee == null || hotel == null)
             {
-                return new BadRequestObjectResult("User or hotel does not exist.");
+                return new NotFoundObjectResult("User or hotel does not exist.");
             }
-
-            var userHotelConnection = HotelCodeStore.GetByEmployeeHotel(employeeEmail, hotelId);
 
             if (userHotelConnection != null)
             {
@@ -37,13 +32,11 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? RespondToInvitationValidator(User user, string codeId)
+        public static IActionResult? RespondToInvitationValidator(User user, HotelCode? code)
         {
-            var code = HotelCodeStore.GetById(codeId);
-
             if (code == null)
             {
-                return new BadRequestObjectResult("Code does not exist.");
+                return new NotFoundObjectResult("Code does not exist.");
             }
 
             if (user.Id != code.UserId)
@@ -59,19 +52,14 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? DeleteInviteValidator(User user, string codeId)
+        public static IActionResult? DeleteInviteValidator(int userId, HotelCode? code, int hotelOwnerId)
         {
-            var code = HotelCodeStore.GetById(codeId);
-
             if (code == null)
             {
-                return new BadRequestObjectResult("Code does not exist.");
+                return new NotFoundObjectResult("Code does not exist.");
             }
 
-            Hotel hotel = HotelStore.GetById(code.HotelId);
-            var hotelOwner = UserStore.GetById(hotel.OwnerId);
-
-            if (user.Id != hotelOwner.Id)
+            if (userId != hotelOwnerId)
             {
                 return new UnauthorizedObjectResult("You're not the creator of this invite.");
             }

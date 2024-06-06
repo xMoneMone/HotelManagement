@@ -1,14 +1,21 @@
 ﻿using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Models;
 using HotelManagementAPI.Util;
+using HotelManagementAPI.DataInterfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Data
 {
-    public class HotelCodeStore : DataStore
+    public class HotelCodeStore(HotelManagementContext _context, IUserStore userStore, IHotelStore hotelStore, IUserHotelStore userHotelStore) : IHotelCodeStore
     {
-        public static string Add(HotelCodeCreateDTO hotelCodeDTO, string code, User user)
+        private readonly HotelManagementContext context = _context;
+        private readonly IUserStore userStore = userStore;
+        private readonly IHotelStore hotelStore = hotelStore;
+        private readonly IUserHotelStore userHotelStore = userHotelStore;
+
+        public string Add(HotelCodeCreateDTO hotelCodeDTO, string code, User user)
         {
-            var employee = UserStore.GetByEmail(hotelCodeDTO.UserEmail);
+            var employee = userStore.GetByEmail(hotelCodeDTO.UserEmail);
 
             context.Add(new HotelCode
             {
@@ -24,29 +31,64 @@ namespace HotelManagementAPI.Data
             return code;
         }
 
-        public static void AcceptInvite(string codeId)
+        public IActionResult RespondToInvite(RespondToInviteDTO inviteResponse, string codeId)
+        {
+            var user = userStore.GetCurrentUser();
+            var code = GetById(codeId);
+
+            var error = InvitationValidators.RespondToInvitationValidator(user, code);
+
+            if (error != null)
+            {
+                return error;
+            }
+
+            if (inviteResponse.Accept)
+            {
+                AcceptInvite(codeId);
+                return new OkObjectResult("Invite accepted.");
+            }
+            else
+            {
+                RejectInvite(codeId);
+                return new OkObjectResult("Invite rejected.");
+            }
+        }
+
+        public void AcceptInvite(string codeId)
         {
             var code = GetById(codeId);
             code.StatusId = 2;
-            UserHotelStore.Add(code);
+            userHotelStore.Add(code);
             context.SaveChanges();
         }
 
-        public static void RejectInvite(string codeId)
+        public void RejectInvite(string codeId)
         {
             var code = GetById(codeId);
             code.StatusId = 3;
             context.SaveChanges();
         }
 
-        public static void Delete(string id)
+        public IActionResult Delete(string id)
         {
+            var user = userStore.GetCurrentUser();
             var code = GetById(id);
+            var hotel = hotelStore.GetById(code?.HotelId);
+
+            var error = InvitationValidators.DeleteInviteValidator(user.Id, code, hotel.OwnerId);
+
+            if (error != null)
+            {
+                return error;
+            }
+
             context.HotelCodes.Remove(code);
             context.SaveChanges();
+            return new OkObjectResult("Invite deleted.");
         }
 
-        public static HotelCode? GetById(string id)
+        public HotelCode? GetById(string id)
         {
             return (from code in context.HotelCodes
                     where id == code.Code
@@ -54,43 +96,54 @@ namespace HotelManagementAPI.Data
                    .FirstOrDefault();
         }
 
-        public static HotelCode? GetByEmployeeHotel(string employeeEmail, int hotelId)
+        public HotelCode? GetByEmployeeHotel(string employeeEmail, int hotelId)
         {
-            var employee = UserStore.GetByEmail(employeeEmail);
+            var employee = userStore.GetByEmail(employeeEmail);
             return (from code in context.HotelCodes
                     where employee.Id == code.UserId && hotelId == code.HotelId
                     select code)
                    .FirstOrDefault();
         }
 
-        public static IEnumerable<HotelCode> All()
+        public IActionResult GetInvites()
         {
-            return from code in context.HotelCodes
-                   select code;
+            var user = userStore.GetCurrentUser();
+
+            if (user?.AccountTypeId == 1)
+            {
+                return new OkObjectResult(GetSentInvites(user));
+            }
+            else if (user?.AccountTypeId == 2)
+            {
+                return new OkObjectResult(GetReceivedInvites(user));
+            }
+
+            return new BadRequestObjectResult("User does not exist.");
         }
-        
-        public static IEnumerable<HotelCodeSentDTO> GetSentInvites(User user)
+
+        public IEnumerable<HotelCodeSentDTO> GetSentInvites(User user)
         {
             return from code in context.HotelCodes
                    where code.SenderId == user.Id
                    select new HotelCodeSentDTO
                    {
                        Code = code.Code,
-                       HotelName = HotelStore.GetById(code.HotelId).Name,
-                       UserEmail = context.Users.FirstOrDefault(x => x.Id == code.UserId).Email,
+                       HotelName = hotelStore.GetById(code.HotelId).Name,
+                       UserEmail = userStore.GetById(code.UserId).Email,
+                       fix later
                        Status = context.HotelCodeStatuses.FirstOrDefault(x => x.Id == code.StatusId).Status
                    };
         }
 
-        public static IEnumerable<HotelCodeReceivedDTO> GetReceivedInvites(User user)
+        public IEnumerable<HotelCodeReceivedDTO> GetReceivedInvites(User user)
         {
             return from code in context.HotelCodes
                    where code.UserId == user.Id
                    select new HotelCodeReceivedDTO
                    {
                        Code = code.Code,
-                       HotelName = HotelStore.GetById(code.HotelId).Name,
-                       OwnerEmail = context.Users.FirstOrDefault(x => x.Id == code.SenderId).Email,
+                       HotelName = hotelStore.GetById(code.HotelId).Name,
+                       OwnerEmail = userStore.GetById(code.SenderId).Email,
                    };
         }
     }
