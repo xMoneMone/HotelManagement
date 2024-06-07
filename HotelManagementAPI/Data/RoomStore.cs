@@ -3,6 +3,7 @@ using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagementAPI.Data
 {
@@ -13,10 +14,10 @@ namespace HotelManagementAPI.Data
         private readonly IHotelStore hotelStore = hotelStore;
         private readonly ICurrencyStore currencyStore = currencyStore;
 
-        public IActionResult Add(RoomCreateDTO roomDTO, int hotelId)
+        public async Task<IActionResult> Add(RoomCreateDTO roomDTO, int hotelId)
         {
-            var user = userStore.GetCurrentUser();
-            var hotel = hotelStore.GetById(roomDTO.HotelId);
+            var user = await userStore.GetCurrentUser();
+            var hotel = await hotelStore.GetById(roomDTO.HotelId);
 
             var error = RoomValidators.CreateRoomValidator(user, roomDTO, hotel);
 
@@ -25,22 +26,22 @@ namespace HotelManagementAPI.Data
                 return error;
             }
 
-            context.Rooms.Add(new Room
+            await context.Rooms.AddAsync(new Room
             {
                 RoomNumber = roomDTO.RoomNumber,
                 PricePerNight = roomDTO.PricePerNight,
                 Notes = roomDTO.Notes,
                 HotelId = hotelId
             });
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             return new OkObjectResult("Room created successfully.");
         }
 
-        public IActionResult Edit(int id, RoomCreateDTO roomDTO)
+        public async Task<IActionResult> Edit(int id, RoomCreateDTO roomDTO)
         {
-            var user = userStore.GetCurrentUser();
-            var room = GetById(id);
-            var hotel = hotelStore.GetById(roomDTO.HotelId);
+            var user = await userStore.GetCurrentUser();
+            var room = await GetById(id);
+            var hotel = await hotelStore.GetById(roomDTO.HotelId);
 
             var error = RoomValidators.EditRoomValidator(user, roomDTO, room, hotel);
 
@@ -53,15 +54,15 @@ namespace HotelManagementAPI.Data
             room.PricePerNight = roomDTO.PricePerNight;
             room.Notes = roomDTO.Notes;
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             return new OkObjectResult("Room created successfully.");
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var user = userStore.GetCurrentUser();
-            var room = GetById(id);
-            var hotel = hotelStore.GetById(room?.HotelId);
+            var user = await userStore.GetCurrentUser();
+            var room = await GetById(id);
+            var hotel = await hotelStore.GetById(room?.HotelId);
 
             var error = RoomValidators.DeleteRoomValidator(user, room, hotel);
 
@@ -71,29 +72,30 @@ namespace HotelManagementAPI.Data
             }
 
             context.Rooms.Remove(room);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return new OkObjectResult("Room has been deleted.");
         }
 
-        public Room? GetById(int? id)
+        public async Task<Room?> GetById(int? id)
         {
             if (id == null)
             {
                 return null;
             }
-            return (from room in context.Rooms
+            return await (from room in context.Rooms
                     where id == room.Id
                     select room)
-                   .FirstOrDefault();
+                   .FirstOrDefaultAsync();
         }
 
-        public IActionResult GetDTOById(int id)
+        public async Task<IActionResult> GetDTOById(int id)
         {
-            var user = userStore.GetCurrentUser();
-            var room = GetById(id);
-            var hotel = hotelStore.GetById(room.HotelId);
-            var employeesAtHotel = hotelStore.GetHotelEmployeesIds(hotel?.Id);
+            var user = await userStore.GetCurrentUser();
+            var room = await GetById(id);
+            var hotel = await hotelStore.GetById(room.HotelId);
+            var employeesAtHotel = await hotelStore.GetHotelEmployeesIds(hotel?.Id);
+            var currency = await currencyStore.GetById(hotel.CurrencyId);
 
             var error = RoomValidators.GetRoomByIdValidator(user, room, hotel, employeesAtHotel);
 
@@ -108,21 +110,21 @@ namespace HotelManagementAPI.Data
                 RoomNumber = room.RoomNumber,
                 PricePerNight = room.PricePerNight,
                 Notes = room.Notes,
-                CurrencyFormat = currencyStore.GetById(hotel.CurrencyId).FormattingString
+                CurrencyFormat = currency.FormattingString
             });
         }
 
-        public IEnumerable<Room> All()
+        public async Task<IEnumerable<Room>> All()
         {
-            return from room in context.Rooms
-                   select room;
+            return await (from room in context.Rooms
+                   select room).ToListAsync();
         }
 
-        public IActionResult GetRooms(int hotelId)
+        public async Task<IActionResult> GetRooms(int hotelId)
         {
-            var user = userStore.GetCurrentUser();
-            var hotel = hotelStore.GetById(hotelId);
-            var employeesAtHotel = hotelStore.GetHotelEmployeesIds(hotel?.Id);
+            var user = await userStore.GetCurrentUser();
+            var hotel = await hotelStore.GetById(hotelId);
+            var employeesAtHotel = await hotelStore.GetHotelEmployeesIds(hotel?.Id);
 
             var error = RoomValidators.GetRoomsValidator(user, hotel, employeesAtHotel);
 
@@ -131,7 +133,7 @@ namespace HotelManagementAPI.Data
                 return error;
             }
 
-            return new OkObjectResult(from room in context.Rooms
+            return new OkObjectResult(await (from room in context.Rooms
                                       where room.HotelId == hotel.Id
                                       select new RoomDTO
                                       {
@@ -140,7 +142,7 @@ namespace HotelManagementAPI.Data
                                           PricePerNight = room.PricePerNight,
                                           Notes = room.Notes,
                                           CurrencyFormat = currencyStore.GetById(hotel.CurrencyId).FormattingString
-                                      });
+                                      }).ToListAsync());
         }
     }
 }
