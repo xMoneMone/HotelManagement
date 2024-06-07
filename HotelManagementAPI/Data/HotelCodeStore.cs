@@ -58,29 +58,31 @@ namespace HotelManagementAPI.Data
 
             if (inviteResponse.Accept)
             {
-                AcceptInvite(codeId);
+                await AcceptInvite(codeId);
                 return new OkObjectResult("Invite accepted.");
             }
             else
             {
-                RejectInvite(codeId);
+                await RejectInvite(codeId);
                 return new OkObjectResult("Invite rejected.");
             }
         }
 
-        public async void AcceptInvite(string codeId)
+        public async Task<bool> AcceptInvite(string codeId)
         {
             var code = await GetById(codeId);
             code.StatusId = 2;
             await userHotelStore.Add(code);
             await context.SaveChangesAsync();
+            return true;
         }
 
-        public async void RejectInvite(string codeId)
+        public async Task<bool> RejectInvite(string codeId)
         {
             var code = await GetById(codeId);
             code.StatusId = 3;
             await context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IActionResult> Delete(string id)

@@ -6,7 +6,7 @@ namespace HotelManagementAPI.DataInterfaces
 {
     public interface IHotelCodeStore
     {
-        void AcceptInvite(string codeId);
+        Task<bool> AcceptInvite(string codeId);
         Task<IActionResult> Add(HotelCodeCreateDTO hotelCodeDTO);
         Task<IActionResult> Delete(string id);
         Task<HotelCode?> GetByEmployeeHotel(string employeeEmail, int hotelId);
@@ -14,7 +14,7 @@ namespace HotelManagementAPI.DataInterfaces
         Task<IActionResult> GetInvites();
         Task<IEnumerable<HotelCodeReceivedDTO>> GetReceivedInvites(User user);
         Task<IEnumerable<HotelCodeSentDTO>> GetSentInvites(User user);
-        void RejectInvite(string codeId);
+        Task<bool> RejectInvite(string codeId);
         Task<IActionResult> RespondToInvite(RespondToInviteDTO inviteResponse, string codeId);
     }
 }
