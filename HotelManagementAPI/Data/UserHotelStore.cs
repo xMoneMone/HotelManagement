@@ -12,13 +12,14 @@ namespace HotelManagementAPI.Data
         private readonly IUserStore userStore = userStore;
         private readonly IHotelStore hotelStore = hotelStore;
 
-        public async void Add(HotelCode code)
+        public async Task<bool> Add(HotelCode code)
         {
             await context.AddAsync(new UsersHotel
             {
                 HotelId = code.HotelId,
                 UserId = code.UserId
             });
+            return true;
         }
 
         public async Task<IActionResult> Delete(int hotelId, int employeeId)

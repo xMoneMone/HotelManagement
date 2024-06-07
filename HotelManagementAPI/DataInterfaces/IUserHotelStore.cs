@@ -1,11 +1,12 @@
 ﻿using HotelManagementAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlTypes;
 
 namespace HotelManagementAPI.DataInterfaces
 {
     public interface IUserHotelStore
     {
-        void Add(HotelCode code);
+        Task<bool> Add(HotelCode code);
         Task<IActionResult> Delete(int hotelId, int employeeId);
         Task<UsersHotel?> GetByHotelEmployee(int? hotelId, int? employeeId);
     }
