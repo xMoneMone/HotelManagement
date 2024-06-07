@@ -16,7 +16,7 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? LoginValidator(UserLoginDTO userDTO, User user)
+        public static IActionResult? LoginValidator(UserLoginDTO userDTO, User? user)
         {
             if (user == null)
             {

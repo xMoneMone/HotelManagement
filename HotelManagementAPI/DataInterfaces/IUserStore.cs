@@ -2,17 +2,17 @@
 using HotelManagementAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelManagementAPI.DataInterfaces
+namespace HotelManagementAPI.Data
 {
     public interface IUserStore
     {
-        IActionResult Add(UserCreateDTO userDTO);
-        IEnumerable<User> All();
-        IActionResult Delete();
-        IActionResult Edit(UserEditDTO userDTO);
-        IActionResult Login(UserLoginDTO userDTO);
-        User? GetByEmail(string email);
-        User? GetById(int id);
-        User? GetCurrentUser();
+        Task<IActionResult> Add(UserCreateDTO userDTO);
+        Task<IEnumerable<User>> All();
+        Task<IActionResult> Delete();
+        Task<IActionResult> Edit(UserEditDTO userDTO);
+        Task<User?> GetByEmail(string email);
+        Task<User?> GetById(int id);
+        Task<User?> GetCurrentUser();
+        Task<IActionResult> Login(UserLoginDTO userDTO);
     }
 }

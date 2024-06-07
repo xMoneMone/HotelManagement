@@ -1,7 +1,7 @@
 ﻿using HotelManagementAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using HotelManagementAPI.DataInterfaces;
+using HotelManagementAPI.Data;
 
 namespace HotelManagementAPI.Controllers
 {
@@ -14,34 +14,34 @@ namespace HotelManagementAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult CreateUser([FromBody] UserCreateDTO userDTO)
+        public async Task<IActionResult> CreateUser([FromBody] UserCreateDTO userDTO)
         {
-            return userStore.Add(userDTO);
+            return await userStore.Add(userDTO);
         }
 
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Login(UserLoginDTO userDTO)
+        public async Task<IActionResult> Login(UserLoginDTO userDTO)
         {
-            return userStore.Login(userDTO);
+            return await userStore.Login(userDTO);
         }
 
         [HttpDelete, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteUser()
+        public async Task<IActionResult> DeleteUser()
         {
-            return userStore.Delete();
+            return await userStore.Delete();
         }
 
         [HttpPut, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult EditUser([FromBody] UserEditDTO userDTO)
+        public async Task<IActionResult> EditUser([FromBody] UserEditDTO userDTO)
         {
-            return userStore.Edit(userDTO);
+            return await userStore.Edit(userDTO);
         } 
     }
 }

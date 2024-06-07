@@ -3,6 +3,7 @@ using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,13 +19,13 @@ namespace HotelManagementAPI.Data
         private readonly IConfiguration configuration = configuration;
         private readonly IAccountTypeStore accountTypeStore = accountTypeStore;
 
-        public User? GetCurrentUser()
+        public async Task<User?> GetCurrentUser()
         {
             var userId = Jwt.DecodeUser(http.HttpContext.User.Claims);
-            return GetById(userId);
+            return await GetById(userId);
         }
 
-        public IActionResult Add(UserCreateDTO userDTO)
+        public async Task<IActionResult> Add(UserCreateDTO userDTO)
         {
             var error = UserValidators.CreateUserValidator(userDTO);
 
@@ -33,7 +34,7 @@ namespace HotelManagementAPI.Data
                 return error;
             }
 
-            context.Users.Add(new Models.User
+            await context.Users.AddAsync(new Models.User
             {
                 ColorId = Validators.ValidateMultipleChoice(context.Colors, userDTO.ColorId),
                 Email = userDTO.Email,
@@ -42,14 +43,14 @@ namespace HotelManagementAPI.Data
                 LastName = userDTO.LastName,
                 AccountTypeId = Validators.ValidateMultipleChoice(context.AccountTypes, userDTO.ColorId)
             });
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return new OkObjectResult("User has been created.");
         }
 
-        public IActionResult Edit(UserEditDTO userDTO)
+        public async Task<IActionResult> Edit(UserEditDTO userDTO)
         {
-            var user = GetCurrentUser();
+            var user = await GetCurrentUser();
 
             var error = UserValidators.EditUserValidator(userDTO);
 
@@ -61,38 +62,38 @@ namespace HotelManagementAPI.Data
             user.FirstName = userDTO.FirstName;
             user.LastName = userDTO.LastName;
             user.ColorId = Validators.ValidateMultipleChoice(context.Colors, userDTO.ColorId);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return new OkObjectResult("User has been edited.");
         }
 
-        public IActionResult Delete()
+        public async Task<IActionResult> Delete()
         {
-            var user = GetCurrentUser();
+            var user = await GetCurrentUser();
             context.Users.Remove(user);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             return new OkObjectResult("User has been deleted.");
         }
 
-        public User? GetById(int id)
+        public async Task<User?> GetById(int id)
         {
-            return (from user in context.Users
-                    where id == user.Id
-                    select user)
-                   .FirstOrDefault();
+            return await (from user in context.Users
+                          where id == user.Id
+                          select user)
+                   .FirstOrDefaultAsync();
         }
 
-        public User? GetByEmail(string email)
+        public async Task<User?> GetByEmail(string email)
         {
-            return (from user in context.Users
-                    where email == user.Email
-                    select user)
-                   .FirstOrDefault();
+            return await (from user in context.Users
+                          where email == user.Email
+                          select user)
+                   .FirstOrDefaultAsync();
         }
 
-        public IActionResult Login(UserLoginDTO userDTO)
+        public async Task<IActionResult> Login(UserLoginDTO userDTO)
         {
-            var user = GetByEmail(userDTO.Email);
+            var user = await GetByEmail(userDTO.Email);
 
             var error = UserValidators.LoginValidator(userDTO, user);
 
@@ -104,13 +105,13 @@ namespace HotelManagementAPI.Data
             return new OkObjectResult(CreateToken(user));
         }
 
-        public IEnumerable<User> All()
+        public async Task<IEnumerable<User>> All()
         {
-            return from user in context.Users
-                   select user;
+            return await (from user in context.Users
+                          select user).ToListAsync();
         }
 
-        private string CreateToken(User user)
+        private string CreateToken(User? user)
         {
             List<Claim> claims =
             [
