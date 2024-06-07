@@ -1,5 +1,6 @@
 ﻿using HotelManagementAPI.DataInterfaces;
 using HotelManagementAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagementAPI.Data
 {
@@ -7,12 +8,12 @@ namespace HotelManagementAPI.Data
     {
         private readonly HotelManagementContext context = context;
 
-        public Currency? GetById(int id)
+        public async Task<Currency?> GetById(int id)
         {
-            return (from currency in context.Currencies
+            return await (from currency in context.Currencies
                     where id == currency.Id
                     select currency)
-                   .FirstOrDefault();
+                   .FirstOrDefaultAsync();
         }
     }
 }
