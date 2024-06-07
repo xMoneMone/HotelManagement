@@ -6,7 +6,7 @@ namespace HotelManagementAPI.DataInterfaces
     public interface IUserHotelStore
     {
         void Add(HotelCode code);
-        IActionResult Delete(int hotelId, int employeeId);
-        UsersHotel? GetByHotelEmployee(int? hotelId, int? employeeId);
+        Task<IActionResult> Delete(int hotelId, int employeeId);
+        Task<UsersHotel?> GetByHotelEmployee(int? hotelId, int? employeeId);
     }
 }

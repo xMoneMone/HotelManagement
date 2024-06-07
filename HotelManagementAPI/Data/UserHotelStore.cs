@@ -2,6 +2,7 @@
 using HotelManagementAPI.Models;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagementAPI.Data
 {
@@ -11,21 +12,21 @@ namespace HotelManagementAPI.Data
         private readonly IUserStore userStore = userStore;
         private readonly IHotelStore hotelStore = hotelStore;
 
-        public void Add(HotelCode code)
+        public async void Add(HotelCode code)
         {
-            context.Add(new UsersHotel
+            await context.AddAsync(new UsersHotel
             {
                 HotelId = code.HotelId,
                 UserId = code.UserId
             });
         }
 
-        public IActionResult Delete(int hotelId, int employeeId)
+        public async Task<IActionResult> Delete(int hotelId, int employeeId)
         {
-            var user = userStore.GetCurrentUser();
-            var hotel = hotelStore.GetById(hotelId);
-            var employee = context.Users.FirstOrDefault(x => x.Id == employeeId);
-            var userHotelConnection = GetByHotelEmployee(hotelId, employeeId);
+            var user = await userStore.GetCurrentUser();
+            var hotel = await hotelStore.GetById(hotelId);
+            var employee = await context.Users.FirstOrDefaultAsync(x => x.Id == employeeId);
+            var userHotelConnection = await GetByHotelEmployee(hotelId, employeeId);
 
             var error = HotelValidators.RemoveHotelEmployeeValidator(user, employee, hotel, userHotelConnection);
 
@@ -35,17 +36,17 @@ namespace HotelManagementAPI.Data
             }
 
             context.UsersHotels.Remove(userHotelConnection);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             return new OkObjectResult("Employee removed from hotel.");
         }
 
-        public UsersHotel? GetByHotelEmployee(int? hotelId, int? employeeId)
+        public async Task<UsersHotel?> GetByHotelEmployee(int? hotelId, int? employeeId)
         {
             if (employeeId == null || hotelId == null)
             {
                 return null;
             }
-            return context.UsersHotels.FirstOrDefault(x => x.UserId == employeeId && x.HotelId == hotelId);
+            return await context.UsersHotels.FirstOrDefaultAsync(x => x.UserId == employeeId && x.HotelId == hotelId);
         }
     }
 }

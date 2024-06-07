@@ -22,7 +22,9 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete("{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
+        public async Task<IActionResult> RemoveHotelEmployee(int hotelId, int employeeId)
         {
+            return await userHotelStore.Delete(hotelId, employeeId);
         }
 
         [HttpPost, Authorize(Roles = "Owner")]
