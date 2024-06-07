@@ -178,7 +178,7 @@ namespace HotelManagementAPI.Data
                                                  FullPaymentPrice = booking.FullPaymentPrice,
                                                  Notes = booking.Notes,
                                                  RoomId = room.Id
-                                             }));
+                                             }).ToListAsync());
         }
     }
 }
