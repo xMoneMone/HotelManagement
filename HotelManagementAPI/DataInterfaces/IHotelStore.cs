@@ -6,12 +6,12 @@ namespace HotelManagementAPI.DataInterfaces
 {
     public interface IHotelStore
     {
-        IActionResult Add(HotelCreateDTO hotelDTO);
-        IEnumerable<Hotel> All();
-        IActionResult Delete(int id);
-        IActionResult Edit(int id, HotelCreateDTO hotelDTO);
-        Hotel? GetById(int? id);
-        int[] GetHotelEmployeesIds(int? hotelId);
-        IEnumerable<HotelDTO> GetUserHotels();
+        Task<IActionResult> Add(HotelCreateDTO hotelDTO);
+        Task<IEnumerable<Hotel>> All();
+        Task<IActionResult> Delete(int id);
+        Task<IActionResult> Edit(int id, HotelCreateDTO hotelDTO);
+        Task<Hotel?> GetById(int? id);
+        Task<int[]> GetHotelEmployeesIds(int? hotelId);
+        Task<IEnumerable<HotelDTO>> GetUserHotels();
     }
 }
