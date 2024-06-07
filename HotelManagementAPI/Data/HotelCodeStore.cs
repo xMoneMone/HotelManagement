@@ -3,24 +3,23 @@ using HotelManagementAPI.Models;
 using HotelManagementAPI.Util;
 using HotelManagementAPI.DataInterfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagementAPI.Data
 {
-    public class HotelCodeStore(HotelManagementContext _context, IUserStore userStore, IHotelStore hotelStore, IUserHotelStore userHotelStore,
-        IHotelCodeStatusStore hotelCodeStatusStore) : IHotelCodeStore
+    public class HotelCodeStore(HotelManagementContext _context, IUserStore userStore, IHotelStore hotelStore, IUserHotelStore userHotelStore) : IHotelCodeStore
     {
         private readonly HotelManagementContext context = _context;
         private readonly IUserStore userStore = userStore;
         private readonly IHotelStore hotelStore = hotelStore;
         private readonly IUserHotelStore userHotelStore = userHotelStore;
-        private readonly IHotelCodeStatusStore hotelCodeStatusesStore = hotelCodeStatusStore;
 
-        public IActionResult Add(HotelCodeCreateDTO hotelCodeDTO)
+        public async Task<IActionResult> Add(HotelCodeCreateDTO hotelCodeDTO)
         {
-            var user = userStore.GetCurrentUser();
-            var employee = userStore.GetByEmail(hotelCodeDTO.UserEmail);
-            var hotel = hotelStore.GetById(hotelCodeDTO.HotelId);
-            var connection = userHotelStore.GetByHotelEmployee(hotel?.Id, employee?.Id);
+            var user = await userStore.GetCurrentUser();
+            var employee = await userStore.GetByEmail(hotelCodeDTO.UserEmail);
+            var hotel = await hotelStore.GetById(hotelCodeDTO.HotelId);
+            var connection = await userHotelStore.GetByHotelEmployee(hotel?.Id, employee?.Id);
 
             var error = InvitationValidators.InviteEmployeeValidator(user, employee, hotel, connection);
 
@@ -31,7 +30,7 @@ namespace HotelManagementAPI.Data
 
             string code = CodeGenerator.GenerateCode();
 
-            context.Add(new HotelCode
+            await context.AddAsync(new HotelCode
             {
                 UserId = employee.Id,
                 Code = code,
@@ -40,15 +39,15 @@ namespace HotelManagementAPI.Data
                 SenderId = user.Id
             });
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return new OkObjectResult(code);
         }
 
-        public IActionResult RespondToInvite(RespondToInviteDTO inviteResponse, string codeId)
+        public async Task<IActionResult> RespondToInvite(RespondToInviteDTO inviteResponse, string codeId)
         {
-            var user = userStore.GetCurrentUser();
-            var code = GetById(codeId);
+            var user = await userStore.GetCurrentUser();
+            var code = await GetById(codeId);
 
             var error = InvitationValidators.RespondToInvitationValidator(user, code);
 
@@ -69,26 +68,26 @@ namespace HotelManagementAPI.Data
             }
         }
 
-        public void AcceptInvite(string codeId)
+        public async void AcceptInvite(string codeId)
         {
-            var code = GetById(codeId);
+            var code = await GetById(codeId);
             code.StatusId = 2;
-            userHotelStore.Add(code);
-            context.SaveChanges();
+            await userHotelStore.Add(code);
+            await context.SaveChangesAsync();
         }
 
-        public void RejectInvite(string codeId)
+        public async void RejectInvite(string codeId)
         {
-            var code = GetById(codeId);
+            var code = await GetById(codeId);
             code.StatusId = 3;
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var user = userStore.GetCurrentUser();
-            var code = GetById(id);
-            var hotel = hotelStore.GetById(code?.HotelId);
+            var user = await userStore.GetCurrentUser();
+            var code = await GetById(id);
+            var hotel = await hotelStore.GetById(code?.HotelId);
 
             var error = InvitationValidators.DeleteInviteValidator(user.Id, code, hotel.OwnerId);
 
@@ -98,66 +97,71 @@ namespace HotelManagementAPI.Data
             }
 
             context.HotelCodes.Remove(code);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             return new OkObjectResult("Invite deleted.");
         }
 
-        public HotelCode? GetById(string id)
+        public async Task<HotelCode?> GetById(string id)
         {
-            return (from code in context.HotelCodes
-                    where id == code.Code
-                    select code)
-                   .FirstOrDefault();
+            return await (from code in context.HotelCodes
+                          where id == code.Code
+                          select code)
+                   .FirstOrDefaultAsync();
         }
 
-        public HotelCode? GetByEmployeeHotel(string employeeEmail, int hotelId)
+        public async Task<HotelCode?> GetByEmployeeHotel(string employeeEmail, int hotelId)
         {
             var employee = userStore.GetByEmail(employeeEmail);
-            return (from code in context.HotelCodes
-                    where employee.Id == code.UserId && hotelId == code.HotelId
-                    select code)
-                   .FirstOrDefault();
+            return await (from code in context.HotelCodes
+                          where employee.Id == code.UserId && hotelId == code.HotelId
+                          select code)
+                   .FirstOrDefaultAsync();
         }
 
-        public IActionResult GetInvites()
+        public async Task<IActionResult> GetInvites()
         {
-            var user = userStore.GetCurrentUser();
+            var user = await userStore.GetCurrentUser();
 
             if (user?.AccountTypeId == 1)
             {
-                return new OkObjectResult(GetSentInvites(user));
+                return new OkObjectResult(await GetSentInvites(user));
             }
             else if (user?.AccountTypeId == 2)
             {
-                return new OkObjectResult(GetReceivedInvites(user));
+                return new OkObjectResult(await GetReceivedInvites(user));
             }
 
             return new BadRequestObjectResult("User does not exist.");
         }
 
-        public IEnumerable<HotelCodeSentDTO> GetSentInvites(User user)
+        public async Task<IEnumerable<HotelCodeSentDTO>> GetSentInvites(User user)
         {
-            return from code in context.HotelCodes
-                   where code.SenderId == user.Id
-                   select new HotelCodeSentDTO
-                   {
-                       Code = code.Code,
-                       HotelName = hotelStore.GetById(code.HotelId).Name,
-                       UserEmail = userStore.GetById(code.UserId).Email,
-                       Status = hotelCodeStatusStore.GetById(code.StatusId).Status
-                   };
+            return await (from code in context.HotelCodes
+                          where code.SenderId == user.Id
+                          join hotel in context.Hotels on code.HotelId equals hotel.Id
+                          join employee in context.Users on code.UserId equals employee.Id
+                          join status in context.HotelCodeStatuses on code.StatusId equals status.Id
+                          select new HotelCodeSentDTO
+                          {
+                              Code = code.Code,
+                              HotelName = hotel.Name,
+                              UserEmail = employee.Email,
+                              Status = status.Status
+                          }).ToListAsync();
         }
 
-        public IEnumerable<HotelCodeReceivedDTO> GetReceivedInvites(User user)
+        public async Task<IEnumerable<HotelCodeReceivedDTO>> GetReceivedInvites(User user)
         {
-            return from code in context.HotelCodes
-                   where code.UserId == user.Id
-                   select new HotelCodeReceivedDTO
-                   {
-                       Code = code.Code,
-                       HotelName = hotelStore.GetById(code.HotelId).Name,
-                       OwnerEmail = userStore.GetById(code.SenderId).Email,
-                   };
+            return await (from code in context.HotelCodes
+                          where code.UserId == user.Id
+                          join hotel in context.Hotels on code.HotelId equals hotel.Id
+                          join owner in context.Users on code.SenderId equals owner.Id
+                          select new HotelCodeReceivedDTO
+                          {
+                              Code = code.Code,
+                              HotelName = hotel.Name,
+                              OwnerEmail = owner.Email,
+                          }).ToListAsync();
         }
     }
 }

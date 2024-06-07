@@ -14,36 +14,36 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet, Authorize]
-        public IActionResult GetInvites()
+        public async Task<IActionResult> GetInvites()
         {
-            return hotelCodeStore.GetInvites();
+            return await hotelCodeStore.GetInvites();
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost, Authorize(Roles = "Owner")]
-        public IActionResult InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO)
+        public async Task<IActionResult> InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO)
         {
-            return hotelCodeStore.Add(hotelCodeDTO);
+            return await hotelCodeStore.Add(hotelCodeDTO);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("{codeId}"), Authorize]
-        public IActionResult RespondToInvitation(string codeId, [FromBody] RespondToInviteDTO inviteResponse)
+        public async Task<IActionResult> RespondToInvitation(string codeId, [FromBody] RespondToInviteDTO inviteResponse)
         {
-            return hotelCodeStore.RespondToInvite(inviteResponse, codeId);
+            return await hotelCodeStore.RespondToInvite(inviteResponse, codeId);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete("{codeId}"), Authorize(Roles = "Owner")]
-        public IActionResult DeleteInvite(string codeId)
+        public async Task<IActionResult> DeleteInvite(string codeId)
         {
-            return hotelCodeStore.Delete(codeId);
+            return await hotelCodeStore.Delete(codeId);
         }
 
     }

@@ -7,14 +7,14 @@ namespace HotelManagementAPI.DataInterfaces
     public interface IHotelCodeStore
     {
         void AcceptInvite(string codeId);
-        IActionResult Add(HotelCodeCreateDTO hotelCodeDTO);
-        IActionResult Delete(string id);
-        HotelCode? GetByEmployeeHotel(string employeeEmail, int hotelId);
-        HotelCode? GetById(string id);
-        IActionResult GetInvites();
-        IEnumerable<HotelCodeReceivedDTO> GetReceivedInvites(User user);
-        IEnumerable<HotelCodeSentDTO> GetSentInvites(User user);
+        Task<IActionResult> Add(HotelCodeCreateDTO hotelCodeDTO);
+        Task<IActionResult> Delete(string id);
+        Task<HotelCode?> GetByEmployeeHotel(string employeeEmail, int hotelId);
+        Task<HotelCode?> GetById(string id);
+        Task<IActionResult> GetInvites();
+        Task<IEnumerable<HotelCodeReceivedDTO>> GetReceivedInvites(User user);
+        Task<IEnumerable<HotelCodeSentDTO>> GetSentInvites(User user);
         void RejectInvite(string codeId);
-        IActionResult RespondToInvite(RespondToInviteDTO inviteResponse, string codeId);
+        Task<IActionResult> RespondToInvite(RespondToInviteDTO inviteResponse, string codeId);
     }
 }
