@@ -135,12 +135,14 @@ namespace HotelManagementAPI.Data
 
             return new OkObjectResult(await (from room in context.Rooms
                                       where room.HotelId == hotel.Id
+                                      join currency in context.Currencies on hotel.CurrencyId equals currency.Id
                                       select new RoomDTO
                                       {
                                           Id = room.Id,
                                           RoomNumber = room.RoomNumber,
                                           PricePerNight = room.PricePerNight,
                                           Notes = room.Notes,
+                                          CurrencyFormat = currency.FormattingString
                                       }).ToListAsync());
         }
     }
