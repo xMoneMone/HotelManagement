@@ -2,7 +2,7 @@
 using HotelManagementAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelManagementAPI.Data
+namespace HotelManagementAPI.DataInterfaces
 {
     public interface IUserStore
     {

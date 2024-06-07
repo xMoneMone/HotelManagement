@@ -1,7 +1,7 @@
 ﻿using HotelManagementAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using HotelManagementAPI.Data;
+using HotelManagementAPI.DataInterfaces;
 
 namespace HotelManagementAPI.Controllers
 {
