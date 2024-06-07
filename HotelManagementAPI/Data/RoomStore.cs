@@ -95,7 +95,7 @@ namespace HotelManagementAPI.Data
             var room = await GetById(id);
             var hotel = await hotelStore.GetById(room.HotelId);
             var employeesAtHotel = await hotelStore.GetHotelEmployeesIds(hotel?.Id);
-            var currency = await currencyStore.GetById(hotel.CurrencyId);
+            var currency = await currencyStore.GetById(hotel?.CurrencyId);
 
             var error = RoomValidators.GetRoomByIdValidator(user, room, hotel, employeesAtHotel);
 
@@ -141,7 +141,6 @@ namespace HotelManagementAPI.Data
                                           RoomNumber = room.RoomNumber,
                                           PricePerNight = room.PricePerNight,
                                           Notes = room.Notes,
-                                          CurrencyFormat = currencyStore.GetById(hotel.CurrencyId).FormattingString
                                       }).ToListAsync());
         }
     }

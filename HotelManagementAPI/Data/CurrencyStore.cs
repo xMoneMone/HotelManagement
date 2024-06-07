@@ -8,8 +8,12 @@ namespace HotelManagementAPI.Data
     {
         private readonly HotelManagementContext context = context;
 
-        public async Task<Currency?> GetById(int id)
+        public async Task<Currency?> GetById(int? id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             return await (from currency in context.Currencies
                     where id == currency.Id
                     select currency)
