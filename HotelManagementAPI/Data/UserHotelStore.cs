@@ -26,7 +26,7 @@ namespace HotelManagementAPI.Data
         {
             var user = await userStore.GetCurrentUser();
             var hotel = await hotelStore.GetById(hotelId);
-            var employee = await context.Users.FirstOrDefaultAsync(x => x.Id == employeeId);
+            var employee = await userStore.GetById(employeeId);
             var userHotelConnection = await GetByHotelEmployee(hotelId, employeeId);
 
             var error = HotelValidators.RemoveHotelEmployeeValidator(user, employee, hotel, userHotelConnection);
