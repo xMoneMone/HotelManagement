@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Controllers
 {
-    [Route(""), Authorize]
+    [Route("hotels/{hotelId:int}/rooms/{roomId:int}/bookings"), Authorize]
     [ApiController]
     public class BookingsController(IBookingStore bookingStore) : ControllerBase
     {
         private readonly IBookingStore bookingStore = bookingStore;
 
-        [HttpGet("hotels/{hotelId}/rooms/{roomId:int}/bookings"), Authorize]
+        [HttpGet(""), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -20,7 +20,7 @@ namespace HotelManagementAPI.Controllers
             return await bookingStore.GetBookings(roomId);
         }
 
-        [HttpPost("hotels/{hotelId:int}/rooms/{roomId:int}/bookings"), Authorize]
+        [HttpPost(""), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -29,7 +29,7 @@ namespace HotelManagementAPI.Controllers
             return await bookingStore.Add(bookingDTO, roomId);
         }
 
-        [HttpPatch("hotels/{hotelId:int}/rooms/{roomId:int}/bookings/{bookingId:int}"), Authorize]
+        [HttpPatch("{bookingId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -38,7 +38,7 @@ namespace HotelManagementAPI.Controllers
             return await bookingStore.Edit(bookingId, bookingDTO);
         }
 
-        [HttpGet("hotels/{hotelId:int}/rooms/{roomId:int}/bookings/{bookingId:int}"), Authorize]
+        [HttpGet("{bookingId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -47,7 +47,7 @@ namespace HotelManagementAPI.Controllers
             return await bookingStore.GetDTOById(bookingId);
         }
 
-        [HttpDelete("hotels/{hotelId:int}/rooms/{roomId:int}/bookings/{bookingId:int}"), Authorize(Roles = "Owner")]
+        [HttpDelete("{bookingId:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
