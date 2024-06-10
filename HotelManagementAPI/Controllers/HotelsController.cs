@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Controllers
 {
-    [Route("hotels"), Authorize]
+    [Route(""), Authorize]
     [ApiController]
     public class HotelsController(IHotelStore hotelStore, IUserHotelStore userHotelStore) : ControllerBase
     {
         private readonly IHotelStore hotelStore = hotelStore;
         private readonly IUserHotelStore userHotelStore = userHotelStore;
 
-        [HttpGet, Authorize]
+        [HttpGet("user/hotels"), Authorize]
         public async Task<IEnumerable<HotelDTO>> GetHotels()
         {
             return await hotelStore.GetUserHotels();
@@ -21,13 +21,13 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete("{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
+        [HttpDelete("hotels/{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
         public async Task<IActionResult> RemoveHotelEmployee(int hotelId, int employeeId)
         {
             return await userHotelStore.Delete(hotelId, employeeId);
         }
 
-        [HttpPost, Authorize(Roles = "Owner")]
+        [HttpPost("hotels"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -38,7 +38,7 @@ namespace HotelManagementAPI.Controllers
             
         }
 
-        [HttpPatch("{id:int}"), Authorize(Roles = "Owner")]
+        [HttpPatch("hotels/{id:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -48,7 +48,7 @@ namespace HotelManagementAPI.Controllers
         }
 
 
-        [HttpDelete("{id:int}"), Authorize(Roles = "Owner")]
+        [HttpDelete("hotels/{id:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
