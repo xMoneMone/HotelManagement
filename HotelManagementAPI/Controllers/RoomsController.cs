@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Controllers
 {
-    [Route("rooms"), Authorize]
+    [Route("hotels/{hotelId:int}/rooms"), Authorize]
     [ApiController]
     public class RoomsController(IRoomStore roomStore) : ControllerBase
     {
         private readonly IRoomStore roomStore = roomStore;
 
-        [HttpGet("all-rooms/{hotelId:int}"), Authorize]
+        [HttpGet(""), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -20,7 +20,7 @@ namespace HotelManagementAPI.Controllers
             return await roomStore.GetRooms(hotelId);
         }
 
-        [HttpPost("{hotelId:int}"), Authorize(Roles = "Owner")]
+        [HttpPost(""), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -33,7 +33,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId)
+        public async Task<IActionResult> EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId, int hotelId)
         {
             return await roomStore.Edit(roomId, roomDTO);
         }
@@ -42,7 +42,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetRoomById(int roomId)
+        public async Task<IActionResult> GetRoomById(int roomId, int hotelId)
         {
             return await roomStore.GetDTOById(roomId);
         }
@@ -51,7 +51,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> DeleteRoom(int roomId)
+        public async Task<IActionResult> DeleteRoom(int roomId, int hotelId)
         {
             return await roomStore.Delete(roomId);
         }
