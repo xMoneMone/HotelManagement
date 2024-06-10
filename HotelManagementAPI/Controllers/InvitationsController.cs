@@ -12,7 +12,6 @@ namespace HotelManagementAPI.Controllers
         private readonly IHotelCodeStore hotelCodeStore = hotelCodeStore;
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("user/invitations"), Authorize]
         public async Task<IActionResult> GetInvites()
         {
@@ -21,7 +20,8 @@ namespace HotelManagementAPI.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPost("user/invitations/{codeId}"), Authorize]
         public async Task<IActionResult> RespondToInvitation(string codeId, [FromBody] RespondToInviteDTO inviteResponse)
         {
@@ -30,7 +30,8 @@ namespace HotelManagementAPI.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPost("hotels/invitations"), Authorize(Roles = "Owner")]
         public async Task<IActionResult> InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO)
         {
@@ -38,8 +39,8 @@ namespace HotelManagementAPI.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpDelete("hotels/invitations/{codeId}"), Authorize(Roles = "Owner")]
         public async Task<IActionResult> DeleteInvite(string codeId)
         {

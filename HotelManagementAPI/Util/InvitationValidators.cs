@@ -1,6 +1,5 @@
-﻿using HotelManagementAPI.Data;
-using HotelManagementAPI.Models;
-using HotelManagementAPI.Models.DTO;
+﻿using HotelManagementAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Util
@@ -21,7 +20,7 @@ namespace HotelManagementAPI.Util
 
             if (user.Id != hotel.OwnerId)
             {
-                return new BadRequestObjectResult("You are not the owner of this hotel.");
+                return new ObjectResult("You are not the owner of this hotel.") { StatusCode = 403 };
             }
 
             if (user == employee)
