@@ -17,7 +17,7 @@ namespace HotelManagementAPI.Util
 
             if (user.Id != hotel.OwnerId)
             {
-                return new UnauthorizedObjectResult("You are not authorized to perform this action.");
+                return new ObjectResult("You are not authorized to perform this action.") { StatusCode = 403 };
             }
 
             if (userHotelConnection == null)
@@ -61,7 +61,7 @@ namespace HotelManagementAPI.Util
 
             if (hotel.OwnerId != user.Id)
             {
-                return new UnauthorizedObjectResult("You are not the owner of this hotel.");
+                return new ObjectResult("You are not the owner of this hotel.") { StatusCode = 403 };
             }
 
             return CreateHotelValidator(hotelDTO);
@@ -76,7 +76,7 @@ namespace HotelManagementAPI.Util
 
             if (hotel.OwnerId != user.Id)
             {
-                return new UnauthorizedObjectResult("You are not the owner of this hotel.");
+                return new ObjectResult("You are not the owner of this hotel.") { StatusCode = 403 };
             }
 
             return null;

@@ -17,7 +17,7 @@ namespace HotelManagementAPI.Util
 
             if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
-                return new UnauthorizedObjectResult("You do not have permission to see this resource.");
+                return new ObjectResult("You do not have permission to see this resource.") { StatusCode = 403 };
             }
 
             return null;
@@ -32,7 +32,7 @@ namespace HotelManagementAPI.Util
 
             if (hotel.OwnerId != user.Id)
             {
-                return new UnauthorizedObjectResult("You are not the owner of this hotel.");
+                return new ObjectResult("You are not the owner of this hotel.") { StatusCode = 403 };
             }
 
             if (roomDTO.RoomNumber.Length <= 0 || roomDTO.RoomNumber.Length > 50)
@@ -77,7 +77,7 @@ namespace HotelManagementAPI.Util
 
             if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
-                return new UnauthorizedObjectResult("You do not have permission to see this resource.");
+                return new ObjectResult("You do not have permission to see this resource.") { StatusCode = 403 };
             }
 
             return null;
@@ -92,7 +92,7 @@ namespace HotelManagementAPI.Util
 
             if (hotel.OwnerId != user.Id)
             {
-                return new UnauthorizedObjectResult("You do not have permission to delete this resource.");
+                return new ObjectResult("You do not have permission to delete this resource.") { StatusCode = 403 };
             }
 
             return null;

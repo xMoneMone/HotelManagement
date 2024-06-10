@@ -41,7 +41,7 @@ namespace HotelManagementAPI.Util
 
             if (user.Id != code.UserId)
             {
-                return new UnauthorizedObjectResult("You are not the recepient of this invite.");
+                return new ObjectResult("You are not the recepient of this invite.") { StatusCode = 403 };
             }
 
             if (code.StatusId != 1)
@@ -61,7 +61,7 @@ namespace HotelManagementAPI.Util
 
             if (userId != hotelOwnerId)
             {
-                return new UnauthorizedObjectResult("You're not the creator of this invite.");
+                return new ObjectResult("You're not the creator of this invite.") { StatusCode = 403 };
             }
 
             return null;
