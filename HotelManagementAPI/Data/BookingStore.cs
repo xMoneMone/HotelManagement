@@ -43,7 +43,7 @@ namespace HotelManagementAPI.Data
             });
             await context.SaveChangesAsync();
 
-            return new OkObjectResult("Booking created successfully.");
+            return new OkObjectResult(bookingDTO);
         }
 
         public async Task<IActionResult> Edit(int id, BookingCreateDTO bookingDTO)
@@ -73,7 +73,7 @@ namespace HotelManagementAPI.Data
             booking.Notes = bookingDTO.Notes;
             await context.SaveChangesAsync();
 
-            return new OkObjectResult("Booking edited successfully.");
+            return new OkObjectResult(bookingDTO);
         }
 
         public async Task<IActionResult> Delete(int id)

@@ -34,7 +34,7 @@ namespace HotelManagementAPI.Data
                 HotelId = hotelId
             });
             await context.SaveChangesAsync();
-            return new OkObjectResult("Room created successfully.");
+            return new OkObjectResult(roomDTO);
         }
 
         public async Task<IActionResult> Edit(int id, RoomCreateDTO roomDTO)
@@ -55,7 +55,7 @@ namespace HotelManagementAPI.Data
             room.Notes = roomDTO.Notes;
 
             await context.SaveChangesAsync();
-            return new OkObjectResult("Room created successfully.");
+            return new OkObjectResult(roomDTO);
         }
 
         public async Task<IActionResult> Delete(int id)

@@ -34,7 +34,7 @@ namespace HotelManagementAPI.Data
                 return error;
             }
 
-            await context.Users.AddAsync(new Models.User
+            var newUser = new Models.User
             {
                 ColorId = Validators.ValidateMultipleChoice(context.Colors, userDTO.ColorId),
                 Email = userDTO.Email,
@@ -42,10 +42,12 @@ namespace HotelManagementAPI.Data
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
                 AccountTypeId = Validators.ValidateMultipleChoice(context.AccountTypes, userDTO.ColorId)
-            });
+            };
+
+            await context.Users.AddAsync(newUser);
             await context.SaveChangesAsync();
 
-            return new OkObjectResult("User has been created.");
+            return new OkObjectResult(userDTO);
         }
 
         public async Task<IActionResult> Edit(UserEditDTO userDTO)
@@ -59,12 +61,14 @@ namespace HotelManagementAPI.Data
                 return error;
             }
 
+            userDTO.ColorId = Validators.ValidateMultipleChoice(context.Colors, userDTO.ColorId);
+
             user.FirstName = userDTO.FirstName;
             user.LastName = userDTO.LastName;
-            user.ColorId = Validators.ValidateMultipleChoice(context.Colors, userDTO.ColorId);
+            user.ColorId = userDTO.ColorId;
             await context.SaveChangesAsync();
 
-            return new OkObjectResult("User has been edited.");
+            return new OkObjectResult(userDTO);
         }
 
         public async Task<IActionResult> Delete()
