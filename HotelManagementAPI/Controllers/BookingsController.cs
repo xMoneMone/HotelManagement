@@ -5,53 +5,53 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Controllers
 {
-    [Route("hotels/{hotelId:int}/rooms/{roomId:int}/bookings"), Authorize]
+    [Route("hotels/rooms"), Authorize]
     [ApiController]
     public class BookingsController(IBookingStore bookingStore) : ControllerBase
     {
         private readonly IBookingStore bookingStore = bookingStore;
 
-        [HttpGet(""), Authorize]
+        [HttpGet("{roomId:int}/bookings"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetBookings(int roomId, int hotelId)
+        public async Task<IActionResult> GetBookings(int roomId)
         {
             return await bookingStore.GetBookings(roomId);
         }
 
-        [HttpPost(""), Authorize]
+        [HttpPost("{roomId:int}/bookings"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDTO bookingDTO, int roomId, int hotelId)
+        public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDTO bookingDTO, int roomId)
         {
             return await bookingStore.Add(bookingDTO, roomId);
         }
 
-        [HttpPatch("{bookingId:int}"), Authorize]
+        [HttpPatch("bookings/{bookingId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> EditBooking([FromBody] BookingCreateDTO bookingDTO, int bookingId, int roomId, int hotelId)
+        public async Task<IActionResult> EditBooking([FromBody] BookingCreateDTO bookingDTO, int bookingId)
         {
             return await bookingStore.Edit(bookingId, bookingDTO);
         }
 
-        [HttpGet("{bookingId:int}"), Authorize]
+        [HttpGet("bookings/{bookingId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetBookingById(int bookingId, int roomId, int hotelId)
+        public async Task<IActionResult> GetBookingById(int bookingId)
         {
             return await bookingStore.GetDTOById(bookingId);
         }
 
-        [HttpDelete("{bookingId:int}"), Authorize(Roles = "Owner")]
+        [HttpDelete("bookings/{bookingId:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> DeleteBooking(int bookingId, int roomId, int hotelId)
+        public async Task<IActionResult> DeleteBooking(int bookingId)
         {
             return await bookingStore.Delete(bookingId);
         }

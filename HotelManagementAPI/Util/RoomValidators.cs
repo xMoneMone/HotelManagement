@@ -70,6 +70,11 @@ namespace HotelManagementAPI.Util
                 return new NotFoundObjectResult("Room does not exist.");
             }
 
+            if (room.HotelId != hotel.Id)
+            {
+                return new NotFoundObjectResult("Room does not exist.");
+            }
+
             if (hotel.OwnerId != user.Id && Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
                 return new UnauthorizedObjectResult("You do not have permission to see this resource.");

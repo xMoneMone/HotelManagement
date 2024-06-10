@@ -31,8 +31,8 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost("hotels/{hotelId:int}/invitations"), Authorize(Roles = "Owner")]
-        public async Task<IActionResult> InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO, int hotelId)
+        [HttpPost("hotels/invitations"), Authorize(Roles = "Owner")]
+        public async Task<IActionResult> InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO)
         {
             return await hotelCodeStore.Add(hotelCodeDTO);
         }
@@ -40,8 +40,8 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete("hotels/{hotelId:int}/invitations/{codeId}"), Authorize(Roles = "Owner")]
-        public async Task<IActionResult> DeleteInvite(string codeId, int hotelId)
+        [HttpDelete("hotels/invitations/{codeId}"), Authorize(Roles = "Owner")]
+        public async Task<IActionResult> DeleteInvite(string codeId)
         {
             return await hotelCodeStore.Delete(codeId);
         }
