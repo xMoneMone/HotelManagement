@@ -29,7 +29,7 @@ namespace HotelManagementAPI.Controllers
             return await bookingStore.Add(bookingDTO, roomId);
         }
 
-        [HttpPut("{bookingId:int}"), Authorize]
+        [HttpPatch("{bookingId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

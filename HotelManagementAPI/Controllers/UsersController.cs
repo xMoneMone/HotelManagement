@@ -36,7 +36,7 @@ namespace HotelManagementAPI.Controllers
             return await userStore.Delete();
         }
 
-        [HttpPut, Authorize]
+        [HttpPatch, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditUser([FromBody] UserEditDTO userDTO)

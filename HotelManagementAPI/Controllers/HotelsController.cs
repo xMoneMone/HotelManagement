@@ -38,7 +38,7 @@ namespace HotelManagementAPI.Controllers
             
         }
 
-        [HttpPut("{id:int}"), Authorize(Roles = "Owner")]
+        [HttpPatch("{id:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
