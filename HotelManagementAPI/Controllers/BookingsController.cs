@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementAPI.Controllers
 {
-    [Route("hotels/rooms"), Authorize]
+    [Route("hotels/{hotelId}/rooms/{roomId}"), Authorize]
     [ApiController]
     public class BookingsController(IBookingStore bookingStore) : ControllerBase
     {
         private readonly IBookingStore bookingStore = bookingStore;
 
-        [HttpGet("{roomId:int}/bookings"), Authorize]
+        [HttpGet("bookings"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -20,7 +20,7 @@ namespace HotelManagementAPI.Controllers
             return await bookingStore.GetBookings(roomId);
         }
 
-        [HttpPost("{roomId:int}/bookings"), Authorize]
+        [HttpPost("bookings"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

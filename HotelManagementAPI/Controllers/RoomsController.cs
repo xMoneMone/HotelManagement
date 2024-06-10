@@ -35,7 +35,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId, int hotelId)
+        public async Task<IActionResult> EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId)
         {
             return await roomStore.Edit(roomId, roomDTO);
         }
@@ -44,7 +44,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetRoomById(int roomId, int hotelId)
+        public async Task<IActionResult> GetRoomById(int roomId)
         {
             return await roomStore.GetDTOById(roomId);
         }
@@ -53,7 +53,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteRoom(int roomId, int hotelId)
+        public async Task<IActionResult> DeleteRoom(int roomId)
         {
             return await roomStore.Delete(roomId);
         }

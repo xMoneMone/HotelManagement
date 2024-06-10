@@ -28,7 +28,7 @@ namespace HotelManagementAPI.Controllers
             return await hotelCodeStore.RespondToInvite(inviteResponse, codeId);
         }
 
-        [HttpPost("hotels/invitations"), Authorize(Roles = "Owner")]
+        [HttpPost("hotels/{hotelId}/invitations"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -38,7 +38,7 @@ namespace HotelManagementAPI.Controllers
             return await hotelCodeStore.Add(hotelCodeDTO);
         }
 
-        [HttpDelete("hotels/invitations/{codeId}"), Authorize(Roles = "Owner")]
+        [HttpDelete("hotels/{hotelId}/invitations/{codeId}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
