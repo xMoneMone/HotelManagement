@@ -20,12 +20,12 @@ namespace HotelManagementAPI.Util
         {
             if (user == null)
             {
-                return new BadRequestObjectResult("Wrong email or password.");
+                return new UnauthorizedObjectResult("Wrong email or password.");
             }
 
             if (!BCrypt.Net.BCrypt.Verify(userDTO.Password, user.Password))
             {
-                return new BadRequestObjectResult("Wrong email or password.");
+                return new UnauthorizedObjectResult("Wrong email or password.");
             }
 
             return null;
