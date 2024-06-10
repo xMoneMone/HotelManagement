@@ -38,7 +38,7 @@ namespace HotelManagementAPI.Data
 
             context.UsersHotels.Remove(userHotelConnection);
             await context.SaveChangesAsync();
-            return new OkObjectResult("Employee removed from hotel.");
+            return new ObjectResult("") { StatusCode = 204 };
         }
 
         public async Task<UsersHotel?> GetByHotelEmployee(int? hotelId, int? employeeId)

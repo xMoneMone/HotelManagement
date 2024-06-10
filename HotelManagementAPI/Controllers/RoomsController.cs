@@ -50,7 +50,7 @@ namespace HotelManagementAPI.Controllers
         }
 
         [HttpDelete("{roomId:int}"), Authorize(Roles = "Owner")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteRoom(int roomId)

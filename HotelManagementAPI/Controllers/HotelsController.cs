@@ -40,7 +40,7 @@ namespace HotelManagementAPI.Controllers
 
 
         [HttpDelete("hotels/{id:int}"), Authorize(Roles = "Owner")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteHotel(int id)
@@ -48,7 +48,7 @@ namespace HotelManagementAPI.Controllers
             return await hotelStore.Delete(id);
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -27,19 +27,19 @@ namespace HotelManagementAPI.Controllers
             return await userStore.Login(userDTO);
         }
 
-        [HttpDelete, Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteUser()
-        {
-            return await userStore.Delete();
-        }
-
         [HttpPatch, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditUser([FromBody] UserEditDTO userDTO)
         {
             return await userStore.Edit(userDTO);
-        } 
+        }
+
+        [HttpDelete, Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteUser()
+        {
+            return await userStore.Delete();
+        }
     }
 }

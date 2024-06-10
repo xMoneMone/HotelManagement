@@ -76,7 +76,7 @@ namespace HotelManagementAPI.Data
             var user = await GetCurrentUser();
             context.Users.Remove(user);
             await context.SaveChangesAsync();
-            return new OkObjectResult("User has been deleted.");
+            return new ObjectResult("") { StatusCode = 204 };
         }
 
         public async Task<User?> GetById(int id)

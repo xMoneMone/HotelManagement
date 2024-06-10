@@ -74,7 +74,7 @@ namespace HotelManagementAPI.Data
             context.Rooms.Remove(room);
             await context.SaveChangesAsync();
 
-            return new OkObjectResult("Room has been deleted.");
+            return new ObjectResult("") { StatusCode = 204 };
         }
 
         public async Task<Room?> GetById(int? id)

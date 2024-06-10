@@ -39,7 +39,7 @@ namespace HotelManagementAPI.Controllers
         }
 
         [HttpDelete("hotels/{hotelId}/invitations/{codeId}"), Authorize(Roles = "Owner")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteInvite(string codeId)

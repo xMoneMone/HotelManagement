@@ -100,7 +100,7 @@ namespace HotelManagementAPI.Data
 
             context.HotelCodes.Remove(code);
             await context.SaveChangesAsync();
-            return new OkObjectResult("Invite deleted.");
+            return new ObjectResult("") { StatusCode = 204 };
         }
 
         public async Task<HotelCode?> GetById(string id)

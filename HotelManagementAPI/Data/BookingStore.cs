@@ -93,7 +93,7 @@ namespace HotelManagementAPI.Data
             context.Bookings.Remove(booking);
             await context.SaveChangesAsync();
 
-            return new OkObjectResult("Booking has been deleted.");
+            return new ObjectResult("") { StatusCode = 204};
         }
 
         public async Task<Booking?> GetById(int? id)
