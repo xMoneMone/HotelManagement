@@ -5,7 +5,7 @@ using HotelManagementAPI.DataInterfaces;
 
 namespace HotelManagementAPI.Controllers
 {
-    [Route("hotels/invitations"), Authorize]
+    [Route(""), Authorize]
     [ApiController]
     public class InvitationsController(IHotelCodeStore hotelCodeStore) : ControllerBase
     {
@@ -13,7 +13,7 @@ namespace HotelManagementAPI.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet, Authorize]
+        [HttpGet("user/invitations"), Authorize]
         public async Task<IActionResult> GetInvites()
         {
             return await hotelCodeStore.GetInvites();
@@ -22,16 +22,7 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost, Authorize(Roles = "Owner")]
-        public async Task<IActionResult> InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO)
-        {
-            return await hotelCodeStore.Add(hotelCodeDTO);
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost("{codeId}"), Authorize]
+        [HttpPost("user/invitations/{codeId}"), Authorize]
         public async Task<IActionResult> RespondToInvitation(string codeId, [FromBody] RespondToInviteDTO inviteResponse)
         {
             return await hotelCodeStore.RespondToInvite(inviteResponse, codeId);
@@ -40,8 +31,17 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete("{codeId}"), Authorize(Roles = "Owner")]
-        public async Task<IActionResult> DeleteInvite(string codeId)
+        [HttpPost("hotels/{hotelId:int}/invitations"), Authorize(Roles = "Owner")]
+        public async Task<IActionResult> InviteEmployee([FromBody] HotelCodeCreateDTO hotelCodeDTO, int hotelId)
+        {
+            return await hotelCodeStore.Add(hotelCodeDTO);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [HttpDelete("hotels/{hotelId:int}/invitations/{codeId}"), Authorize(Roles = "Owner")]
+        public async Task<IActionResult> DeleteInvite(string codeId, int hotelId)
         {
             return await hotelCodeStore.Delete(codeId);
         }
