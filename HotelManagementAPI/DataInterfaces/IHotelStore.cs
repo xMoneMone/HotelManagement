@@ -12,6 +12,6 @@ namespace HotelManagementAPI.DataInterfaces
         Task<IActionResult> Edit(int id, HotelCreateDTO hotelDTO);
         Task<Hotel?> GetById(int? id);
         Task<int[]> GetHotelEmployeesIds(int? hotelId);
-        Task<IEnumerable<HotelDTO>> GetUserHotels();
+        Task<IActionResult> GetUserHotels();
     }
 }

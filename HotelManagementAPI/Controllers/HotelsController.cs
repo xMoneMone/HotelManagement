@@ -13,7 +13,8 @@ namespace HotelManagementAPI.Controllers
         private readonly IUserHotelStore userHotelStore = userHotelStore;
 
         [HttpGet("user/hotels"), Authorize]
-        public async Task<IEnumerable<HotelDTO>> GetHotels()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetHotels()
         {
             return await hotelStore.GetUserHotels();
         }
@@ -40,8 +41,8 @@ namespace HotelManagementAPI.Controllers
 
         [HttpDelete("hotels/{id:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteHotel(int id)
         {
             return await hotelStore.Delete(id);
@@ -49,8 +50,8 @@ namespace HotelManagementAPI.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("hotels/{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
         public async Task<IActionResult> RemoveHotelEmployee(int hotelId, int employeeId)
         {

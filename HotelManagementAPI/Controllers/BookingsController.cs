@@ -13,8 +13,8 @@ namespace HotelManagementAPI.Controllers
 
         [HttpGet("{roomId:int}/bookings"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetBookings(int roomId)
         {
             return await bookingStore.GetBookings(roomId);
@@ -33,8 +33,8 @@ namespace HotelManagementAPI.Controllers
         [HttpPatch("bookings/{bookingId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> EditBooking([FromBody] BookingCreateDTO bookingDTO, int bookingId)
         {
             return await bookingStore.Edit(bookingId, bookingDTO);
@@ -42,8 +42,8 @@ namespace HotelManagementAPI.Controllers
 
         [HttpGet("bookings/{bookingId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetBookingById(int bookingId)
         {
             return await bookingStore.GetDTOById(bookingId);
@@ -51,8 +51,8 @@ namespace HotelManagementAPI.Controllers
 
         [HttpDelete("bookings/{bookingId:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteBooking(int bookingId)
         {
             return await bookingStore.Delete(bookingId);

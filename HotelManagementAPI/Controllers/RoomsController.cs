@@ -11,7 +11,7 @@ namespace HotelManagementAPI.Controllers
     {
         private readonly IRoomStore roomStore = roomStore;
 
-        [HttpGet(""), Authorize]
+        [HttpGet, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
