@@ -13,17 +13,18 @@ namespace HotelManagementAPI.Controllers
 
         [HttpGet(""), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRooms(int hotelId)
         {
             return await roomStore.GetRooms(hotelId);
         }
 
-        [HttpPost(""), Authorize(Roles = "Owner")]
+        [HttpPost, Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateRoom([FromBody] RoomCreateDTO roomDTO, int hotelId)
         {
             return await roomStore.Add(roomDTO, hotelId);
@@ -32,7 +33,8 @@ namespace HotelManagementAPI.Controllers
         [HttpPatch("{roomId:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId, int hotelId)
         {
             return await roomStore.Edit(roomId, roomDTO);
@@ -40,8 +42,8 @@ namespace HotelManagementAPI.Controllers
 
         [HttpGet("{roomId:int}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRoomById(int roomId, int hotelId)
         {
             return await roomStore.GetDTOById(roomId);
@@ -49,8 +51,8 @@ namespace HotelManagementAPI.Controllers
 
         [HttpDelete("{roomId:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteRoom(int roomId, int hotelId)
         {
             return await roomStore.Delete(roomId);
