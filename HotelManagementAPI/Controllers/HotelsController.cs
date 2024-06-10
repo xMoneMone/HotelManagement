@@ -21,7 +21,6 @@ namespace HotelManagementAPI.Controllers
         [HttpPost("hotels"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> CreateHotel([FromBody] HotelCreateDTO hotelDTO)
         {
 
@@ -32,7 +31,7 @@ namespace HotelManagementAPI.Controllers
         [HttpPatch("hotels/{id:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> EditHotel([FromBody] HotelCreateDTO hotelDTO, int id)
         {
             return await hotelStore.Edit(id, hotelDTO);
@@ -41,8 +40,8 @@ namespace HotelManagementAPI.Controllers
 
         [HttpDelete("hotels/{id:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteHotel(int id)
         {
             return await hotelStore.Delete(id);
@@ -50,7 +49,8 @@ namespace HotelManagementAPI.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpDelete("hotels/{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
         public async Task<IActionResult> RemoveHotelEmployee(int hotelId, int employeeId)
         {

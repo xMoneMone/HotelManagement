@@ -32,7 +32,7 @@ namespace HotelManagementAPI.Util
         {
             if (hotelDTO == null)
             {
-                return new NotFoundObjectResult(hotelDTO);
+                return new BadRequestObjectResult(hotelDTO);
             }
 
             if (hotelDTO.Name.Length == 0 || hotelDTO.Name.Length > 100)
