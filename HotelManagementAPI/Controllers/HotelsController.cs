@@ -18,15 +18,6 @@ namespace HotelManagementAPI.Controllers
             return await hotelStore.GetUserHotels();
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete("hotels/{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
-        public async Task<IActionResult> RemoveHotelEmployee(int hotelId, int employeeId)
-        {
-            return await userHotelStore.Delete(hotelId, employeeId);
-        }
-
         [HttpPost("hotels"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -55,6 +46,15 @@ namespace HotelManagementAPI.Controllers
         public async Task<IActionResult> DeleteHotel(int id)
         {
             return await hotelStore.Delete(id);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [HttpDelete("hotels/{hotelId}/employees/{employeeId}"), Authorize(Roles = "Owner")]
+        public async Task<IActionResult> RemoveHotelEmployee(int hotelId, int employeeId)
+        {
+            return await userHotelStore.Delete(hotelId, employeeId);
         }
     }
 }   
