@@ -124,23 +124,20 @@ namespace HotelManagementAPI.Data
                 return error;
             }
 
-            return new OkObjectResult(await (from bkng in context.Bookings
-                                             where id == bkng.Id
-                                             select new BookingDTO
+            return new OkObjectResult(new BookingDTO
                                              {
-                                                 Id = bkng.Id,
-                                                 FirstName = bkng.FirstName,
-                                                 LastName = bkng.LastName,
-                                                 StartDate = bkng.StartDate,
-                                                 EndDate = bkng.EndDate,
-                                                 DownPaymentPaid = bkng.DownPaymentPaid,
-                                                 FullPaymentPaid = bkng.FullPaymentPaid,
-                                                 DownPaymentPrice = bkng.DownPaymentPrice,
-                                                 FullPaymentPrice = bkng.FullPaymentPrice,
-                                                 Notes = bkng.Notes,
-                                                 RoomId = bkng.RoomId
-                                             })
-                   .FirstOrDefaultAsync());
+                                                 Id = booking.Id,
+                                                 FirstName = booking.FirstName,
+                                                 LastName = booking.LastName,
+                                                 StartDate = booking.StartDate,
+                                                 EndDate = booking.EndDate,
+                                                 DownPaymentPaid = booking.DownPaymentPaid,
+                                                 FullPaymentPaid = booking.FullPaymentPaid,
+                                                 DownPaymentPrice = booking.DownPaymentPrice,
+                                                 FullPaymentPrice = booking.FullPaymentPrice,
+                                                 Notes = booking.Notes,
+                                                 RoomId = booking.RoomId
+                                             });
         }
 
         public async Task<IEnumerable<Booking>> All()
