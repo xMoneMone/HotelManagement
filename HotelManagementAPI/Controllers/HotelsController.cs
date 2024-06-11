@@ -19,7 +19,7 @@ namespace HotelManagementAPI.Controllers
             return await hotelStore.GetUserHotels();
         }
 
-        [HttpGet("hotels/{hotelId:int}"), Authorize]
+        [HttpGet("hotels/{hotelId:int}"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
