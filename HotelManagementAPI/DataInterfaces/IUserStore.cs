@@ -12,6 +12,7 @@ namespace HotelManagementAPI.DataInterfaces
         Task<IActionResult> Edit(UserEditDTO userDTO);
         Task<User?> GetByEmail(string email);
         Task<User?> GetById(int id);
+        Task<IActionResult> GetUserDTO();
         Task<User?> GetCurrentUser();
         Task<IActionResult> Login(UserLoginDTO userDTO);
     }

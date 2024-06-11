@@ -11,6 +11,13 @@ namespace HotelManagementAPI.Controllers
     {
         private readonly IUserStore userStore = userStore;
 
+        [HttpGet, Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUser()
+        {
+            return await userStore.GetUserDTO();
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

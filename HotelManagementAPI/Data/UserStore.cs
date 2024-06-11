@@ -87,6 +87,20 @@ namespace HotelManagementAPI.Data
                    .FirstOrDefaultAsync();
         }
 
+        public async Task<IActionResult> GetUserDTO()
+        {
+            var user = await GetCurrentUser();
+
+            return new OkObjectResult(new UserDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ColorId = user.ColorId
+            });
+        }
+
         public async Task<User?> GetByEmail(string email)
         {
             return await (from user in context.Users
