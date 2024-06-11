@@ -11,5 +11,7 @@
         public string? Notes { get; set; }
 
         public string CurrencyFormat { get; set; } = null!;
+        public virtual ICollection<BedDTO> Beds { get; set; } = new List<BedDTO>();
+
     }
 }
