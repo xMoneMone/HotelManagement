@@ -126,6 +126,7 @@ namespace HotelManagementAPI.Data
         public async Task<IEnumerable<Hotel>> All()
         {
             return await (from hotel in context.Hotels
+                          orderby hotel.Name
                           select hotel).ToListAsync();
         }
 

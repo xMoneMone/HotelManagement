@@ -162,6 +162,7 @@ namespace HotelManagementAPI.Data
 
             return new OkObjectResult(await (from booking in context.Bookings
                                              where booking.RoomId == room.Id
+                                             orderby booking.StartDate
                                              select new BookingDTO
                                              {
                                                  Id = booking.Id,
