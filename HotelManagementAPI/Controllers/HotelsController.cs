@@ -19,6 +19,15 @@ namespace HotelManagementAPI.Controllers
             return await hotelStore.GetUserHotels();
         }
 
+        [HttpGet("hotels/{hotelId:int}"), Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(int hotelId)
+        {
+            return await hotelStore.GetDTOById(hotelId);
+        }
+
         [HttpPost("hotels"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

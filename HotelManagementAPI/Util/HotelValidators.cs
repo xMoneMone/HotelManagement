@@ -48,6 +48,21 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
+        public static IActionResult? GetByIdValidator(Hotel? hotel, User user)
+        {
+            if (hotel == null)
+            {
+                return new NotFoundObjectResult("Hotel does not exist.");
+            }
+
+            if (hotel.OwnerId != user.Id)
+            {
+                return new ObjectResult("You do not have permission to view this resource.") { StatusCode = 403 };
+            }
+
+            return null;
+        }
+
         public static IActionResult? EditHotelValidator(HotelCreateDTO hotelDTO, Hotel? hotel, User user)
         {
             if (hotelDTO == null)

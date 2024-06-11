@@ -8,10 +8,11 @@ using HotelManagementAPI.DataInterfaces;
 
 namespace HotelManagementAPI.Data
 {
-    public class HotelStore(HotelManagementContext context, IUserStore userStore) : IHotelStore
+    public class HotelStore(HotelManagementContext context, IUserStore userStore, ICurrencyStore currencyStore) : IHotelStore
     {
         private readonly HotelManagementContext context = context;
         private readonly IUserStore userStore = userStore;
+        private readonly ICurrencyStore currencyStore = currencyStore;
 
         public async Task<IActionResult> Add(HotelCreateDTO hotelDTO)
         {
@@ -87,6 +88,41 @@ namespace HotelManagementAPI.Data
                    .FirstOrDefaultAsync();
         }
 
+        public async Task<IActionResult> GetDTOById(int id)
+        {
+            User? user = await userStore.GetCurrentUser();
+            Hotel? hotel = await GetById(id);
+
+            IActionResult? error = HotelValidators.GetByIdValidator(hotel, user);
+
+            if (error != null)
+            {
+                return error;
+            }
+
+            Currency? currency = await currencyStore.GetById(hotel.CurrencyId);
+
+            List<EmployeeDTO> hotelEmployees = await (from hotelconnection in context.UsersHotels
+                                        join employee in context.Users on hotelconnection.UserId equals employee.Id
+                                        where hotelconnection.HotelId == id
+                                        select new EmployeeDTO
+                                        {
+                                            Id = employee.Id,
+                                            ColorId = employee.ColorId,
+                                            FirstName = employee.FirstName,
+                                            LastName = employee.LastName
+                                        }).ToListAsync();
+
+            return new OkObjectResult(new HotelDTO
+                          {
+                              Id = hotel.Id,
+                              Name = hotel.Name,
+                              CurrencyFormat = currency.FormattingString,
+                              DownPaymentPercentage = hotel.DownPaymentPercentage,
+                              Employees = hotelEmployees
+                          });
+        }
+
         public async Task<IEnumerable<Hotel>> All()
         {
             return await (from hotel in context.Hotels
@@ -99,12 +135,10 @@ namespace HotelManagementAPI.Data
             int[] employeeHotelsIds = context.UsersHotels.Where(x => x.UserId == user.Id).Select(x => x.HotelId).ToArray();
             return new OkObjectResult(await (from hotel in context.Hotels
                           where hotel.Owner == user || employeeHotelsIds.Contains(hotel.Id)
-                          select new HotelDTO()
+                          select new HotelListDTO()
                           {
                               Id = hotel.Id,
-                              Name = hotel.Name,
-                              CurrencyFormat = hotel.Currency.FormattingString,
-                              DownPaymentPercentage = hotel.DownPaymentPercentage
+                              Name = hotel.Name
                           }).ToListAsync());
         }
 
