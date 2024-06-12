@@ -1,5 +1,8 @@
 ﻿using HotelManagementAPI.DataInterfaces;
 using HotelManagementAPI.Models;
+using HotelManagementAPI.Models.DTO;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagementAPI.Data
 {
@@ -13,6 +16,18 @@ namespace HotelManagementAPI.Data
                     where id == accountType.Id
                     select accountType)
                    .FirstOrDefault();
+        }
+
+        public async Task<IActionResult> GetAccountTypes()
+        {
+            return new OkObjectResult(await (from accountType in context.AccountTypes
+                                             orderby accountType.Id
+                                             select new AccountTypeDTO
+                                             {
+                                                 Id = accountType.Id,
+                                                 Type = accountType.Type
+                                             })
+                                             .ToListAsync());
         }
     }
 }
