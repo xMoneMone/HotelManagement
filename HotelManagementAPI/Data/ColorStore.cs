@@ -13,6 +13,7 @@ namespace HotelManagementAPI.Data
         public async Task<IActionResult> GetColors()
         {
             return new OkObjectResult(await (from color in context.Colors
+                                             orderby color.Id
                                              select new ColorDTO
                                              {
                                                  Id = color.Id,
