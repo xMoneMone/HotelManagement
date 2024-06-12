@@ -131,6 +131,20 @@ namespace HotelManagementAPI.Data
             });
         }
 
+        public async Task<bool> RoomIsFree(int? roomId, DateTime start, DateTime end)
+        {
+            if (roomId == null)
+            {
+                return false;
+            }
+            var bookingsDuringTimePeriod = await (from booking in context.Bookings
+                                                  where booking.RoomId == roomId &&
+                                                        (booking.StartDate >= start && booking.StartDate <= end) ||
+                                                        (booking.EndDate >= start && booking.EndDate <= end)
+                                                  select booking).FirstOrDefaultAsync();
+            return bookingsDuringTimePeriod == null;
+        }
+
         public async Task<IEnumerable<Room>> All()
         {
             return await (from room in context.Rooms

@@ -22,7 +22,7 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? CreateBookingValidator(User user, BookingCreateDTO bookingDTO, Room? room, Hotel? hotel, int[] employeesAtHotel)
+        public static IActionResult? CreateBookingValidator(User user, BookingCreateDTO bookingDTO, Room? room, Hotel? hotel, int[] employeesAtHotel, bool roomIsFree)
         {
             if (room == null)
             {
@@ -32,6 +32,11 @@ namespace HotelManagementAPI.Util
             if (hotel.OwnerId != user.Id || Validators.EmployeeWorksAtHotel(user.Id, employeesAtHotel))
             {
                 return new ObjectResult("You cannot create bookings in this hotel.") { StatusCode = 403 };
+            }
+
+            if (!roomIsFree)
+            {
+                return new BadRequestObjectResult("Room will be occupied during this time period.");
             }
 
             if (bookingDTO.FirstName.Length <= 0 || bookingDTO.FirstName.Length > 50)
@@ -54,6 +59,11 @@ namespace HotelManagementAPI.Util
                 return new BadRequestObjectResult("Full payment price cannot be a negative number.");
             }
 
+            if (bookingDTO.EndDate < bookingDTO.StartDate)
+            {
+                return new BadRequestObjectResult("End date cannot be before start date.");
+            }
+
             if (bookingDTO.Notes != null && bookingDTO.Notes.Length > 300)
             {
                 return new BadRequestObjectResult("Room notes must not exceed 300 characters.");
@@ -62,14 +72,15 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? EditBookingValidator(User user, BookingCreateDTO bookingDTO, Booking? booking, Room? room, Hotel? hotel, int[] employeesAtHotel)
+        public static IActionResult? EditBookingValidator(User user, BookingCreateDTO bookingDTO, Booking? booking, Room? room, Hotel? hotel, int[] employeesAtHotel,
+            bool roomIsFree)
         {
             if (booking == null)
             {
                 return new NotFoundObjectResult("Booking does not exist.");
             }
 
-            return CreateBookingValidator(user, bookingDTO, room, hotel, employeesAtHotel);
+            return CreateBookingValidator(user, bookingDTO, room, hotel, employeesAtHotel, roomIsFree);
         }
 
 

@@ -20,8 +20,9 @@ namespace HotelManagementAPI.Data
             var room = await roomStore.GetById(roomId);
             var hotel = await hotelStore.GetById(room?.HotelId);
             var employeesAtHotel = await hotelStore.GetHotelEmployeesIds(hotel?.Id);
+            var roomIsFree = await roomStore.RoomIsFree(room.Id, bookingDTO.StartDate, bookingDTO.EndDate);
 
-            var error = BookingValidators.CreateBookingValidator(user, bookingDTO, room, hotel, employeesAtHotel);
+            var error = BookingValidators.CreateBookingValidator(user, bookingDTO, room, hotel, employeesAtHotel, roomIsFree);
 
             if (error != null)
             {
@@ -52,10 +53,11 @@ namespace HotelManagementAPI.Data
             var room = await roomStore.GetById(booking?.RoomId);
             var hotel = await hotelStore.GetById(room?.HotelId);
             var employeesAtHotel = await hotelStore.GetHotelEmployeesIds(hotel?.Id);
+            var roomIsFree = await roomStore.RoomIsFree(room.Id, bookingDTO.StartDate, bookingDTO.EndDate);
 
             var user = await userStore.GetCurrentUser();
 
-            var error = BookingValidators.EditBookingValidator(user, bookingDTO, booking, room, hotel, employeesAtHotel);
+            var error = BookingValidators.EditBookingValidator(user, bookingDTO, booking, room, hotel, employeesAtHotel, roomIsFree);
 
             if (error != null)
             {
