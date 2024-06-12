@@ -10,4 +10,6 @@ public partial class Bed
     public string BedType { get; set; } = null!;
 
     public int Capacity { get; set; }
+
+    public virtual ICollection<RoomsBed> RoomsBeds { get; set; } = new List<RoomsBed>();
 }

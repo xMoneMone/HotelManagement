@@ -5,6 +5,8 @@ namespace HotelManagementAPI.Models;
 
 public partial class RoomsBed
 {
+    public int Id { get; set; }
+
     public int RoomId { get; set; }
 
     public int BedId { get; set; }

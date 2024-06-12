@@ -18,4 +18,6 @@ public partial class Room
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Hotel Hotel { get; set; } = null!;
+
+    public virtual ICollection<RoomsBed> RoomsBeds { get; set; } = new List<RoomsBed>();
 }

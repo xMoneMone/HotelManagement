@@ -19,7 +19,7 @@ public partial class User
 
     public string LastName { get; set; } = null!;
 
-    public virtual AccountType AccountType { get; set; }
+    public virtual AccountType? AccountType { get; set; }
 
     public virtual Color Color { get; set; } = null!;
 
