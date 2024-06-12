@@ -15,9 +15,7 @@ public partial class Hotel
 
     public int OwnerId { get; set; }
 
-    public virtual Currency? Currency { get; set; }
-
-    public virtual ICollection<Extra> Extras { get; set; } = new List<Extra>();
+    public virtual Currency Currency { get; set; } = null!;
 
     public virtual ICollection<HotelCode> HotelCodes { get; set; } = new List<HotelCode>();
 
