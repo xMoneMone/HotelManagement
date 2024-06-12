@@ -21,13 +21,9 @@ public partial class HotelManagementContext : DbContext
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
-    public virtual DbSet<BookingsExtra> BookingsExtras { get; set; }
-
     public virtual DbSet<Color> Colors { get; set; }
 
     public virtual DbSet<Currency> Currencies { get; set; }
-
-    public virtual DbSet<Extra> Extras { get; set; }
 
     public virtual DbSet<Hotel> Hotels { get; set; }
 
@@ -45,13 +41,15 @@ public partial class HotelManagementContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.;Database=HotelManagement;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true");
+        => optionsBuilder.UseSqlServer("Server=.;Database=HotelManagement;Trusted_Connection=true;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccountType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AccountT__3214EC07A5273193");
+            entity.HasKey(e => e.Id).HasName("PK__AccountT__3214EC07E6BABABA");
+
+            entity.HasIndex(e => e.Type, "UQ__AccountT__F9B8A48BC448E5EE").IsUnique();
 
             entity.Property(e => e.Type)
                 .HasMaxLength(100)
@@ -60,7 +58,7 @@ public partial class HotelManagementContext : DbContext
 
         modelBuilder.Entity<Bed>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Beds__3214EC0778DDFE77");
+            entity.HasKey(e => e.Id).HasName("PK__Beds__3214EC076B87C8B5");
 
             entity.Property(e => e.BedType)
                 .HasMaxLength(200)
@@ -69,16 +67,16 @@ public partial class HotelManagementContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bookings__3214EC073FC260C6");
+            entity.HasKey(e => e.Id).HasName("PK__Bookings__3214EC07D60A3359");
 
             entity.Property(e => e.DownPaymentPrice).HasColumnType("money");
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.FirstName)
-                .HasMaxLength(200)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.FullPaymentPrice).HasColumnType("money");
             entity.Property(e => e.LastName)
-                .HasMaxLength(200)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Notes)
                 .HasMaxLength(300)
@@ -87,26 +85,14 @@ public partial class HotelManagementContext : DbContext
 
             entity.HasOne(d => d.Room).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.RoomId)
-                .HasConstraintName("FK__Bookings__RoomId__52593CB8");
-        });
-
-        modelBuilder.Entity<BookingsExtra>(entity =>
-        {
-            entity.HasNoKey();
-
-            entity.HasOne(d => d.Booking).WithMany()
-                .HasForeignKey(d => d.BookingId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BookingsE__Booki__5812160E");
-
-            entity.HasOne(d => d.Extra).WithMany()
-                .HasForeignKey(d => d.ExtraId)
-                .HasConstraintName("FK__BookingsE__Extra__571DF1D5");
+                .HasConstraintName("FK__Bookings__RoomId__5CD6CB2B");
         });
 
         modelBuilder.Entity<Color>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Colors__3214EC0733919A7D");
+            entity.HasKey(e => e.Id).HasName("PK__Colors__3214EC07BD342C43");
+
+            entity.HasIndex(e => e.Color1, "UQ__Colors__E11D3845ED86E867").IsUnique();
 
             entity.Property(e => e.Color1)
                 .HasMaxLength(6)
@@ -116,7 +102,7 @@ public partial class HotelManagementContext : DbContext
 
         modelBuilder.Entity<Currency>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Currenci__3214EC07A7C5D1DC");
+            entity.HasKey(e => e.Id).HasName("PK__Currenci__3214EC07C353BD27");
 
             entity.Property(e => e.FormattingString)
                 .HasMaxLength(300)
@@ -126,40 +112,27 @@ public partial class HotelManagementContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<Extra>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Extras__3214EC075D2A48F5");
-
-            entity.Property(e => e.Name)
-                .HasMaxLength(300)
-                .IsUnicode(false);
-            entity.Property(e => e.Price).HasColumnType("money");
-
-            entity.HasOne(d => d.Hotel).WithMany(p => p.Extras)
-                .HasForeignKey(d => d.HotelId)
-                .HasConstraintName("FK__Extras__HotelId__5535A963");
-        });
-
         modelBuilder.Entity<Hotel>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Hotels__3214EC073EBA0B14");
+            entity.HasKey(e => e.Id).HasName("PK__Hotels__3214EC077DB86E24");
 
             entity.Property(e => e.Name)
-                .HasMaxLength(300)
+                .HasMaxLength(100)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.Currency).WithMany(p => p.Hotels)
                 .HasForeignKey(d => d.CurrencyId)
-                .HasConstraintName("FK__Hotels__Currency__412EB0B6");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Hotels__Currency__440B1D61");
 
             entity.HasOne(d => d.Owner).WithMany(p => p.Hotels)
                 .HasForeignKey(d => d.OwnerId)
-                .HasConstraintName("FK__Hotels__OwnerId__4222D4EF");
+                .HasConstraintName("FK__Hotels__OwnerId__44FF419A");
         });
 
         modelBuilder.Entity<HotelCode>(entity =>
         {
-            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA61DBFEE3C");
+            entity.HasKey(e => e.Code).HasName("PK__HotelCod__A25C5AA667AB189A");
 
             entity.Property(e => e.Code)
                 .HasMaxLength(200)
@@ -168,27 +141,29 @@ public partial class HotelManagementContext : DbContext
             entity.HasOne(d => d.Hotel).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.HotelId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HotelCode__Hotel__7E37BEF6");
+                .HasConstraintName("FK__HotelCode__Hotel__4AB81AF0");
 
             entity.HasOne(d => d.Sender).WithMany(p => p.HotelCodeSenders)
                 .HasForeignKey(d => d.SenderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HotelCode__Sende__01142BA1");
+                .HasConstraintName("FK__HotelCode__Sende__4D94879B");
 
             entity.HasOne(d => d.Status).WithMany(p => p.HotelCodes)
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HotelCode__Statu__00200768");
+                .HasConstraintName("FK__HotelCode__Statu__4CA06362");
 
             entity.HasOne(d => d.User).WithMany(p => p.HotelCodeUsers)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HotelCode__UserI__7F2BE32F");
+                .HasConstraintName("FK__HotelCode__UserI__4BAC3F29");
         });
 
         modelBuilder.Entity<HotelCodeStatus>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__HotelCod__3214EC07542A122E");
+            entity.HasKey(e => e.Id).HasName("PK__HotelCod__3214EC0704E78A4E");
+
+            entity.HasIndex(e => e.Status, "UQ__HotelCod__3A15923FB73591C8").IsUnique();
 
             entity.Property(e => e.Status)
                 .HasMaxLength(200)
@@ -197,47 +172,49 @@ public partial class HotelManagementContext : DbContext
 
         modelBuilder.Entity<Room>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Rooms__3214EC0777302296");
+            entity.HasKey(e => e.Id).HasName("PK__Rooms__3214EC079A144C90");
 
             entity.Property(e => e.Notes)
                 .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.PricePerNight).HasColumnType("money");
             entity.Property(e => e.RoomNumber)
-                .HasMaxLength(200)
+                .HasMaxLength(50)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.Hotel).WithMany(p => p.Rooms)
                 .HasForeignKey(d => d.HotelId)
-                .HasConstraintName("FK__Rooms__HotelId__4AB81AF0");
+                .HasConstraintName("FK__Rooms__HotelId__5441852A");
         });
 
         modelBuilder.Entity<RoomsBed>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => e.Id).HasName("PK__RoomsBed__3214EC076042AE86");
 
-            entity.HasOne(d => d.Bed).WithMany()
+            entity.HasOne(d => d.Bed).WithMany(p => p.RoomsBeds)
                 .HasForeignKey(d => d.BedId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RoomsBeds__BedId__4F7CD00D");
+                .HasConstraintName("FK__RoomsBeds__BedId__59FA5E80");
 
-            entity.HasOne(d => d.Room).WithMany()
+            entity.HasOne(d => d.Room).WithMany(p => p.RoomsBeds)
                 .HasForeignKey(d => d.RoomId)
-                .HasConstraintName("FK__RoomsBeds__RoomI__4E88ABD4");
+                .HasConstraintName("FK__RoomsBeds__RoomI__59063A47");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07689B5E6A");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC0719D76903");
+
+            entity.HasIndex(e => e.Email, "UQ__Users__A9D105343AA788EE").IsUnique();
 
             entity.Property(e => e.Email)
                 .HasMaxLength(320)
                 .IsUnicode(false);
             entity.Property(e => e.FirstName)
-                .HasMaxLength(200)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.LastName)
-                .HasMaxLength(200)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Password)
                 .HasMaxLength(300)
@@ -245,26 +222,26 @@ public partial class HotelManagementContext : DbContext
 
             entity.HasOne(d => d.AccountType).WithMany(p => p.Users)
                 .HasForeignKey(d => d.AccountTypeId)
-                .HasConstraintName("FK__Users__AccountTy__3C69FB99");
+                .HasConstraintName("FK__Users__AccountTy__3F466844");
 
             entity.HasOne(d => d.Color).WithMany(p => p.Users)
                 .HasForeignKey(d => d.ColorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Users__ColorId__3B75D760");
+                .HasConstraintName("FK__Users__ColorId__3E52440B");
         });
 
         modelBuilder.Entity<UsersHotel>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UsersHot__3214EC07F00AF75D");
+            entity.HasKey(e => e.Id).HasName("PK__UsersHot__3214EC078DDF5AF3");
 
             entity.HasOne(d => d.Hotel).WithMany(p => p.UsersHotels)
                 .HasForeignKey(d => d.HotelId)
-                .HasConstraintName("FK__UsersHote__Hotel__7B5B524B");
+                .HasConstraintName("FK__UsersHote__Hotel__5165187F");
 
             entity.HasOne(d => d.User).WithMany(p => p.UsersHotels)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UsersHote__UserI__7A672E12");
+                .HasConstraintName("FK__UsersHote__UserI__5070F446");
         });
 
         OnModelCreatingPartial(modelBuilder);
