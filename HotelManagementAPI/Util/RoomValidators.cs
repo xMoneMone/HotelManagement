@@ -23,7 +23,7 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? CreateRoomValidator(User user, RoomCreateDTO roomDTO, Hotel? hotel)
+        public static IActionResult? CreateRoomValidator(User user, RoomCreateDTO roomDTO, Hotel? hotel, int[] bedIds)
         {
             if (hotel == null)
             {
@@ -33,6 +33,19 @@ namespace HotelManagementAPI.Util
             if (hotel.OwnerId != user.Id)
             {
                 return new ObjectResult("You are not the owner of this hotel.") { StatusCode = 403 };
+            }
+
+            if (roomDTO.BedsIds == null || roomDTO.BedsIds.Length == 0)
+            {
+                return new BadRequestObjectResult("You must add at least one bed.");
+            }
+
+            foreach (int id in roomDTO.BedsIds)
+            {
+                if (!bedIds.Contains(id))
+                {
+                    return new BadRequestObjectResult("Invalid bed Id.");
+                }
             }
 
             if (roomDTO.RoomNumber.Length <= 0 || roomDTO.RoomNumber.Length > 50)
@@ -53,14 +66,14 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
-        public static IActionResult? EditRoomValidator(User user, RoomCreateDTO roomDTO, Room? room, Hotel? hotel)
+        public static IActionResult? EditRoomValidator(User user, RoomCreateDTO roomDTO, Room? room, Hotel? hotel, int[] bedIds)
         {
             if (room == null)
             {
                 return new NotFoundObjectResult("Room does not exist.");
             }
 
-            return CreateRoomValidator(user, roomDTO, hotel);
+            return CreateRoomValidator(user, roomDTO, hotel, bedIds);
         }
 
         public static IActionResult? GetRoomByIdValidator(User user, Room? room, Hotel? hotel, int[] employeesAtHotel)

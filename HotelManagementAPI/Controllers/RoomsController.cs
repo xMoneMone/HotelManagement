@@ -35,9 +35,9 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId)
+        public async Task<IActionResult> EditRoom([FromBody] RoomCreateDTO roomDTO, int roomId, int hotelId)
         {
-            return await roomStore.Edit(roomId, roomDTO);
+            return await roomStore.Edit(roomId, hotelId, roomDTO);
         }
 
         [HttpGet("{roomId:int}"), Authorize]

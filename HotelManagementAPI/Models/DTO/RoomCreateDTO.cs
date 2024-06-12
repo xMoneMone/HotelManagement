@@ -8,6 +8,6 @@
 
         public string? Notes { get; set; }
 
-        public int HotelId { get; set; }
+        public int[] BedsIds { get; set; } = [];
     }
 }
