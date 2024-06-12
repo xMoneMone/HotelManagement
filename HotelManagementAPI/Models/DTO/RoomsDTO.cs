@@ -10,6 +10,8 @@
 
         public string? Notes { get; set; }
 
+        public bool Available { get; set; }
+
         public virtual int Capacity { get; set; }
     }
 }

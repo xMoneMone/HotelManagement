@@ -4,6 +4,7 @@ using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace HotelManagementAPI.Data
 {
@@ -151,7 +152,7 @@ namespace HotelManagementAPI.Data
                    select room).ToListAsync();
         }
 
-        public async Task<IActionResult> GetRooms(int hotelId)
+        public async Task<IActionResult> GetRooms(int hotelId, DateTime start, DateTime end, bool orderByAvailability = false)
         {
             User? user = await userStore.GetCurrentUser();
             Hotel? hotel = await hotelStore.GetById(hotelId);
@@ -164,19 +165,29 @@ namespace HotelManagementAPI.Data
                 return error;
             }
 
-            return new OkObjectResult(await (from roombed in context.RoomsBeds
-                                             join room in context.Rooms on roombed.RoomId equals room.Id
-                                             where room.HotelId == hotel.Id
-                                             join bed in context.Beds on roombed.BedId equals bed.Id
-                                             group room by room.Id into roomgroup
-                                             select new RoomsDTO
-                                             {
-                                                 Id = roomgroup.Key,
-                                                 RoomNumber = roomgroup.First().RoomNumber,
-                                                 PricePerNight = roomgroup.First().PricePerNight,
-                                                 Notes = roomgroup.First().Notes,
-                                                 Capacity = 0
-                                             }).ToListAsync());
+            var query = await (from room in context.Rooms
+                               where room.HotelId == hotel.Id
+                               orderby room.RoomNumber
+                               select new RoomsDTO
+                               {
+                                   Id = room.Id,
+                                   RoomNumber = room.RoomNumber,
+                                   PricePerNight = room.PricePerNight,
+                                   Notes = room.Notes,
+                                   Available = room.Bookings.Where(x => 
+                                                        (x.StartDate >= start && x.StartDate <= end) ||
+                                                        (x.EndDate >= start && x.EndDate <= end ||
+                                                        (x.StartDate <= start && x.EndDate >= end))).FirstOrDefault() == null,
+                                   Capacity = room.RoomsBeds.Select(x => x.Bed.Capacity).Sum()
+                               }).ToListAsync();
+            if (orderByAvailability)
+            {
+                return new OkObjectResult(query.OrderByDescending(x => x.Available));
+            }
+            else
+            {
+                return new OkObjectResult(query);
+            }
         }
     }
 }

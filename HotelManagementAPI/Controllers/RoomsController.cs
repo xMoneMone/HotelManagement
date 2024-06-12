@@ -17,7 +17,16 @@ namespace HotelManagementAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRooms(int hotelId)
         {
-            return await roomStore.GetRooms(hotelId);
+            return await roomStore.GetRooms(hotelId, DateTime.Now, DateTime.Now);
+        }
+
+        [HttpGet("{start:DateTime}/{end:DateTime}"), Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetRoomsFiltered(int hotelId, DateTime start, DateTime end)
+        {
+            return await roomStore.GetRooms(hotelId, start, end, true);
         }
 
         [HttpPost, Authorize(Roles = "Owner")]

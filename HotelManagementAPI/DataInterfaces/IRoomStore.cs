@@ -13,6 +13,6 @@ namespace HotelManagementAPI.DataInterfaces
         Task<Room?> GetById(int? id);
         Task<IActionResult> GetDTOById(int id);
         Task<bool> RoomIsFree(int? roomId, DateTime start, DateTime end);
-        Task<IActionResult> GetRooms(int hotelId);
+        Task<IActionResult> GetRooms(int hotelId, DateTime start, DateTime end, bool orderByAvailability = false);
     }
 }
