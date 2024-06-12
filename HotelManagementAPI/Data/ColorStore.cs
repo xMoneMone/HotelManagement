@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagementAPI.Data
 {
-    public class ColorStore(HotelManagementContext _context) : ControllerBase, IColorStore
+    public class ColorStore(HotelManagementContext _context) : IColorStore
     {
         private readonly HotelManagementContext context = _context;
 
