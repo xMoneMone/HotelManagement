@@ -21,5 +21,17 @@ namespace HotelManagementAPI.Data
                               Capacity = bed.Capacity
                           }).ToListAsync();
         }
+
+        public async Task<IActionResult> GetBeds()
+        {
+            return new OkObjectResult(await (from bed in context.Beds
+                                              orderby bed.Id
+                                              select new BedOptionsDTO
+                                              {
+                                                  Id = bed.Id,
+                                                  BedType = bed.BedType,
+                                                  Capacity = bed.Capacity
+                                              }).ToListAsync());
+        }
     }
 }
