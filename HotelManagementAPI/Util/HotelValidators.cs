@@ -48,6 +48,16 @@ namespace HotelManagementAPI.Util
             return null;
         }
 
+        public static IActionResult? GetHotelCurrencyValidator(Hotel? hotel)
+        {
+            if (hotel == null)
+            {
+                return new NotFoundObjectResult("Hotel does not exist.");
+            }
+
+            return null;
+        }
+
         public static IActionResult? GetByIdValidator(Hotel? hotel, User user)
         {
             if (hotel == null)

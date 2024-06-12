@@ -88,6 +88,21 @@ namespace HotelManagementAPI.Data
                    .FirstOrDefaultAsync();
         }
 
+        public async Task<IActionResult> GetHotelCurrencyFormat(int hotelId)
+        {
+            var hotel = await GetById(hotelId);
+
+            IActionResult? error = HotelValidators.GetHotelCurrencyValidator(hotel);
+
+            if (error != null)
+            {
+                return error;
+            }
+
+            var currency = await currencyStore.GetById(hotel.CurrencyId);
+            return new OkObjectResult(currency.FormattingString);
+        }
+
         public async Task<IActionResult> GetDTOById(int id)
         {
             User? user = await userStore.GetCurrentUser();

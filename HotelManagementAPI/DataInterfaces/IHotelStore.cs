@@ -11,6 +11,7 @@ namespace HotelManagementAPI.DataInterfaces
         Task<IActionResult> Delete(int id);
         Task<IActionResult> Edit(int id, HotelCreateDTO hotelDTO);
         Task<Hotel?> GetById(int? id);
+        Task<IActionResult> GetHotelCurrencyFormat(int hotelId);
         Task<IActionResult> GetDTOById(int id);
         Task<int[]> GetHotelEmployeesIds(int? hotelId);
         Task<IActionResult> GetUserHotels();

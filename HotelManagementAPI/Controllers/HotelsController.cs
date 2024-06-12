@@ -28,6 +28,14 @@ namespace HotelManagementAPI.Controllers
             return await hotelStore.GetDTOById(hotelId);
         }
 
+        [HttpGet("hotels/{hotelId:int}/format"), Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetHotelCurrencyFormat(int hotelId)
+        {
+            return await hotelStore.GetHotelCurrencyFormat(hotelId);
+        }
+
         [HttpPost("hotels"), Authorize(Roles = "Owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
