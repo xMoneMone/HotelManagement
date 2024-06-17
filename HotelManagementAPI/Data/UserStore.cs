@@ -103,7 +103,7 @@ namespace HotelManagementAPI.Data
             });
         }
 
-        public async Task<User?> GetByEmail(string email)
+        public async Task<User?> GetByEmail(string email)   
         {
             return await (from user in context.Users
                           where email == user.Email

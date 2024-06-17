@@ -16,11 +16,8 @@
 .navbar .icon {
     fill: var(--navbar-icon-color);
     transition: var(--transition);
+    height: var(--navbar-icon-size);
 } 
-
-.navbar .icon:hover {
-    opacity: 0.8;
-}
 
 .right, .navbar-authorized {
     display: flex;
@@ -38,6 +35,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: var(--navbar-font-weight);
 }
 
 .navbar-initials {

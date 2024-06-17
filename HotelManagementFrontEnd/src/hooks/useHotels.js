@@ -9,7 +9,7 @@ export default (token) => {
       }, [])
 
     const refresh = async () => {
-        const {data} = await axios_base.get("user/hotels", {headers: token})
+        const {data} = await axios_base.get("user/hotels", {headers: {authorization: token}})
         setHotels(data)
     }
 

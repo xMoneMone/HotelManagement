@@ -1,4 +1,4 @@
-﻿using HotelManagementAPI.Models;
+﻿    using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
 using HotelManagementAPI.Util;
 using Validators = HotelManagementAPI.Util.Validators;
@@ -154,7 +154,8 @@ namespace HotelManagementAPI.Data
                           select new HotelListDTO()
                           {
                               Id = hotel.Id,
-                              Name = hotel.Name
+                              Name = hotel.Name,
+                              UserIsOwner = hotel.OwnerId == user.Id
                           }).ToListAsync());
         }
 

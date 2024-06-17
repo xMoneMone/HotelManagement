@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 
 :root {
     /* BODY */
@@ -16,6 +16,8 @@
     --navbar-icon-color: rgb(231, 231, 231);
     --navbar-initials-color: var(--navbar-background-color);
     --navbar-initials-size: 2em;
+    --navbar-icon-size: 2em;
+    --navbar-font-weight: 700;
 
     /* BUTTON */
     --button-color: rgb(231, 231, 231);
@@ -27,7 +29,17 @@
     --home-not-authorized-button-padding: 1em 4em;
     --home-not-authorized-button-margin: 0.5em;
     --home-not-authorized-button-font-size: 1.6em;
-
+    --home-authorized-padding: 4em 0 0 0;
+    --home-authorized-hotel-background-color: var(--navbar-background-color);
+    --home-authorized-hotel-font-color: var(--body-text-color);
+    --home-authorized-hotel-font-size: 2em;
+    --home-authorized-hotel-icon-color: var(--body-text-color);
+    --home-authorized-hotel-icon-size: 1em;
+    --home-authorized-hotel-width: 20em;
+    --home-authorized-hotel-padding: 0.5em 1em;
+    --home-authorized-hotel-margin: 0.5em;
+    --home-authorized-hotel-border-radius: 0.3em;
+    --home-authorized-hotel-hover-background-color: rgb(12, 12, 12);
 
 }
 
@@ -43,5 +55,10 @@ a {
   }
 
 .icon {
-    height: 2em;
+    transition: var(--transition);
+    height: 1em;
+}
+
+.icon:hover {
+    opacity: 0.8;
 }

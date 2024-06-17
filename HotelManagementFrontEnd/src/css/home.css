@@ -14,3 +14,43 @@
     margin: var(--home-not-authorized-button-margin);
     font-size: var(--home-not-authorized-button-font-size);
 }
+
+.home-authorized {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: var(--home-authorized-padding);
+}
+
+.home-hotel {
+    background-color: var(--home-authorized-hotel-background-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--home-authorized-hotel-font-size);
+    color: var(--home-authorized-hotel-font-color);
+    width: var(--home-authorized-hotel-width);
+    padding: var(--home-authorized-hotel-padding);
+    margin: var(--home-authorized-hotel-margin);
+    border-radius: var(--home-authorized-hotel-border-radius);
+    transition: var(--transition);
+}
+
+.home-hotel:hover {
+    background-color: var(--home-authorized-hotel-hover-background-color);
+}
+
+.home-hotel .icon {
+    fill: var(--home-authorized-hotel-icon-color);
+    height: var(--home-authorized-hotel-icon-size);
+}
+
+.home-hotel-edit {
+    display: flex;
+    align-items: center;
+}
+
+.home-hotel-name {
+    font-family: var(--font);
+    font-weight: 400;
+}
