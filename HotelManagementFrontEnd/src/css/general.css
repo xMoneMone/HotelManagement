@@ -2,13 +2,13 @@
 
 :root {
     /* BODY */
-    --body-color: rgb(66, 54, 54);
+    --body-color: rgb(27, 27, 27);
     --body-text-color: rgb(231, 231, 231);
     --font: "Quicksand", sans-serif;
     --transition: all ease-in-out 200ms;
 
     /* NAVBAR */
-    --navbar-background-color: rgb(51, 41, 38);
+    --navbar-background-color: rgb(0, 0, 0);
     --navbar-padding: 0em 2em;
     --navbar-height: 10vh;
     --navbar-buttons-margin: 0 0.5em;
