@@ -1,0 +1,48 @@
+@import "general.css";
+
+.navbar {
+    background-color: var(--navbar-background-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--navbar-padding);
+    height: var(--navbar-height);
+    box-shadow: 0px 8px 16px -8px rgba(0, 0, 0, 0.314);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.navbar .icon {
+    fill: var(--navbar-icon-color);
+    transition: var(--transition);
+} 
+
+.navbar .icon:hover {
+    opacity: 0.8;
+}
+
+.right, .navbar-authorized {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-not-authorized button, .navbar-authorized > * {
+    margin: var(--navbar-buttons-margin);
+}
+
+.profile-circle {
+    width: var(--navbar-profile-circle-size);
+    height: var(--navbar-profile-circle-size);
+    border-radius: 100em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-initials {
+    text-transform: uppercase;
+    font-family: var(--font);
+    font-size: var(--navbar-initials-size);
+    color: var(--navbar-initials-color);
+}

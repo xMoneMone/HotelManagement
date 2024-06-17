@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap");
+
+:root {
+    /* BODY */
+    --body-color: rgb(66, 54, 54);
+    --body-text-color: rgb(231, 231, 231);
+    --font: "Quicksand", sans-serif;
+    --transition: all ease-in-out 200ms;
+
+    /* NAVBAR */
+    --navbar-background-color: rgb(51, 41, 38);
+    --navbar-padding: 0em 2em;
+    --navbar-height: 10vh;
+    --navbar-buttons-margin: 0 0.5em;
+    --navbar-profile-circle-size: 4em;
+    --navbar-icon-color: rgb(231, 231, 231);
+    --navbar-initials-color: var(--navbar-background-color);
+    --navbar-initials-size: 2em;
+
+    /* BUTTON */
+    --button-color: rgb(231, 231, 231);
+    --button-text-color: var(--navbar-color);
+    --button-hover-color: rgba(255, 255, 255, 0.69);
+
+
+}
+
+body {  
+    padding: 0;
+    margin: 0;
+    background-color: var(--body-color);
+}
+
+a {
+    color: inherit; 
+    text-decoration: inherit; 
+  }
+
+.icon {
+    height: 2em;
+}

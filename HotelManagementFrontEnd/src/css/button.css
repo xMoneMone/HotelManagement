@@ -1,0 +1,19 @@
+@import "general.css";
+
+button {
+    font-size: inherit;
+    font-family: var(--font);
+    border: none;
+    transition: none;
+    text-decoration: none;
+    color: var(--button-text-color);
+    background-color: var(--button-color);
+    border-radius: 1em;
+    padding: 0.5em 1em;
+    transition: var(--transition);
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: var(--button-hover-color);
+  }
