@@ -12,15 +12,17 @@ using Validators = HotelManagementAPI.Util.Validators;
 
 namespace HotelManagementAPI.Data
 {
-    public class UserStore(HotelManagementContext _context, IHttpContextAccessor http, IConfiguration configuration, IAccountTypeStore accountTypeStore) : IUserStore
+    public class UserStore(HotelManagementContext _context, IHttpContextAccessor http, IConfiguration configuration, IAccountTypeStore accountTypeStore, IColorStore colorStore) : IUserStore
     {
         private readonly HotelManagementContext context = _context;
         private readonly IHttpContextAccessor http = http;
         private readonly IConfiguration configuration = configuration;
         private readonly IAccountTypeStore accountTypeStore = accountTypeStore;
+        private readonly IColorStore colorStore = colorStore;
 
         public async Task<User?> GetCurrentUser()
         {
+            // IS THIS SECURE?????
             var userId = Jwt.DecodeUser(http.HttpContext.User.Claims);
             return await GetById(userId);
         }
@@ -97,7 +99,7 @@ namespace HotelManagementAPI.Data
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                ColorId = user.ColorId
+                Color = await colorStore.GetColorById(user.ColorId)
             });
         }
 

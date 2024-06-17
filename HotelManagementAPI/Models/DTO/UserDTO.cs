@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Email { get; set; } = null!;
-        public int ColorId { get; set; }
+        public string Color { get; set; } = null!;
 
         public string FirstName { get; set; } = null!;
 
