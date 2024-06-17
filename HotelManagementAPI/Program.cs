@@ -13,12 +13,21 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-Log.Logger = new LoggerConfiguration().MinimumLevel.Error().WriteTo.File("Log/log.txt", rollingInterval:RollingInterval.Month).CreateLogger();
+//Log.Logger = new LoggerConfiguration().MinimumLevel.Error().WriteTo.File("Log/log.txt", rollingInterval:RollingInterval.Month).CreateLogger();
 
-builder.Host.UseSerilog();
+//builder.Host.UseSerilog();
 builder.Services.AddDbContext<HotelManagementContext>(options => options.UseSqlServer("Server=.;Database=HotelManagement;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"));
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("default", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // Registering stores
 builder.Services.AddScoped<IAccountTypeStore, AccountTypeStore>();
@@ -77,5 +86,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("default");
 
 app.Run();

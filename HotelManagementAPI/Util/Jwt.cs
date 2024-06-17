@@ -11,6 +11,5 @@ namespace HotelManagementAPI.Util
             int userId = int.Parse(claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value);
             return userId;
         }
-
     }
 }
