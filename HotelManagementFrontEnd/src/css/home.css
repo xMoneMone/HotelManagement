@@ -13,6 +13,7 @@
     border-radius: 100em;
     margin: var(--home-not-authorized-button-margin);
     font-size: var(--home-not-authorized-button-font-size);
+    font-weight: var(--home-not-authorized-button-font-weight);
 }
 
 .home-authorized {

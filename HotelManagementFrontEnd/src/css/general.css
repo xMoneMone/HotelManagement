@@ -29,6 +29,7 @@
     --home-not-authorized-button-padding: 1em 4em;
     --home-not-authorized-button-margin: 0.5em;
     --home-not-authorized-button-font-size: 1.6em;
+    --home-not-authorized-button-font-weight: 500;
     --home-authorized-padding: 4em 0 0 0;
     --home-authorized-hotel-background-color: var(--navbar-background-color);
     --home-authorized-hotel-font-color: var(--body-text-color);
