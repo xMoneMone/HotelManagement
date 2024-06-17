@@ -14,7 +14,7 @@ export default function App(){
   return (
     <>
       <Router>
-        <UserContext.Provider value={user}>
+        <UserContext.Provider value={[user, token]}>
         <Navbar/>
           <div className="page">
             <Routes>

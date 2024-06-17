@@ -1,11 +1,10 @@
 import { useContext } from "react"
 import { UserContext } from "./App"
-import Button from "./Button"
 import { Link } from 'react-router-dom';
 import './css/navbar.css'
 
 export default function Navbar(){
-    const user = useContext(UserContext)
+    const [user, token] = useContext(UserContext)
     
     return  <>
                 <div className="navbar">
