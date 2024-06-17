@@ -3,6 +3,7 @@ using HotelManagementAPI.Models;
 using HotelManagementAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace HotelManagementAPI.Data
 {
@@ -20,6 +21,14 @@ namespace HotelManagementAPI.Data
                                                  Color1 = color.Color1,
                                              })
                    .ToListAsync());
+        }
+
+        public async Task<string?> GetColorById(int id)
+        {
+            return await (from color in context.Colors
+                                             where color.Id == id
+                                             select color.Color1)
+                   .FirstOrDefaultAsync();
         }
     }
 }
