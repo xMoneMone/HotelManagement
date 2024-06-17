@@ -1,0 +1,16 @@
+@import "general.css";
+
+.home-not-authorized {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: var(--home-not-authorized-height);
+}
+
+.home-not-authorized button {
+    padding: var(--home-not-authorized-button-padding);
+    border-radius: 100em;
+    margin: var(--home-not-authorized-button-margin);
+    font-size: var(--home-not-authorized-button-font-size);
+}
