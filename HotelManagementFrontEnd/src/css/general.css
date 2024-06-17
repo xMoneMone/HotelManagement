@@ -2,7 +2,7 @@
 
 :root {
     /* BODY */
-    --body-color: rgb(27, 27, 27);
+    --body-color: rgb(16, 16, 16);
     --body-text-color: rgb(231, 231, 231);
     --font: "Quicksand", sans-serif;
     --transition: all ease-in-out 200ms;
@@ -40,7 +40,7 @@
     --home-authorized-hotel-padding: 0.5em 1em;
     --home-authorized-hotel-margin: 0.5em;
     --home-authorized-hotel-border-radius: 0.3em;
-    --home-authorized-hotel-hover-background-color: rgb(12, 12, 12);
+    --home-authorized-hotel-hover-background-color: rgb(8, 8, 8);
 
 }
 
