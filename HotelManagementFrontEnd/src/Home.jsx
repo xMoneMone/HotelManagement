@@ -40,6 +40,13 @@ function Home () {
                     })}
 
                 </div>} 
+
+                {token && <div className="home-not-authorized">
+                       
+                       <Link to="/signup"><Button>SIGN UP</Button></Link>
+                       <Link to="/login"><Button>LOG IN</Button> </Link>
+                               
+                </div>}
             </>
 }
 
