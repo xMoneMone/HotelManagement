@@ -23,6 +23,12 @@
     padding: var(--home-authorized-padding);
 }
 
+.home-authorized h1 {
+    margin-bottom: 0.5em;
+    font-weight: 500;
+    font-size: 3em;
+}
+
 .home-hotel {
     background-color: var(--home-authorized-hotel-background-color);
     display: flex;
@@ -54,4 +60,10 @@
 .home-hotel-name {
     font-family: var(--font);
     font-weight: 400;
+    display: flex;
+    align-items: center;
+}
+
+.home-hotel-name .icon {
+    margin-right: 0.5em;
 }
