@@ -15,7 +15,11 @@ export default function Home () {
       
     return  <>
                 {token && hotels && <div className="home-authorized">
-                    <h1>Hotels</h1>
+                    <div className="home-authorized-title">
+                        <div className="home-authorized-title-line"></div>
+                        <h1>Hotels</h1>
+                        <div className="home-authorized-title-line"></div>
+                    </div>
                     {hotels.map((hotel) => {
 
                         return <Link to={`/hotels/${hotel.id}/rooms`} key={hotel.id}>
@@ -37,10 +41,10 @@ export default function Home () {
                     })}
                 </div>} 
 
-                {token && <div className="home-not-authorized">
+                {!token && <div className="home-not-authorized">
                        
-                       <Link to="/signup"><Button>SIGN UP</Button></Link>
-                       <Link to="/login"><Button>LOG IN</Button> </Link>
+                       <Link className="signup-button" to="/signup"><Button>SIGN UP</Button></Link>
+                       <Link className="login-button" to="/login"><Button>LOG IN</Button> </Link>
                                
                 </div>}
             </>

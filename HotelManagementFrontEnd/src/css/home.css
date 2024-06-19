@@ -23,10 +23,32 @@
     padding: var(--home-authorized-padding);
 }
 
+.home-not-authorized .signup-button > button {
+    background-color: var(--home-not-authorized-singup-background-button-color);
+}
+
+.home-not-authorized .login-button > button {
+    background-color: var(--home-not-authorized-login-background-button-color);
+}
+
 .home-authorized h1 {
-    margin-bottom: 0.5em;
     font-weight: 500;
     font-size: 3em;
+    color: var(--home-authorized-h1-color)
+}
+.home-authorized-title{
+    display: flex;
+    margin-bottom: 0.5em;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-authorized-title-line {
+    width: 20em;
+    height: 0.3em;
+    margin: 0 1em 0 1em;
+    background-color: var(--body-text-color);
+    border-radius: 10em;
 }
 
 .home-hotel {

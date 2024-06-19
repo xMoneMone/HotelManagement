@@ -3,7 +3,7 @@
 :root {
     /* BODY */
     --body-color: rgb(16, 16, 16);
-    --body-text-color: rgb(231, 231, 231);
+    --body-text-color: rgb(253, 229, 186);
     --font: "Quicksand", sans-serif;
     --transition: all ease-in-out 200ms;
 
@@ -13,17 +13,18 @@
     --navbar-height: 10vh;
     --navbar-buttons-margin: 0 0.5em;
     --navbar-profile-circle-size: 4em;
-    --navbar-icon-color: rgb(231, 231, 231);
+    --navbar-icon-color: var(--body-text-color);
     --navbar-initials-color: var(--navbar-background-color);
     --navbar-initials-size: 2em;
     --navbar-icon-size: 2em;
     --navbar-font-weight: 700;
+    --navbar-invitations-color: white;
     --navbar-invitations-notification-color: rgb(212, 63, 63);
 
     /* BUTTON */
-    --button-color: rgb(231, 231, 231);
+    --button-color: var(--body-text-color);
     --button-text-color: var(--navbar-color);
-    --button-hover-color: rgba(255, 255, 255, 0.69);
+    --button-hover-color: rgba(243, 225, 197, 0.808);
 
     /* HOME */
     --home-not-authorized-height: 80vh;
@@ -31,9 +32,12 @@
     --home-not-authorized-button-margin: 0.5em;
     --home-not-authorized-button-font-size: 1.6em;
     --home-not-authorized-button-font-weight: 500;
+    --home-not-authorized-singup-background-button-color: var(--button-color);
+    --home-not-authorized-login-background-button-color: white;
     --home-authorized-padding: 4em 0 0 0;
     --home-authorized-hotel-background-color: var(--navbar-background-color);
-    --home-authorized-hotel-font-color: var(--body-text-color);
+    --home-authorized-h1-color: white;
+    --home-authorized-hotel-font-color: white;
     --home-authorized-hotel-font-size: 2em;
     --home-authorized-hotel-icon-color: var(--body-text-color);
     --home-authorized-hotel-icon-size: 1em;
