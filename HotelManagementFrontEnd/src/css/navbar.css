@@ -17,7 +17,11 @@
     fill: var(--navbar-icon-color);
     transition: var(--transition);
     height: var(--navbar-icon-size);
-} 
+}
+
+.navbar .invitations {
+    fill: var(--navbar-invitations-color);
+}
 
 .right, .navbar-authorized {
     display: flex;
@@ -43,4 +47,19 @@
     font-family: var(--font);
     font-size: var(--navbar-initials-size);
     color: var(--navbar-initials-color);
+}
+
+.notification-circle {
+    background-color: var(--navbar-invitations-notification-color);
+    position: relative;
+    height: 0.8em;
+    width: 0.8em;
+    left: 1.4em;
+    top: -2.3em;
+    border-radius: 10em;
+    border: 3px solid var(--navbar-background-color);
+}
+
+.invitations-link {
+    height: 2em;
 }
