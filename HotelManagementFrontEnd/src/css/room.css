@@ -59,13 +59,13 @@
 }
 
 .date-selector button {
-    font-weight: 600;
+    font-weight: var(--date-selector-button-font-weight);
 }
 
 .date-selector input {
-    margin: 0 1em 0 0;
+    margin: var(--date-selector-margin);
     font-family: inherit;
-    font-weight: 700;
-    border-radius: 0.6em;
-    padding: 0.3em 0.5em;
+    font-weight: var(--date-selector-font-weight);
+    border-radius: var(--date-selector-border-radius);
+    padding: var(--date-selector-padding);
 }
