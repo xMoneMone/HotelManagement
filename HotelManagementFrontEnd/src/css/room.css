@@ -8,6 +8,7 @@
 
 .rooms-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     width: var(--rooms-container-width);
     padding: var(--rooms-container-padding);
