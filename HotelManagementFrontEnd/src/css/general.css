@@ -6,6 +6,7 @@
     --body-text-color: rgb(253, 229, 186);
     --font: "Quicksand", sans-serif;
     --transition: all ease-in-out 200ms;
+    --accent-color: white;
 
     /* NAVBAR */
     --navbar-background-color: rgb(0, 0, 0);
@@ -18,7 +19,7 @@
     --navbar-initials-size: 2em;
     --navbar-icon-size: 2em;
     --navbar-font-weight: 700;
-    --navbar-invitations-color: white;
+    --navbar-invitations-color: var(--accent-color);
     --navbar-invitations-notification-color: rgb(212, 63, 63);
 
     /* BUTTON */
@@ -33,11 +34,11 @@
     --home-not-authorized-button-font-size: 1.6em;
     --home-not-authorized-button-font-weight: 500;
     --home-not-authorized-singup-background-button-color: var(--button-color);
-    --home-not-authorized-login-background-button-color: white;
+    --home-not-authorized-login-background-button-color: var(--accent-color);
     --home-authorized-padding: 4em 0 0 0;
     --home-authorized-hotel-background-color: var(--navbar-background-color);
-    --home-authorized-h1-color: white;
-    --home-authorized-hotel-font-color: white;
+    --home-authorized-h1-color: var(--accent-color);
+    --home-authorized-hotel-font-color: var(--accent-color);
     --home-authorized-hotel-font-size: 2em;
     --home-authorized-hotel-icon-color: var(--body-text-color);
     --home-authorized-hotel-icon-size: 1em;
@@ -50,6 +51,7 @@
     /* FORM */
     --form-background-color: var(--navbar-background-color);
     --form-text-color: var(--body-text-color);
+    --form-h1-color: var(--accent-color);
     --form-input-text-color: var(--navbar-background-color);
     --form-input-text-font-weight: 600;
     --form-button-text-font-weight: 600;
@@ -78,4 +80,11 @@ a {
 
 .icon:hover {
     opacity: 0.8;
+}
+
+.line {
+    height: 0.3em;
+    margin: 0 1em 0 1em;
+    background-color: var(--body-text-color);
+    border-radius: 10em;
 }
