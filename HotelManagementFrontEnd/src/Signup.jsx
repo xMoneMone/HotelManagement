@@ -39,7 +39,11 @@ export default function Login() {
     return <>
         <div className="form-container">
             <div className="form-background">
-                <h1>SIGN UP</h1>
+                <div className="form-title">
+                    <div className="form-title-line line"></div>
+                        <h1>SIGN UP</h1>
+                    <div className="form-title-line line"></div>  
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="input-field">
                         <label>Email:</label>

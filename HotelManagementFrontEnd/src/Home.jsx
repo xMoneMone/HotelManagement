@@ -16,9 +16,9 @@ export default function Home () {
     return  <>
                 {token && hotels && <div className="home-authorized">
                     <div className="home-authorized-title">
-                        <div className="home-authorized-title-line"></div>
+                        <div className="home-authorized-title-line line"></div>
                         <h1>Hotels</h1>
-                        <div className="home-authorized-title-line"></div>
+                        <div className="home-authorized-title-line line"></div>
                     </div>
                     {hotels.map((hotel) => {
 

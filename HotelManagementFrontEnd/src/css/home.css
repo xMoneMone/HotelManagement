@@ -45,10 +45,6 @@
 
 .home-authorized-title-line {
     width: 20em;
-    height: 0.3em;
-    margin: 0 1em 0 1em;
-    background-color: var(--body-text-color);
-    border-radius: 10em;
 }
 
 .home-hotel {

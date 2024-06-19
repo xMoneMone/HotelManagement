@@ -2,7 +2,7 @@
 
 h1 {
   margin: 0;
-  color: var(--form-text-color);
+  color: var(--form-h1-color);
   font-family: var(--font);
 }
 
@@ -97,13 +97,6 @@ textarea {
   color: var(--form-text-color);
 }
 
-form h2 {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  color: rgb(66, 66, 66);
-}
-
 #submit-button {
   display: none;
 }
@@ -144,4 +137,13 @@ form h2 {
 
 .under-form-message-link {
   text-decoration: underline;
+}
+
+.form-title {
+  display: flex;
+  align-items: center;
+}
+
+.form-title-line {
+  width: 10em;
 }
