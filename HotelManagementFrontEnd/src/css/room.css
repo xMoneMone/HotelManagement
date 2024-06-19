@@ -1,0 +1,56 @@
+@import "general.css";
+
+.rooms {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+}
+
+.rooms-container {
+    display: flex;
+    justify-content: center;
+    width: var(--rooms-container-width);
+    padding: var(--rooms-container-padding);
+}
+
+.room {
+    margin: var(--room-margin);
+}
+
+.room-number {
+    font-size: var(--room-font-size);
+    width: var(--room-width);
+    height: var(--room-height);
+    border-radius: var(--room-border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+    color: var(--room-number-color);
+}
+
+.room-available {
+    background-color: var(--room-available-background-color);
+}
+
+.room-taken {
+    background-color: var(--room-taken-background-color);
+}
+
+.bed-icon {
+    fill: var(--bed-icon-color);
+    margin: var(--bed-icon-margin);
+}
+
+.room-info {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--room-info-padding);
+    margin: var(--room-info-margin);
+    font-weight: var(--room-info-font-weight);
+}
+
+.room-info-capacity {
+    display: flex;
+    align-items: center;
+}

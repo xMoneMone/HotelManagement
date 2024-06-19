@@ -60,6 +60,23 @@
     --form-under-form-message-color: rgb(122, 122, 122);
     --form-under-form-message-margin: 2em 0 0 0; 
 
+    /* ROOMS */
+    --rooms-container-width: 70vw;
+    --rooms-container-padding: 5em 0 0 0;
+    --room-margin: 1em;
+    --room-font-size: 2.4em;
+    --room-width: 5em;
+    --room-height: 3em;
+    --room-border-radius: 0.2em;
+    --room-available-background-color: var(--body-text-color);
+    --room-taken-background-color: var(--button-hover-color);
+    --room-number-color: var(--body-color);
+    --bed-icon-color: white;
+    --bed-icon-margin: 0 0.3em 0 0;
+    --room-info-padding: 0 0.5em;
+    --room-info-margin: 0.5em 0;
+    --room-info-font-weight: 600;
+
 }
 
 body {  
@@ -67,6 +84,7 @@ body {
     margin: 0;
     background-color: var(--body-color);
     font-family: var(--font);
+    color: var(--body-text-color);
 }
 
 a {
