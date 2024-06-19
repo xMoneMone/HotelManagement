@@ -2,8 +2,10 @@
 
 .rooms {
     display: flex;
-    justify-content: center;
+    align-items: center;
     width: 100vw;
+    flex-direction: column;
+    padding: var(--rooms-padding);
 }
 
 .rooms-container {
@@ -54,4 +56,16 @@
 .room-info-capacity {
     display: flex;
     align-items: center;
+}
+
+.date-selector button {
+    font-weight: 600;
+}
+
+.date-selector input {
+    margin: 0 1em 0 0;
+    font-family: inherit;
+    font-weight: 700;
+    border-radius: 0.6em;
+    padding: 0.3em 0.5em;
 }

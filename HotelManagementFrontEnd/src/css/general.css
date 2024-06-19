@@ -24,7 +24,7 @@
 
     /* BUTTON */
     --button-color: var(--body-text-color);
-    --button-text-color: var(--navbar-color);
+    --button-text-color: var(--navbar-background-color);
     --button-hover-color: rgba(243, 225, 197, 0.808);
 
     /* HOME */
@@ -62,7 +62,8 @@
 
     /* ROOMS */
     --rooms-container-width: 50vw;
-    --rooms-container-padding: 5em 0 0 0;
+    --rooms-container-padding: 2em 0 0 0;
+    --rooms-padding: 2em 0 0 0;
     --room-margin: 1em;
     --room-font-size: 2.4em;
     --room-width: 5em;
