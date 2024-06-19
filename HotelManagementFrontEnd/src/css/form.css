@@ -3,7 +3,6 @@
 h1 {
   margin: 0;
   color: var(--form-h1-color);
-  font-family: var(--font);
 }
 
 .form-container {
@@ -57,7 +56,6 @@ h1 {
 
 form label {
   color: var(--navbar-color);
-  font-family: var(--font);
 }
 
 form input,
@@ -65,7 +63,6 @@ textarea {
   margin-top: 0.5em;
   width: 30em;
   height: 2em;
-  font-family: var(--font);
   color: var(--form-input-text-color);
   font-weight: var(--form-input-text-font-weight);
   border-radius: 0.7em;
@@ -108,7 +105,6 @@ textarea {
   color: rgb(175, 99, 142);
   width: 100%;
   overflow-wrap: break-word;
-  font-family: var(--font);
 }
 
 .wrong-div {
@@ -132,7 +128,6 @@ textarea {
 .under-form-message {
   color: var(--form-under-form-message-color);
   margin: var(--form-under-form-message-margin);
-  font-family: var(--font);
 }
 
 .under-form-message-link {

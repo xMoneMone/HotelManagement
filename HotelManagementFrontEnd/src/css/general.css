@@ -66,6 +66,7 @@ body {
     padding: 0;
     margin: 0;
     background-color: var(--body-color);
+    font-family: var(--font);
 }
 
 a {
