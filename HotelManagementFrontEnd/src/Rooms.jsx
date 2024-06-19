@@ -6,6 +6,7 @@ import { UserContext } from "./App"
 import { Link } from 'react-router-dom';
 import Room from "./Room"
 import './css/room.css'
+import { dayDif } from "./util/dayDif";
 import Button from "./Button"
 
 export default function Rooms() {
@@ -16,8 +17,12 @@ export default function Rooms() {
     const {rooms, refresh} = useRooms(token, pk, "")
     const hotelCurrency = useHotelCurrency(token, pk)
 
+    const [stay, setStay] = useState(dayDif(startDate, finishDate))
+    console.log(stay)
+
     function filterClick() {
         refresh(`/${startDate}/${finishDate}`)
+        setStay(dayDif(startDate, finishDate))
     }
 
     return <>
@@ -35,7 +40,8 @@ export default function Rooms() {
                 </div>
                 <div className="rooms-container">
                 {rooms.map((room) => {
-                    return <Link to={room.id.toString()} key={room.id}><Room number={room.roomNumber} capacity={room.capacity} currency={hotelCurrency.currency} price={room.pricePerNight} available={room.available}></Room></Link>
+                    return <Link to={room.id.toString()} key={room.id}><Room number={room.roomNumber} capacity={room.capacity} currency={hotelCurrency.currency} 
+                    price={stay != 0 ? room.pricePerNight * stay : room.pricePerNight} available={room.available}></Room></Link>
                 })}
                 </div>
             </div>
