@@ -99,7 +99,8 @@ namespace HotelManagementAPI.Data
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Color = await colorStore.GetColorById(user.ColorId)
+                Color = await colorStore.GetColorById(user.ColorId),
+                AccountType = user.AccountTypeId
             });
         }
 
