@@ -83,6 +83,17 @@
     --date-selector-border-radius: 0.6em;
     --date-selector-padding: 0.3em 0.5em;
 
+    /* BOTTOM OF PAGE BUTTON */
+    --bottom-of-page-button-background-color: var(--body-text-color);
+    --bottom-of-page-button-font-size: 6vh;
+    --bottom-of-page-button-font-weight: 600;
+    --bottom-of-page-button-width: 8vh;
+    --bottom-of-page-button-height: 8vh;
+    --bottom-of-page-button-border-radius: 10em;
+    --bottom-of-page-button-text-color: var(--body-color);
+    --bottom-of-page-button-top: 89vh;
+    --bottom-of-page-button-left: 95vw;
+
 }
 
 body {  

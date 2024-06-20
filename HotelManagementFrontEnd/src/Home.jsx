@@ -4,6 +4,7 @@ import { UserContext } from "./App"
 import useHotels from "./hooks/useHotels"
 import { Link } from 'react-router-dom';
 import './css/home.css'
+import BottomOfPageButton from "./BottomOfPageButton";
 
 export default function Home () {
     const [token, setToken] = useContext(UserContext)
@@ -14,6 +15,7 @@ export default function Home () {
       }, []);
       
     return  <>
+                {token && <BottomOfPageButton title="Add hotel" link="" buttonText="+"></BottomOfPageButton>}
                 {token && hotels && <div className="home-authorized">
                     <div className="home-authorized-title">
                         <div className="home-authorized-title-line line"></div>
@@ -21,7 +23,6 @@ export default function Home () {
                         <div className="home-authorized-title-line line"></div>
                     </div>
                     {hotels.map((hotel) => {
-
                         return <Link to={`/hotels/${hotel.id}/rooms`} key={hotel.id}>
                                     <div className="home-hotel">
                                         <div className="home-hotel-name">

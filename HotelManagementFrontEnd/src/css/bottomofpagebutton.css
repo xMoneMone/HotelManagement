@@ -1,0 +1,18 @@
+@import "general.css";
+
+.bottom-of-page-button {
+    background-color: var(--bottom-of-page-button-background-color);
+    font-size: var(--bottom-of-page-button-font-size);
+    font-weight: var(--bottom-of-page-button-font-weight);
+    width: var(--bottom-of-page-button-width);
+    height: var(--bottom-of-page-button-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    border-radius: var(--bottom-of-page-button-border-radius);
+    color: var(--bottom-of-page-button-text-color);
+    top: var(--bottom-of-page-button-top);
+    left: var(--bottom-of-page-button-left);
+    
+}

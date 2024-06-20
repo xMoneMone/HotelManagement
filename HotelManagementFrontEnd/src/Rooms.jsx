@@ -8,6 +8,7 @@ import Room from "./Room"
 import './css/room.css'
 import { dayDif } from "./util/dayDif";
 import Button from "./Button"
+import BottomOfPageButton from "./BottomOfPageButton"
 
 export default function Rooms() {
     const {pk} = useParams()
@@ -25,6 +26,7 @@ export default function Rooms() {
     }
 
     return <>
+            <BottomOfPageButton title="Add room" link="" buttonText="+"></BottomOfPageButton>
             <div className="rooms">
                 <div className="date-selector">
                     <input className="startDate"
