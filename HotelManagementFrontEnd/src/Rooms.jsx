@@ -18,7 +18,6 @@ export default function Rooms() {
     const hotelCurrency = useHotelCurrency(token, pk)
 
     const [stay, setStay] = useState(dayDif(startDate, finishDate))
-    console.log(stay)
 
     function filterClick() {
         refresh(`/${startDate}/${finishDate}`)

@@ -10,24 +10,29 @@ export default function Login() {
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [token, setToken] = useContext(UserContext)
+    const {login} = useLogin()
     const navigate = useNavigate()
 
     useEffect(() => {
         document.title = "Login | HMT"
     })
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const {loginToken, error} = useLogin(email, password)
+        const {data, error} = await login(email, password)
 
         if (error){
+            console.log(error)
             setErrorMessage(error)
             return;
         }
         else {
-            setToken(loginToken)
-            document.cookie = jwt_token + "=" + loginToken;
+            // TODO
+            // setToken(loginToken)
+            console.log(data)
+            setErrorMessage("")
+            // document.cookie = jwt_token + "=" + loginToken;
             navigate("/")
         }
     }
