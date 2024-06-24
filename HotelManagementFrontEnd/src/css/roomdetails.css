@@ -1,0 +1,82 @@
+@import "general.css";
+
+.icon {
+    fill: var(--room-details-icon-color);
+    margin: var(--room-details-icon-margin);
+}
+
+.room-details-page .room-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bookings-title {
+    margin: var(--room-details-booking-title-margin);
+}
+
+.room-details-room-number {
+    background-color: var(--room-details-room-number-background-color);
+    color: var(--room-details-room-number-color);
+    width: var(--room-details-room-number-width);
+    height: var(--room-details-room-number-height);
+    border-radius: var(--room-details-room-number-border-radius);
+    font-size: var(--room-details-room-number-font-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: var(--room-details-room-number-font-weight);
+    margin: var(--room-details-room-number-margin);
+}
+
+.room-details-room-info{
+    width: var(--room-details-room-info-width);
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    font-size: var(--room-details-room-info-font-size);
+    margin: var(-room-details-room-info-margin);
+}
+
+.room-details-booking {
+    background-color: var(--room-details-booking-background-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: var(--room-details-booking-margin);
+    width: var(--room-details-booking-width);
+    padding: var(--room-details-booking-padding);
+    font-size: var(--room-details-booking-font-size);
+    border-radius: var(--room-details-booking-border-radius);
+    font-weight: var(--room-details-booking-font-weight);
+}
+
+.room-details-booking > * {
+    width: var(--room-details-booking-info-part-width);
+}
+
+.room-details-booking-payment {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.room-details-booking-payment > * {
+    display: flex;
+    align-items: center;
+}
+
+.room-details-booking-date {
+    display: flex;
+    justify-content: center;
+}
+
+.booking-payment-icon {
+    margin: var(--room-details-payment-icon-margin);
+}
+
+.no-bookings {
+    font-size: var(--room-details-no-booking-font-size);
+    color: var(--room-details-no-booking-color);
+    margin: var(--room-details-no-booking-margin);
+}

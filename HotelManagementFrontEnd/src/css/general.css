@@ -94,6 +94,35 @@
     --bottom-of-page-button-top: 89vh;
     --bottom-of-page-button-left: 95vw;
 
+    /* ROOM DETAILS */
+    --room-details-room-number-background-color: var(--body-text-color);
+    --room-details-room-number-color: var(--navbar-background-color);
+    --room-details-room-number-width: 20em;
+    --room-details-room-number-height: 3em;
+    --room-details-room-number-border-radius: 0.3em;
+    --room-details-room-number-font-size: 3em;
+    --room-details-room-number-font-weight: 700;
+    --room-details-room-number-margin: 0.5em 0;
+    --room-details-booking-title-margin: 4em 0 0 0;
+    --room-details-room-info-width: 36em;
+    --room-details-room-info-font-size: 1.6em;
+    --room-details-room-info-margin: 0.5em 0;
+    --room-details-icon-color: white;
+    --room-details-payment-icon-margin: 0 0 0 0.5em;
+    --room-details-icon-margin: 0 0.5em 0 0;
+    --room-details-booking-border: 2px solid var(--body-text-color);
+    --room-details-booking-background-color: var(--room-taken-background-color);
+    --room-details-booking-margin: 1em;
+    --room-details-booking-width: 46em;
+    --room-details-booking-padding: 0.8em;
+    --room-details-booking-font-size: 1.2em;
+    --room-details-booking-border-radius: 0.8em;
+    --room-details-booking-font-weight: 500;
+    --room-details-booking-info-part-width: 36em;
+    --room-details-no-booking-font-size: 2em;
+    --room-details-no-booking-color: var(--room-taken-background-color);
+    --room-details-no-booking-margin: 1em 0;
+
 }
 
 body {  

@@ -6,6 +6,8 @@ import Navbar from "./Navbar"
 import Signup from "./Signup"
 import Login from './Login';
 import Rooms from './Rooms';
+import RoomDetails from './RoomDetails';
+import BookingDetails from './BookingDetails';
 
 export const UserContext = React.createContext()
 
@@ -23,6 +25,8 @@ export default function App(){
               <Route exact path="/login" element={<Login/>}/>
               <Route exact path="/signup" element={<Signup/>}/>
               <Route exact path="/hotels/:pk/rooms" element={<Rooms/>}/>
+              <Route exact path="/hotels/:hotelId/rooms/:roomId" element={<RoomDetails/>}/>
+              <Route exact path="/hotels/:hotelId/rooms/:roomId/bookings/:bookingId" element={<BookingDetails/>}/>
             </Routes>
           </div>
         </UserContext.Provider>
