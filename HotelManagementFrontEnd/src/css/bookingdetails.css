@@ -1,0 +1,24 @@
+@import "general.css";
+
+.booking-details-page {
+    display: flex;
+    justify-content: center;
+    margin: var(--booking-details-page-margin)
+}
+
+.booking-details {
+    background-color: var(--booking-details-background-color);
+    font-size: var(--booking-details-font-size);
+    padding: var(--booking-details-padding);
+    border-radius: var(--booking-details-border-radius);
+    width: var(--booking-details-width);
+}
+
+.booking-details h1 {
+    display: flex;
+    justify-content: center;
+}
+
+.booking-details .line {
+    margin: 2em 0 2em 0;
+}

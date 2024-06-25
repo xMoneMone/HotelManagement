@@ -123,6 +123,14 @@
     --room-details-no-booking-color: var(--room-taken-background-color);
     --room-details-no-booking-margin: 1em 0;
 
+    /* BOOKING DETAILS */
+    --booking-details-background-color: var(--navbar-background-color);
+    --booking-details-font-size: 1.3em;
+    --booking-details-padding: 2em;
+    --booking-details-border-radius: 1em;
+    --booking-details-page-margin: 2em 0 0 0;
+    --booking-details-width: 60vw;
+
 }
 
 body {  
